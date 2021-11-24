@@ -14,7 +14,7 @@ pico_sdk_init()
 
 add_subdirectory(lib)
 
-add_executable(PicoDrone PicoDrone.cpp)
+add_executable(PicoDrone lib/main.cpp PicoDrone.cpp)
 
 pico_set_program_name(PicoDrone "PicoDrone")
 pico_set_program_version(PicoDrone "0.1")
@@ -24,6 +24,7 @@ pico_enable_stdio_usb(PicoDrone 0)
 
 target_link_libraries(PicoDrone 
 	PwmDevices
+	Helpers
 
 	pico_stdlib 
 	hardware_adc
