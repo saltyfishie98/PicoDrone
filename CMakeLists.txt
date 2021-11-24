@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PICO_SDK_PATH "C:/SDK/pico-sdk")
 
 include(pico_sdk_import.cmake)
-project(PicoDronePro C CXX ASM)
+project(PicoDroneProj C CXX ASM)
 
 pico_sdk_init()
 
@@ -32,4 +32,10 @@ target_link_libraries(PicoDrone
 )
 
 pico_add_extra_outputs(PicoDrone)
+
+add_custom_command(
+    TARGET PicoDrone POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/PicoDrone.uf2" "${CMAKE_BINARY_DIR}/../bin/PicoDrone.uf2"
+)
+
 
