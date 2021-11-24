@@ -5,7 +5,7 @@
 #include "lib/Helpers.hpp"
 #include "lib/Servo.hpp"
 
-int Application() {
+void Application() {
 	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 

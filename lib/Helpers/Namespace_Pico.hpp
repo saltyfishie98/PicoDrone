@@ -7,7 +7,7 @@ namespace LocalLib::Helpers::Pico {
 	class AnalogReader {
 	  public:
 		AnalogReader(const GpioPin& number);
-		const uint16_t read();
+		uint16_t read();
 
 	  private:
 		GpioPin m_pinNumber = NULLPIN;

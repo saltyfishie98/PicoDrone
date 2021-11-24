@@ -11,10 +11,12 @@ include(pico_sdk_import.cmake)
 project(PicoDroneProj C CXX ASM)
 
 pico_sdk_init()
+suppress_tinyusb_warnings()
 
 add_subdirectory(lib)
 
 add_executable(PicoDrone lib/main.cpp PicoDrone.cpp)
+target_compile_options(PicoDrone PRIVATE -Wall -Wextra -Wpedantic)
 
 pico_set_program_name(PicoDrone "PicoDrone")
 pico_set_program_version(PicoDrone "0.1")

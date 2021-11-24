@@ -22,7 +22,7 @@ namespace LocalLib::Helpers::Pico {
 		});
 	}
 
-	const uint16_t AnalogReader::read() {
+	uint16_t AnalogReader::read() {
 		return adc_read();
 	}
 
