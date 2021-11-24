@@ -8,7 +8,7 @@
 
 #include "../Helpers.hpp"
 
-namespace LocalLib {
+namespace LocalLib::PwmDevices {
 	void PwmDevices::setGpioPin(const uint8_t& gpioPinNumber) {
 		servoPin = gpioPinNumber;
 
@@ -40,4 +40,4 @@ namespace LocalLib {
 		DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
 		pwm_set_gpio_level(servoPin, (millis / 20000.f) * wrap);
 	}
-} // namespace LocalLib
+} // namespace LocalLib::PwmDevices

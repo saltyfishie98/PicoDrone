@@ -4,12 +4,12 @@
 #include "PwmDevices.hpp"
 #include "Types.hpp"
 
-namespace LocalLib {
+namespace LocalLib::PwmDevices {
 	class Servo : public PwmDevices {
 	  public:
 		Servo();
 		Servo(const GpioPin& number);
 	};
-} // namespace LocalLib
+} // namespace LocalLib::PwmDevices
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_SERVO_HPP_

@@ -7,9 +7,10 @@
 
 int Application() {
 	using namespace LocalLib::Helpers;
+	using namespace LocalLib;
 
 	Pico::AnalogReader potentialMeter(27);
-	LocalLib::Servo servo0(4);
+	PwmDevices::Servo servo0(4);
 
 	while (true) {
 		float potVal = potentialMeter.read() / 4095.f;

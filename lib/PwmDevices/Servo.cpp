@@ -1,7 +1,7 @@
 #include "../Servo.hpp"
 
-namespace LocalLib {
+namespace LocalLib::PwmDevices {
 	Servo::Servo(const GpioPin& number) {
 		PwmDevices::setGpioPin(number);
 	}
-} // namespace LocalLib
+} // namespace LocalLib::PwmDevices

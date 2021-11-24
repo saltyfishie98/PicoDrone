@@ -3,7 +3,7 @@
 
 #include "Types.hpp"
 
-namespace LocalLib {
+namespace LocalLib::PwmDevices {
 	class PwmDevices {
 	  public:
 		virtual void setGpioPin(const GpioPin& number);
@@ -14,6 +14,6 @@ namespace LocalLib {
 		float wrap = 39062;
 		uint8_t servoPin = NULLPIN;
 	};
-} // namespace LocalLib
+} // namespace LocalLib::PwmDevices
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_PWMDEVICES_HPP_
