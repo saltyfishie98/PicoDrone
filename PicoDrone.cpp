@@ -20,7 +20,7 @@ int main() {
 	adc_gpio_init(analogInputPin);
 	adc_select_input(analogInputPin - 26);
 
-	Servo servo0(4);
+	Servo servo0(40);
 
 	while (true) {
 		float potVal = adc_read() / 4095.f;

@@ -2,6 +2,7 @@
 #define C__PROJECTS_PICO_PICODRONE_LIB_SERVO_HPP_
 
 #include "PwmDevices.hpp"
+#include "Types.hpp"
 
 namespace LocalLib {
 	class Servo : public PwmDevices {
