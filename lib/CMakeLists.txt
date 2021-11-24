@@ -17,3 +17,11 @@ target_link_libraries(PwmDevices
 	pico_stdlib 
 	hardware_pwm
 )
+
+
+add_library(ErrorBlinker
+	ErrorBlinker/ErrorBlinker.cpp ErrorBlinker.hpp
+)
+target_link_libraries(ErrorBlinker
+	pico_stdlib 
+)

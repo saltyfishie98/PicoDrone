@@ -15,7 +15,7 @@ suppress_tinyusb_warnings()
 
 add_subdirectory(lib)
 
-add_executable(PicoDrone lib/main.cpp PicoDrone.cpp)
+add_executable(PicoDrone lib/main.cpp PicoDrone.cpp sandbox.cpp)
 target_compile_options(PicoDrone PRIVATE -Wall -Wextra -Wpedantic)
 
 pico_set_program_name(PicoDrone "PicoDrone")
@@ -27,6 +27,7 @@ pico_enable_stdio_usb(PicoDrone 0)
 target_link_libraries(PicoDrone 
 	PwmDevices
 	Helpers
+	ErrorBlinker
 
 	pico_stdlib 
 	hardware_adc

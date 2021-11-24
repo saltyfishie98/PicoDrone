@@ -4,6 +4,7 @@
 
 #include "lib/Helpers.hpp"
 #include "lib/Servo.hpp"
+#include "lib/ErrorBlinker.hpp"
 
 void Application() {
 	using namespace LocalLib::Helpers;
@@ -17,5 +18,8 @@ void Application() {
 		std::cout << "potVal%: " << potVal << "\n";
 
 		servo0.setPercent(potVal);
+
+		ErrorBlinker::ErrorCode test = ErrorBlinker::int2bin(69);
+		ErrorBlinker::blink(test);
 	}
 }
