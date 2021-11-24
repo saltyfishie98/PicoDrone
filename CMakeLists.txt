@@ -1,0 +1,30 @@
+# Generated Cmake Pico project file
+
+cmake_minimum_required(VERSION 3.13)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+set(PICO_SDK_PATH "C:/SDK/pico-sdk")
+
+include(pico_sdk_import.cmake)
+project(PicoDrone C CXX ASM)
+
+pico_sdk_init()
+
+add_executable(PicoDrone PicoDrone.cpp sandbox.cpp)
+
+pico_set_program_name(PicoDrone "PicoDrone")
+pico_set_program_version(PicoDrone "0.1")
+
+pico_enable_stdio_uart(PicoDrone 1)
+pico_enable_stdio_usb(PicoDrone 0)
+
+target_link_libraries(PicoDrone 
+	pico_stdlib 
+	hardware_adc
+	hardware_pwm
+)
+
+pico_add_extra_outputs(PicoDrone)
+
