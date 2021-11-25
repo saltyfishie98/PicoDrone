@@ -1,4 +1,5 @@
 #include "pico/stdlib.h"
+#include "pico/time.h"
 
 #include <iostream>
 
@@ -6,18 +7,44 @@
 #include "lib/Servo.hpp"
 
 namespace Application {
-	using namespace LocalLib::Helpers;
-	using namespace LocalLib;
 
-	Pico::AnalogReader potentialMeter(27);
-	PwmDevices::Servo servo0(4);
+	namespace Core0 {
+		using namespace LocalLib::Helpers;
+		using namespace LocalLib;
 
-	void setup() {}
+		Pico::AnalogReader potentialMeter(40);
+		PwmDevices::Servo servo0(4);
 
-	void loop() {
-		float potVal = potentialMeter.read() / 4095.f;
-		std::cout << "potVal%: " << potVal << "\n";
+		void setup() {}
 
-		servo0.setPercent(potVal);
-	}
+		void loop() {
+			float potVal = potentialMeter.read() / 4095.f;
+
+			Helpers::setInterval(5000, [&potVal]() {
+				std::cout << "potVal%: " << potVal << "\n";
+			});
+
+			servo0.setPercent(potVal);
+		}
+	} // namespace Core0
+
+	namespace Core1 {
+		using namespace LocalLib::Helpers;
+		using namespace LocalLib;
+
+		Pico::AnalogReader potentialMeter(27);
+		PwmDevices::Servo servo0(4);
+
+		void setup() {}
+
+		void loop() {
+			float potVal = potentialMeter.read() / 4095.f;
+
+			Helpers::setInterval(5000, [&potVal]() {
+				std::cout << "potVal%: " << potVal << "\n";
+			});
+
+			servo0.setPercent(potVal);
+		}
+	} // namespace Core1
 } // namespace Application

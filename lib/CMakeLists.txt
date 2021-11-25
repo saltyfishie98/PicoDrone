@@ -1,7 +1,8 @@
-add_library(Helpers Helpers.hpp
+add_library(Helpers 
 	Helpers/Macros.hpp
-	Helpers/Namespace_Arduino.hpp
-	Helpers/Namespace_Pico.hpp Helpers/Namespace_Pico.cpp
+	Helpers.hpp 					Helpers/Helpers.cpp
+	Helpers/Namespace_Arduino.hpp 	Helpers/Namespace_Arduino.cpp
+	Helpers/Namespace_Pico.hpp 		Helpers/Namespace_Pico.cpp
 )
 target_link_libraries(Helpers
 	pico_stdlib 
@@ -10,9 +11,9 @@ target_link_libraries(Helpers
 
 
 add_library(PwmDevices 
-	PwmDevices.hpp PwmDevices/PwmDevices.cpp 
-	Servo.hpp PwmDevices/Servo.cpp
-	Motor.hpp PwmDevices/Motor.cpp
+	PwmDevices.hpp 	PwmDevices/PwmDevices.cpp 
+	Servo.hpp 		PwmDevices/Servo.cpp
+	Motor.hpp 		PwmDevices/Motor.cpp
 )
 target_link_libraries(PwmDevices
 	pico_stdlib 

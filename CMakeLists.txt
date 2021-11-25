@@ -10,6 +10,15 @@ set(PICO_SDK_PATH "C:/SDK/pico-sdk")
 include(pico_sdk_import.cmake)
 project(PicoDroneProj C CXX ASM)
 
+option(USE_MULTICORE "use the second core of the rp2040 chip" ON)
+
+if(USE_MULTICORE)
+	add_compile_definitions(MULTICORE)
+	message(STATUS "")
+	message(STATUS "multicore program")
+	message(STATUS "")
+endif()
+
 pico_sdk_init()
 suppress_tinyusb_warnings()
 
