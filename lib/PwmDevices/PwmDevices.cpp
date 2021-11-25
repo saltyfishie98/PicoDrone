@@ -7,12 +7,13 @@
 #include "hardware/clocks.h"
 
 #include "../Helpers.hpp"
+#include "../ErrorHandler.hpp"
 
 namespace LocalLib::PwmDevices {
 	void PwmDevices::setGpioPin(const uint8_t& gpioPinNumber) {
 		servoPin = gpioPinNumber;
 
-		CHECK_PIN_NUM(servoPin, 1, {
+		CHECK_PIN_NUM(servoPin, LL_PWM_ERR, {
 			gpio_set_function(servoPin, GPIO_FUNC_PWM);
 			uint slice_num = pwm_gpio_to_slice_num(servoPin);
 

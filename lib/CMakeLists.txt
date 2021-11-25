@@ -10,8 +10,8 @@ target_link_libraries(Helpers
 
 
 add_library(PwmDevices 
-	PwmDevices/PwmDevices.cpp PwmDevices.hpp
-	PwmDevices/Servo.cpp Servo.hpp
+	PwmDevices.hpp PwmDevices/PwmDevices.cpp 
+	Servo.hpp PwmDevices/Servo.cpp
 )
 target_link_libraries(PwmDevices
 	pico_stdlib 
@@ -19,9 +19,11 @@ target_link_libraries(PwmDevices
 )
 
 
-add_library(ErrorBlinker
-	ErrorBlinker/ErrorBlinker.cpp ErrorBlinker.hpp
+add_library(ErrorHandler ErrorHandler.hpp
+	ErrorHandler/Errors.hpp
+	ErrorHandler/ErrMacros.hpp
+	ErrorHandler/ErrorBlinker.hpp ErrorHandler/ErrorBlinker.cpp 
 )
-target_link_libraries(ErrorBlinker
+target_link_libraries(ErrorHandler
 	pico_stdlib 
 )

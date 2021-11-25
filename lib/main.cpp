@@ -5,6 +5,6 @@ extern void sandbox();
 
 int main() {
 	stdio_init_all();
-	// Application();
-	sandbox();
+	Application();
+	// sandbox();
 }

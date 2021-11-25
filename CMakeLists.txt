@@ -27,7 +27,7 @@ pico_enable_stdio_usb(PicoDrone 0)
 target_link_libraries(PicoDrone 
 	PwmDevices
 	Helpers
-	ErrorBlinker
+	ErrorHandler
 
 	pico_stdlib 
 	hardware_adc
