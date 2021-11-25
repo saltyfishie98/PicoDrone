@@ -2,11 +2,10 @@
 #define C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRORS_HPP_
 
 #define LL_NO_ERR  0
-#define LL_PIN_ERR (1 << 0)
-#define LL_ADC_ERR (1 << 1)
-#define LL_PWM_ERR (1 << 2)
+#define LL_ADC_ERR (1 << 0)
+#define LL_PWM_ERR (1 << 1)
 
-#define LL_PIN_EXCEED (1 << 0)
-#define LL_UNDEFINED  (1 << 1)
+#define LL_PIN_NUM_EXCEED  (1 << 0)
+#define LL_ADC_INVALID_PIN (1 << 0)
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRORS_HPP_

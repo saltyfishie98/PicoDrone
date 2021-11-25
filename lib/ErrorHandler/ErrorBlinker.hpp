@@ -21,10 +21,10 @@ namespace LocalLib::ErrorHandler {
 		void blink(const ErrorCode& input, const float& speed = 0.5f);
 	} // namespace Blinker
 
-	inline void ErrBlinkSetup(ErrorLocation where) {
+	inline void ErrBlinkSetup(ErrorLocation where, ErrorDetail what) {
 		ErrorNum errorNum = LL_NO_ERR;
 		setErrorLocation(&errorNum, where);
-		setErrorType(&errorNum, LL_PIN_EXCEED);
+		setErrorType(&errorNum, what);
 
 		auto errorCode = Blinker::int2bin(errorNum);
 		Blinker::printErrorCode(errorCode);
