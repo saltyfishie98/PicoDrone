@@ -12,6 +12,7 @@ target_link_libraries(Helpers
 add_library(PwmDevices 
 	PwmDevices.hpp PwmDevices/PwmDevices.cpp 
 	Servo.hpp PwmDevices/Servo.cpp
+	Motor.hpp PwmDevices/Motor.cpp
 )
 target_link_libraries(PwmDevices
 	pico_stdlib 

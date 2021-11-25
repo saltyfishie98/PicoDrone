@@ -32,6 +32,7 @@ target_link_libraries(PicoDrone
 	pico_stdlib 
 	hardware_adc
 	hardware_pwm
+	pico_multicore
 )
 
 pico_add_extra_outputs(PicoDrone)
