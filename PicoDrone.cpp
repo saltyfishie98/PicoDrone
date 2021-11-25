@@ -12,10 +12,13 @@ namespace Application {
 		using namespace LocalLib::Helpers;
 		using namespace LocalLib;
 
+		PwmDevices::Servo servo0(77);
 		Pico::AnalogReader potentialMeter(40);
-		PwmDevices::Servo servo0(4);
 
-		void setup() {}
+		void setup() {
+			servo0.begin();
+			potentialMeter.begin();
+		}
 
 		void loop() {
 			float potVal = potentialMeter.read() / 4095.f;
@@ -35,7 +38,10 @@ namespace Application {
 		Pico::AnalogReader potentialMeter(27);
 		PwmDevices::Servo servo0(4);
 
-		void setup() {}
+		void setup() {
+			servo0.begin();
+			potentialMeter.begin();
+		}
 
 		void loop() {
 			float potVal = potentialMeter.read() / 4095.f;

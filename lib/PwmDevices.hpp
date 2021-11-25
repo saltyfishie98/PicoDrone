@@ -8,6 +8,7 @@ namespace LocalLib::PwmDevices {
 	  public:
 		virtual void setGpioPin(const GpioPin& number);
 		virtual void setPercent(const float& percent);
+		virtual void begin();
 
 	  private:
 		float clockDiv = 64;
