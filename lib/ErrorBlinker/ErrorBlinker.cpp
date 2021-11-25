@@ -55,7 +55,7 @@ namespace LocalLib::ErrorBlinker {
 		GpioPin m_pinNum = NULLPIN;
 	} errorLed;
 
-	ErrorCode int2bin(uint8_t input) {
+	ErrorCode int2bin(ErrorNum input) {
 		ErrorCode binArray;
 		for (std::size_t i = 0; i < binArray.size(); i++) {
 			binArray[i] = input % 2;
@@ -65,9 +65,11 @@ namespace LocalLib::ErrorBlinker {
 	}
 
 	void printErrorCode(const ErrorCode& input) {
+		std::cout << "Error Code: ";
 		for (auto& bit : input) {
-			std::cout << bit << "\n";
+			std::cout << bit;
 		}
+		std::cout << '\n';
 	}
 
 	void blink(const ErrorCode& input, const float& speed) {
@@ -84,5 +86,13 @@ namespace LocalLib::ErrorBlinker {
 		}
 
 		sleep_ms(400);
+	}
+
+	void setErrorType(ErrorNum* numAddr, ErrorType setType) {
+		(*numAddr) |= setType;
+	}
+
+	void setErrorDetail(ErrorNum* numAddr, ErrorDetail setDetail) {
+		(*numAddr) |= (setDetail << 8);
 	}
 } // namespace LocalLib::ErrorBlinker
