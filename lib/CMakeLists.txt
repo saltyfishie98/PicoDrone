@@ -1,4 +1,4 @@
-add_library(Helpers 
+add_library(Helpers STATIC
 	Helpers/Macros.hpp
 	Helpers/Namespace_Arduino.hpp 	
 	Helpers.hpp 					Helpers/Helpers.cpp
@@ -10,7 +10,7 @@ target_link_libraries(Helpers
 )
 
 
-add_library(Pwm50Devices 
+add_library(Pwm50Devices STATIC
 	Pwm50Devices.hpp 	Pwm50Devices/Pwm50Devices.cpp 
 	Servo.hpp 		Pwm50Devices/Servo.cpp
 	Motor.hpp 		Pwm50Devices/Motor.cpp
@@ -21,7 +21,8 @@ target_link_libraries(Pwm50Devices
 )
 
 
-add_library(ErrorHandler ErrorHandler.hpp
+add_library(ErrorHandler STATIC
+	ErrorHandler.hpp
 	ErrorHandler/Errors.hpp
 	ErrorHandler/ErrMacros.hpp
 	ErrorHandler/ErrorBlinker.hpp ErrorHandler/ErrorBlinker.cpp 

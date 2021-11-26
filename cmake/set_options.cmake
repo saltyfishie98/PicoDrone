@@ -1,0 +1,6 @@
+if(USE_MULTICORE)
+	add_compile_definitions(MULTICORE)
+	message(STATUS "")
+	message(STATUS "multicore program")
+	message(STATUS "")
+endif()
