@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../ErrorHandler.hpp"
+#include "../Helpers.hpp"
 
 namespace LocalLib::Helpers::Pico {
 	AnalogReader::AnalogReader(const GpioPin& number) : m_pinNumber(number) {}
@@ -24,3 +25,48 @@ namespace LocalLib::Helpers::Pico {
 	}
 
 } // namespace LocalLib::Helpers::Pico
+
+namespace LocalLib::Helpers::Pico::Mutex {
+	uint32_t* mtxIdPtr = nullptr;
+
+	BasicMutex::BasicMutex() {}
+
+	BasicMutex::~BasicMutex() {
+		unlock();
+	}
+
+	void BasicMutex::begin() {
+		if (IMutex::notInit) {
+			mutex_init(&m_mtx);
+			IMutex::notInit = false;
+		}
+	}
+
+	void BasicMutex::lock() {
+		mutex_enter_blocking(&m_mtx);
+		DEBUG_RUN({
+			sleep_ms(100);
+			std::cout << "\n\n=========================== entered mutex ===========================\n\n";
+		})
+	}
+
+	void BasicMutex::unlock() {
+		mutex_exit(&m_mtx);
+		DEBUG_RUN({
+			std::cout << "\n\n=========================== exit mutex ===========================\n\n";
+			sleep_ms(100);
+		})
+	}
+
+	void BasicMutex::runIfOwned(const VoidCallback& thisStdFunction) {
+		if (mutex_try_enter(&m_mtx, mtxIdPtr)) {
+			DEBUG_RUN({
+				sleep_ms(100);
+				std::cout << "\n\n=========================== entered mutex ===========================\n\n";
+			})
+			thisStdFunction();
+			unlock();
+		}
+	}
+
+} // namespace LocalLib::Helpers::Pico::Mutex
