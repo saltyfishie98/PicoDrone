@@ -1,0 +1,9 @@
+#ifndef C__PROJECTS_PICO_PICODRONE_LIB_CORE_BASECLASS_HPP_
+#define C__PROJECTS_PICO_PICODRONE_LIB_CORE_BASECLASS_HPP_
+
+class BaseClass {
+  public:
+	virtual void begin() = 0;
+};
+
+#endif // C__PROJECTS_PICO_PICODRONE_LIB_CORE_BASECLASS_HPP_
