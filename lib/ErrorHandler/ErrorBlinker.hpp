@@ -22,7 +22,7 @@ namespace LocalLib::ErrorHandler {
 	} // namespace Blinker
 
 	inline void ErrBlinkSetup(ErrorLocation where, ErrorDetail what) {
-		ErrorNum errorNum = LL_NO_ERR;
+		ErrorNum errorNum = ERR_NONE;
 		setErrorLocation(&errorNum, where);
 		setErrorType(&errorNum, what);
 

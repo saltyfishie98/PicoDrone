@@ -10,26 +10,8 @@
 namespace Application {
 
 	namespace Core0 {
-		using namespace LocalLib::Helpers;
-		using namespace LocalLib;
-
-		PwmDevices::Servo servo0(77);
-		Pico::AnalogReader potentialMeter(40);
-
-		void setup() {
-			servo0.begin();
-			potentialMeter.begin();
-		}
-
-		void loop() {
-			float potVal = potentialMeter.read() / 4095.f;
-
-			Helpers::setInterval(5000, [&potVal]() {
-				std::cout << "potVal%: " << potVal << "\n";
-			});
-
-			servo0.setPercent(potVal);
-		}
+		void setup() {}
+		void loop() {}
 	} // namespace Core0
 
 	namespace Core1 {
@@ -37,7 +19,7 @@ namespace Application {
 		using namespace LocalLib;
 
 		Pico::AnalogReader potentialMeter(27);
-		PwmDevices::Motor motor(4);
+		Pwm50Devices::Motor motor(4);
 
 		void setup() {
 			potentialMeter.begin();
@@ -47,12 +29,10 @@ namespace Application {
 
 		void loop() {
 			float potVal = potentialMeter.read() / 4095.f;
-
-			Helpers::setInterval(5000, [&potVal]() {
-				std::cout << "potVal%: " << potVal << "\n";
-			});
+			std::cout << "potVal%: " << potVal << "\n";
 
 			motor.setPercent(potVal);
 		}
 	} // namespace Core1
+
 } // namespace Application

@@ -7,11 +7,11 @@
 
 namespace LocalLib::ErrorHandler {
 	void setErrorLocation(ErrorNum* numAddr, ErrorLocation setType) {
-		(*numAddr) |= setType;
+		(*numAddr) |= (1 << (setType - 1));
 	}
 
 	void setErrorType(ErrorNum* numAddr, ErrorDetail setDetail) {
-		(*numAddr) |= (setDetail << 8);
+		(*numAddr) |= ((1 << (setDetail - 1)) << 8);
 	}
 
 	namespace Blinker {

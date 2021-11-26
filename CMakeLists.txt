@@ -26,7 +26,7 @@ add_subdirectory(lib)
 
 add_executable(PicoDrone 
 	lib/main.cpp 
-	PicoDrone.cpp 
+	src/PicoDrone.cpp 
 	sandbox.cpp
 )
 target_compile_options(PicoDrone PRIVATE -Wall -Wextra -Wpedantic)
@@ -37,8 +37,10 @@ pico_set_program_version(PicoDrone "0.1")
 pico_enable_stdio_uart(PicoDrone 1)
 pico_enable_stdio_usb(PicoDrone 0)
 
+include_directories(${PROJECT_SOURCE_DIR})
+
 target_link_libraries(PicoDrone 
-	PwmDevices
+	Pwm50Devices
 	Helpers
 	ErrorHandler
 

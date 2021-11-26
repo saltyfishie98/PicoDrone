@@ -3,8 +3,6 @@
 
 #include <functional>
 
-#define MULTICORE
-
 namespace Application {
 	namespace Core0 {
 		void setup();
@@ -17,6 +15,9 @@ namespace Application {
 	} // namespace Core1
 } // namespace Application
 
+#ifdef MULTICORE
+	#define LAUNCH_CORE_1 multicore_launch_core1(core1_Process)
+
 void core1_Process() {
 	using namespace Application::Core1;
 
@@ -25,10 +26,14 @@ void core1_Process() {
 		loop();
 	}
 }
+#else
+	#define LAUNCH_CORE_1
+#endif
 
 int main() {
 	stdio_init_all();
-	multicore_launch_core1(core1_Process);
+
+	LAUNCH_CORE_1;
 
 	using namespace Application::Core0;
 

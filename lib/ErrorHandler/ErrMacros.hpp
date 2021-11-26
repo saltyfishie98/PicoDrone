@@ -4,23 +4,18 @@
 #include "ErrorBlinker.hpp"
 #include "Errors.hpp"
 
+using Predicate = bool;
+
 #define ABORT(func)                                                                                                                             \
 	while (true) {                                                                                                                              \
 		func                                                                                                                                    \
 	}
 
-#define CHECK_PIN_NUM(pin_num_variable, where, run_this)                                                                                        \
-	if (pin_num_variable < GPIO_COUNT) {                                                                                                        \
+#define CHECK_ERROR(predicate, errTypes, errDetails, run_this)                                                                                  \
+	if (predicate) {                                                                                                                            \
 		run_this                                                                                                                                \
 	} else {                                                                                                                                    \
-		ABORT(LocalLib::ErrorHandler::ErrBlinkSetup(where, LL_PIN_NUM_EXCEED);)                                                                 \
-	}
-
-#define CHECK_ADC_PIN(pin_num_variable, where, run_this)                                                                                        \
-	if (pin_num_variable == 26 || pin_num_variable == 27 || pin_num_variable == 28) {                                                           \
-		run_this                                                                                                                                \
-	} else {                                                                                                                                    \
-		ABORT(LocalLib::ErrorHandler::ErrBlinkSetup(where, LL_ADC_INVALID_PIN);)                                                                \
+		ABORT(LocalLib::ErrorHandler::ErrBlinkSetup(errTypes, errDetails);)                                                                     \
 	}
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRMACROS_HPP_

@@ -1,4 +1,4 @@
-#include "../PwmDevices.hpp"
+#include "../Pwm50Devices.hpp"
 
 #include <iostream>
 
@@ -10,13 +10,13 @@
 #include "../ErrorHandler.hpp"
 #include "../Types.hpp"
 
-namespace LocalLib::PwmDevices {
-	void PwmDevices::setGpioPin(const uint8_t& gpioPinNumber) {
+namespace LocalLib::Pwm50Devices {
+	void Pwm50Devices::setGpioPin(const uint8_t& gpioPinNumber) {
 		servoPin = gpioPinNumber;
 	}
 
-	void PwmDevices::begin() {
-		CHECK_PIN_NUM(servoPin, LL_PWM_ERR, {
+	void Pwm50Devices::begin() {
+		CHECK_ERROR(servoPin < GPIO_COUNT, ERR_PWM, ERR_DT_GPIO_PIN_NUM_EXCEED, {
 			gpio_set_function(servoPin, GPIO_FUNC_PWM);
 			uint slice_num = pwm_gpio_to_slice_num(servoPin);
 
@@ -38,10 +38,12 @@ namespace LocalLib::PwmDevices {
 		});
 	}
 
-	void PwmDevices::setPercent(const float& percent) {
-		using namespace Helpers;
-		float millis = Arduino::map(percent, 0.f, 1.f, 400.f, 2400.f);
-		DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
-		pwm_set_gpio_level(servoPin, (millis / 20000.f) * wrap);
+	void Pwm50Devices::setPercent(const float& percent) {
+		CHECK_ERROR(percent < 1.f, ERR_PWM, ERR_DT_PWM_INVALID_PERCENT, {
+			using namespace Helpers;
+			float millis = Arduino::map(percent, 0.f, 1.f, 400.f, 2400.f);
+			// DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
+			pwm_set_gpio_level(servoPin, (millis / 20000.f) * wrap);
+		});
 	}
-} // namespace LocalLib::PwmDevices
+} // namespace LocalLib::Pwm50Devices

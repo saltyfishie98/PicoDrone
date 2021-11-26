@@ -1,11 +1,22 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRORS_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRORS_HPP_
 
-#define LL_NO_ERR  0
-#define LL_ADC_ERR (1 << 0)
-#define LL_PWM_ERR (1 << 1)
+//// Approximated Error location ////////////////////////////////////////////////
+#define ERR_NONE 0
+#define ERR_ADC	 1
+#define ERR_PWM	 2
 
-#define LL_PIN_NUM_EXCEED  (1 << 0)
-#define LL_ADC_INVALID_PIN (1 << 0)
+// clang-format off
 
+//// Error Details ////////////////////////////////////////////////
+// General Details
+#define ERR_DT_GPIO_PIN_NUM_EXCEED 	1
+
+// Pwm
+#define ERR_DT_PWM_INVALID_PERCENT 	2
+
+// Adc
+#define ERR_DT_ADC_INVALID_PIN 		2
+
+//clang-format on
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRORS_HPP_

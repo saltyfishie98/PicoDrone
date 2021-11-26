@@ -5,9 +5,9 @@
 
 #include "../Helpers.hpp"
 
-namespace LocalLib::PwmDevices {
+namespace LocalLib::Pwm50Devices {
 	Motor::Motor(const GpioPin& number) {
-		PwmDevices::setGpioPin(number);
+		Pwm50Devices::setGpioPin(number);
 	}
 
 	void Motor::setLimitOffset(const float& low, const float& high) {
@@ -22,7 +22,7 @@ namespace LocalLib::PwmDevices {
 	void Motor::setPercent(const float& percent) {
 		using namespace Helpers;
 		float millis = Arduino::map(percent, 0.f, 1.f, 400.f + m_lowOffset, 2400.f - m_highOffset);
-		DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
-		pwm_set_gpio_level(PwmDevices::servoPin, (millis / 20000.f) * wrap);
+		// DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
+		pwm_set_gpio_level(Pwm50Devices::servoPin, (millis / 20000.f) * wrap);
 	}
-} // namespace LocalLib::PwmDevices
+} // namespace LocalLib::Pwm50Devices

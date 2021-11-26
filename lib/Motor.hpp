@@ -1,11 +1,11 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_MOTOR_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_MOTOR_HPP_
 
-#include "PwmDevices.hpp"
+#include "Pwm50Devices.hpp"
 #include "Types.hpp"
 
-namespace LocalLib::PwmDevices {
-	class Motor : public PwmDevices {
+namespace LocalLib::Pwm50Devices {
+	class Motor : public Pwm50Devices {
 	  public:
 		Motor();
 		Motor(const GpioPin& number);
@@ -17,6 +17,6 @@ namespace LocalLib::PwmDevices {
 		float m_lowOffset = 0;
 		float m_highOffset = 0;
 	};
-} // namespace LocalLib::PwmDevices
+} // namespace LocalLib::Pwm50Devices
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_MOTOR_HPP_
