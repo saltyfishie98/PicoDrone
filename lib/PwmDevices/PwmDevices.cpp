@@ -41,7 +41,7 @@ namespace LocalLib::PwmDevices {
 	void PwmDevices::setPercent(const float& percent) {
 		using namespace Helpers;
 		float millis = Arduino::map(percent, 0.f, 1.f, 400.f, 2400.f);
-		// DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
+		DEBUG_RUN(std::cout << "millis: " << millis << "\n\n";)
 		pwm_set_gpio_level(servoPin, (millis / 20000.f) * wrap);
 	}
 } // namespace LocalLib::PwmDevices

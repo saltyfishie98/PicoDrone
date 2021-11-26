@@ -10,7 +10,7 @@ namespace LocalLib::PwmDevices {
 		virtual void setPercent(const float& percent);
 		virtual void begin();
 
-	  private:
+	  protected:
 		float clockDiv = 64;
 		float wrap = 39062;
 		uint8_t servoPin = NULLPIN;

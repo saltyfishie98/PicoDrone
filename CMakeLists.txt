@@ -24,7 +24,11 @@ suppress_tinyusb_warnings()
 
 add_subdirectory(lib)
 
-add_executable(PicoDrone lib/main.cpp PicoDrone.cpp sandbox.cpp)
+add_executable(PicoDrone 
+	lib/main.cpp 
+	PicoDrone.cpp 
+	sandbox.cpp
+)
 target_compile_options(PicoDrone PRIVATE -Wall -Wextra -Wpedantic)
 
 pico_set_program_name(PicoDrone "PicoDrone")

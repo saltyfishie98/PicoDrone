@@ -5,6 +5,7 @@
 
 #include "lib/Helpers.hpp"
 #include "lib/Servo.hpp"
+#include "lib/Motor.hpp"
 
 namespace Application {
 
@@ -36,11 +37,12 @@ namespace Application {
 		using namespace LocalLib;
 
 		Pico::AnalogReader potentialMeter(27);
-		PwmDevices::Servo servo0(4);
+		PwmDevices::Motor motor(4);
 
 		void setup() {
-			servo0.begin();
 			potentialMeter.begin();
+			motor.begin();
+			motor.setLimitOffset(390.f, 160.f);
 		}
 
 		void loop() {
@@ -50,7 +52,7 @@ namespace Application {
 				std::cout << "potVal%: " << potVal << "\n";
 			});
 
-			servo0.setPercent(potVal);
+			motor.setPercent(potVal);
 		}
 	} // namespace Core1
 } // namespace Application
