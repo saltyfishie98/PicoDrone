@@ -1,15 +1,15 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_PWMDEVICES_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_PWMDEVICES_HPP_
 
-#include "Core/BaseClass.hpp"
-#include "Types.hpp"
+#include "Interfaces/IClass.hpp"
+#include "../Types.hpp"
 
 namespace LocalLib::Pwm50Devices {
 	/**
 	 * @brief Base class for class made for controlling devices that uses a 5ohz pwm signal
 	 *
 	 */
-	class Pwm50Devices : public BaseClass {
+	class Pwm50Devices : public IClass {
 	  public:
 		/**
 		 * @brief Set the GPIO pin where the pwm device is connected to

@@ -3,12 +3,12 @@
 
 #include "pico/mutex.h"
 
-#include "../Core/BaseClass.hpp"
+#include "../Bases/Interfaces/IClass.hpp"
+#include "../Bases/Interfaces/IMutex.hpp"
 #include "../Types.hpp"
-#include "MutexBase.hpp"
 
 namespace LocalLib::Helpers::Pico {
-	class AnalogReader : public BaseClass {
+	class AnalogReader : public IClass {
 	  public:
 		AnalogReader(const GpioPin& number);
 		void begin() override;

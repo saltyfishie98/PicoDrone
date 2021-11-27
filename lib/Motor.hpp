@@ -1,7 +1,7 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_MOTOR_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_MOTOR_HPP_
 
-#include "Pwm50Devices.hpp"
+#include "Bases/Pwm50Devices.hpp"
 #include "Types.hpp"
 
 namespace LocalLib::Pwm50Devices {

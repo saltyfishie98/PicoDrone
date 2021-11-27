@@ -1,4 +1,4 @@
-#include "../Pwm50Devices.hpp"
+#include "../Bases/Pwm50Devices.hpp"
 
 #include <iostream>
 
@@ -6,8 +6,8 @@
 #include "hardware/pwm.h"
 #include "hardware/clocks.h"
 
+#include "../Core/ErrorHandler.hpp"
 #include "../Helpers.hpp"
-#include "../ErrorHandler.hpp"
 #include "../Types.hpp"
 
 namespace LocalLib::Pwm50Devices {

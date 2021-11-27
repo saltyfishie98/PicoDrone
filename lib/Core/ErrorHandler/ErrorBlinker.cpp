@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include "pico/stdlib.h"
-#include "../Types.hpp"
-#include "../Helpers/Macros.hpp"
+#include "Types.hpp"
+#include "Helpers/Macros.hpp"
 
 namespace LocalLib::ErrorHandler {
 	void setErrorLocation(ErrorNum* numAddr, ErrorLocation setType) {

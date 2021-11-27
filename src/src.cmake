@@ -4,7 +4,7 @@
 set(BINARY_NAME ${PROJECT_NAME})
 
 add_executable(${BINARY_NAME} 
-	lib/main.cpp 
+	lib/Core/main.cpp 
 	src/PicoDrone.cpp 
 	src/sandbox.cpp
 )

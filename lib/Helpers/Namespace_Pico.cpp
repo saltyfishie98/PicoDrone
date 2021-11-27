@@ -4,7 +4,7 @@
 #include "hardware/adc.h"
 #include <iostream>
 
-#include "../ErrorHandler.hpp"
+#include "../Core/ErrorHandler.hpp"
 #include "../Helpers.hpp"
 
 namespace LocalLib::Helpers::Pico {
