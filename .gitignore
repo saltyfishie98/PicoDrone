@@ -2,4 +2,3 @@ build/
 .vscode/.cortex-debug.peripherals.state.json
 .vscode/.cortex-debug.registers.state.json
 *.code-workspace
-sandbox.cpp

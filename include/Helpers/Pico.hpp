@@ -37,16 +37,16 @@ namespace LocalLib::Helpers::Pico {
 		  public:
 			LockGuard(const LocalLib::Helpers::Pico::Mutex::LockGuard&) = delete;
 
-			LockGuard(IMutex* mtx) : m_mtx(mtx) {
-				m_mtx->lock();
+			LockGuard(IMutex& mtx) : m_mtx(mtx) {
+				m_mtx.lock();
 			}
 
 			~LockGuard() {
-				m_mtx->unlock();
+				m_mtx.unlock();
 			}
 
 		  private:
-			IMutex* m_mtx;
+			IMutex& m_mtx;
 		};
 	} // namespace Mutex
 

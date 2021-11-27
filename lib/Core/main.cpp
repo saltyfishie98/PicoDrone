@@ -3,6 +3,8 @@
 
 #include <functional>
 
+void sandbox();
+
 namespace Application {
 	namespace Core0 {
 		void setup();
@@ -32,6 +34,8 @@ void core1_Process() {
 
 int main() {
 	stdio_init_all();
+
+	sandbox();
 
 	LAUNCH_CORE_1;
 
