@@ -4,10 +4,7 @@
 #include <functional>
 #include "Types.hpp"
 
-#include "Helpers/Namespace_Arduino.hpp"
-#include "Helpers/Namespace_Pico.hpp"
-
-namespace LocalLib::Helpers {
+namespace LocalLib::Helpers::Misc {
 	template <typename T>
 	bool arrayFind(T thisElement, T inThisArray) {
 		T* condition = std::find(std::begin(inThisArray), std::end(inThisArray), thisElement);
@@ -17,8 +14,6 @@ namespace LocalLib::Helpers {
 	}
 
 	void setInterval(const Millis&, const VoidCallback&);
-} // namespace LocalLib::Helpers
-
-#include "Helpers/Macros.hpp"
+} // namespace LocalLib::Helpers::Misc
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_HPP_

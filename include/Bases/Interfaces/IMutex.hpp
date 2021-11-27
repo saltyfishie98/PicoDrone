@@ -1,7 +1,7 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MUTEX_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MUTEX_HPP_
 
-#include "../Interfaces/IClass.hpp"
+#include "IClass.hpp"
 
 class IMutex : public IClass {
   public:

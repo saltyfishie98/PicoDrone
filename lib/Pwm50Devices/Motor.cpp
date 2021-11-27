@@ -1,9 +1,9 @@
-#include "../Motor.hpp"
+#include "Pwm50Devices/Motor.hpp"
 
 #include "hardware/pwm.h"
 #include <iostream>
 
-#include "../Helpers.hpp"
+#include "Helpers/Arduino.hpp"
 
 namespace LocalLib::Pwm50Devices {
 	Motor::Motor(const GpioPin& number) {

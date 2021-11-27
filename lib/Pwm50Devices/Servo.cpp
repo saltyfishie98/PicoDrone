@@ -1,4 +1,4 @@
-#include "../Servo.hpp"
+#include "Pwm50Devices/Servo.hpp"
 
 namespace LocalLib::Pwm50Devices {
 	Servo::Servo(const GpioPin& number) {

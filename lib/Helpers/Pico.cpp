@@ -1,11 +1,11 @@
-#include "Namespace_Pico.hpp"
+#include "Helpers/Pico.hpp"
 
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 #include <iostream>
 
-#include "../Core/ErrorHandler.hpp"
-#include "../Helpers.hpp"
+#include "../ErrMacros.hpp"
+#include "Helpers/Macros.hpp"
 
 namespace LocalLib::Helpers::Pico {
 	AnalogReader::AnalogReader(const GpioPin& number) : m_pinNumber(number) {}

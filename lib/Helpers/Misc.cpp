@@ -1,6 +1,9 @@
-#include "../Helpers.hpp"
+#include "Helpers/Misc.hpp"
 
-namespace LocalLib::Helpers {
+#include "Helpers/Arduino.hpp"
+
+namespace LocalLib::Helpers::Misc {
+	using namespace LocalLib::Helpers;
 	auto lastTime = Arduino::millis();
 
 	void setInterval(const Millis& setMillis, const VoidCallback& callThis) {
@@ -9,4 +12,4 @@ namespace LocalLib::Helpers {
 			lastTime = Arduino::millis();
 		}
 	}
-} // namespace LocalLib::Helpers
+} // namespace LocalLib::Helpers::Misc

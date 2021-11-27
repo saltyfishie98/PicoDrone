@@ -1,8 +1,8 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRMACROS_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_ERRORHANDLER_ERRMACROS_HPP_
 
-#include "ErrorBlinker.hpp"
-#include "Errors.hpp"
+#include "ErrorHandler/ErrorBlinker.hpp"
+#include "ErrorHandler/Errors.hpp"
 
 using Predicate = bool;
 

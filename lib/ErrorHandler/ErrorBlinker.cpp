@@ -1,4 +1,4 @@
-#include "ErrorBlinker.hpp"
+#include "ErrorHandler/ErrorBlinker.hpp"
 
 #include <iostream>
 #include "pico/stdlib.h"

@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "lib/Helpers.hpp"
-#include "lib/Servo.hpp"
-#include "lib/Motor.hpp"
+#include "Helpers/Pico.hpp"
+#include "Pwm50Devices/Servo.hpp"
+#include "Pwm50Devices/Motor.hpp"
 
 namespace Application {
 
