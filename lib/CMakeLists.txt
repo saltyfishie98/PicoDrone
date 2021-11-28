@@ -9,16 +9,14 @@ target_link_libraries(Helpers
 target_include_directories(Helpers PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
-add_library(Pwm50Devices STATIC
-	Pwm50Devices/Pwm50Devices.cpp 
-	Pwm50Devices/Servo.cpp
-	Pwm50Devices/Motor.cpp
+add_library(PwmDevices STATIC
+	PwmDevices.cpp 
 )
-target_link_libraries(Pwm50Devices
+target_link_libraries(PwmDevices
 	pico_stdlib 
 	hardware_pwm
 )
-target_include_directories(Pwm50Devices PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(PwmDevices PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
 add_library(ErrorHandler STATIC

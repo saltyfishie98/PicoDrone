@@ -5,13 +5,15 @@
 #include <stdint.h>
 #include <functional>
 
-#define NULLPIN	   31
-#define GPIO_COUNT NUM_BANK0_GPIOS
+#define NULLPIN		   31
+#define GPIO_PIN_COUNT 29
 
 namespace LocalLib {
-	using GpioPin_t = uint8_t;
-	using Millis_t = uint32_t;
-	using PwmWrap_t = uint32_t;
+	using gpioPin_t = uint8_t;
+	using millis_t = uint32_t;
+
+	using pwm_t = unsigned int;
+	using pwmWrap_t = uint16_t;
 
 	using VoidCallback = std::function<void()>;
 } // namespace LocalLib

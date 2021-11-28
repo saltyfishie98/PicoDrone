@@ -8,10 +8,11 @@
 #include "Helpers/Macros.hpp"
 
 namespace LocalLib::Helpers::Pico {
-	AnalogReader::AnalogReader(const GpioPin_t& number) : m_pinNumber(number) {}
+	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {}
 
 	void AnalogReader::begin() {
-		Predicate pinMustEqualThisNum = (m_pinNumber == 26 || m_pinNumber == 27 || m_pinNumber == 28);
+		Predicate pinMustEqualThisNum =
+		  (m_pinNumber == 26 || m_pinNumber == 27 || m_pinNumber == 28);
 
 		CHECK_ERROR(pinMustEqualThisNum, ERR_ADC, ERR_DT_ADC_INVALID_PIN, {
 			adc_init();
@@ -46,14 +47,16 @@ namespace LocalLib::Helpers::Pico::Mutex {
 		mutex_enter_blocking(&m_mtx);
 		DEBUG_RUN({
 			sleep_ms(100);
-			std::cout << "\n\n=========================== entered mutex ===========================\n\n";
+			std::cout
+			  << "\n\n=========================== entered mutex ===========================\n\n";
 		})
 	}
 
 	void BasicMutex::unlock() {
 		mutex_exit(&m_mtx);
 		DEBUG_RUN({
-			std::cout << "\n\n=========================== exit mutex ===========================\n\n";
+			std::cout
+			  << "\n\n=========================== exit mutex ===========================\n\n";
 			sleep_ms(100);
 		})
 	}
@@ -62,7 +65,8 @@ namespace LocalLib::Helpers::Pico::Mutex {
 		if (mutex_try_enter(&m_mtx, mtxIdPtr)) {
 			DEBUG_RUN({
 				sleep_ms(100);
-				std::cout << "\n\n=========================== entered mutex ===========================\n\n";
+				std::cout << "\n\n=========================== entered mutex "
+							 "===========================\n\n";
 			})
 			thisStdFunction();
 			unlock();

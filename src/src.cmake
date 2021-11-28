@@ -19,7 +19,7 @@ pico_enable_stdio_usb(${BINARY_NAME} 0)
 target_include_directories(${BINARY_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 target_link_libraries(${BINARY_NAME} 
-	Pwm50Devices
+	PwmDevices
 	Helpers
 	ErrorHandler
 

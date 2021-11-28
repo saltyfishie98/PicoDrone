@@ -3,19 +3,19 @@
 
 #include "pico/mutex.h"
 
-#include "../Bases/Interfaces/IClass.hpp"
-#include "../Bases/Interfaces/IMutex.hpp"
+#include "../Interfaces.hpp"
 #include "../Types.hpp"
 
 namespace LocalLib::Helpers::Pico {
 	class AnalogReader : public IClass {
 	  public:
-		AnalogReader(const GpioPin_t& number);
+		AnalogReader(const gpioPin_t& number);
 		void begin() override;
 		uint16_t read();
 
 	  private:
-		GpioPin_t m_pinNumber = NULLPIN;
+		AnalogReader() {}
+		gpioPin_t m_pinNumber = NULLPIN;
 	};
 
 	namespace Mutex {

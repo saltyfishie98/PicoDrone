@@ -13,7 +13,7 @@ namespace LocalLib::Helpers::Misc {
 		return false;
 	}
 
-	void setInterval(const Millis_t&, const VoidCallback&);
+	void setInterval(const millis_t&, const VoidCallback&);
 } // namespace LocalLib::Helpers::Misc
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_HPP_

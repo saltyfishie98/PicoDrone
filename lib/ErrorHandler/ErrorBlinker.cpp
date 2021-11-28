@@ -34,10 +34,11 @@ namespace LocalLib::ErrorHandler {
 
 		class BlinkerLed {
 		  public:
-			BlinkerLed(const GpioPin_t& number = PICO_DEFAULT_LED_PIN) : m_pinNum(number) {
+			BlinkerLed(const gpioPin_t& number = PICO_DEFAULT_LED_PIN) : m_pinNum(number) {
 				gpio_init(m_pinNum);
 				gpio_set_dir(m_pinNum, 1);
-				DEBUG_RUN(std::cout << "\n\n================== created Blicker =================\n\n";)
+				DEBUG_RUN(std::cout
+							<< "\n\n================== created Blicker =================\n\n";)
 			}
 
 			void setSpeed(const float& speed) {
@@ -78,7 +79,7 @@ namespace LocalLib::ErrorHandler {
 			uint32_t longInterval = 400;
 			uint32_t spaceInterval = 600;
 			float m_scale = 1.f;
-			GpioPin_t m_pinNum = NULLPIN;
+			gpioPin_t m_pinNum = NULLPIN;
 		} errorLed;
 
 		void blink(const ErrorCode& input, const float& speed) {
