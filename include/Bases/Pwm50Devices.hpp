@@ -2,6 +2,7 @@
 #define C__PROJECTS_PICO_PICODRONE_LIB_PWMDEVICES_HPP_
 
 #include "Interfaces/IClass.hpp"
+#include "../Helpers/PwmDevices.hpp"
 #include "../Types.hpp"
 
 namespace LocalLib::Pwm50Devices {
@@ -16,7 +17,7 @@ namespace LocalLib::Pwm50Devices {
 		 *
 		 * @param number GPIO pin number
 		 */
-		virtual void setGpioPin(const GpioPin& number);
+		virtual void setGpioPin(const GpioPin_t& number);
 
 		/**
 		 * @brief Set the duty cycle percentage (0 to 1)

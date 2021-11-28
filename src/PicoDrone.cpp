@@ -1,6 +1,4 @@
 #include "pico/stdlib.h"
-#include "pico/time.h"
-#include "pico/mutex.h"
 
 #include <iostream>
 #include <stdlib.h>

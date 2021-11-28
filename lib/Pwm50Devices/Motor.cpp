@@ -6,7 +6,7 @@
 #include "Helpers/Arduino.hpp"
 
 namespace LocalLib::Pwm50Devices {
-	Motor::Motor(const GpioPin& number) {
+	Motor::Motor(const GpioPin_t& number) {
 		Pwm50Devices::setGpioPin(number);
 	}
 

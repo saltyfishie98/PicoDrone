@@ -8,7 +8,7 @@ namespace LocalLib::Pwm50Devices {
 	class Servo : public Pwm50Devices {
 	  public:
 		Servo();
-		Servo(const GpioPin& number);
+		Servo(const GpioPin_t& number);
 	};
 } // namespace LocalLib::Pwm50Devices
 

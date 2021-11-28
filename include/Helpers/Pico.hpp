@@ -10,12 +10,12 @@
 namespace LocalLib::Helpers::Pico {
 	class AnalogReader : public IClass {
 	  public:
-		AnalogReader(const GpioPin& number);
+		AnalogReader(const GpioPin_t& number);
 		void begin() override;
 		uint16_t read();
 
 	  private:
-		GpioPin m_pinNumber = NULLPIN;
+		GpioPin_t m_pinNumber = NULLPIN;
 	};
 
 	namespace Mutex {
@@ -35,7 +35,7 @@ namespace LocalLib::Helpers::Pico {
 
 		class LockGuard {
 		  public:
-			LockGuard(const LocalLib::Helpers::Pico::Mutex::LockGuard&) = delete;
+			LockGuard(const LockGuard&) = delete;
 
 			LockGuard(IMutex& mtx) : m_mtx(mtx) {
 				m_mtx.lock();

@@ -8,7 +8,7 @@ namespace LocalLib::Pwm50Devices {
 	class Motor : public Pwm50Devices {
 	  public:
 		Motor();
-		Motor(const GpioPin& number);
+		Motor(const GpioPin_t& number);
 
 		void setLimitOffset(const float& low, const float& high = 0.f);
 		void setPercent(const float& percent) override;

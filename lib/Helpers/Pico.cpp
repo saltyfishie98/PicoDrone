@@ -8,7 +8,7 @@
 #include "Helpers/Macros.hpp"
 
 namespace LocalLib::Helpers::Pico {
-	AnalogReader::AnalogReader(const GpioPin& number) : m_pinNumber(number) {}
+	AnalogReader::AnalogReader(const GpioPin_t& number) : m_pinNumber(number) {}
 
 	void AnalogReader::begin() {
 		Predicate pinMustEqualThisNum = (m_pinNumber == 26 || m_pinNumber == 27 || m_pinNumber == 28);
