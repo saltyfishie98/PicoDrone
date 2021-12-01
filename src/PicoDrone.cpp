@@ -24,10 +24,11 @@ namespace Application {
 		void loop() {
 			uint16_t val = pot0.read();
 
-			auto percentage = Arduino::map<uint16_t>(val, 0, 4095, 0, 12000);
-			servo0.setRawLevel(percentage);
-			// std::cout << "Percentage: " << val << " %\n\n";
-			// sleep_ms(250);
+			uint low = (uint)(65465 * 0.024f);
+			uint high = (uint)(65465 * 0.124f);
+
+			auto percentage = Arduino::map<uint16_t>(val, 0, 4095, low, high);
+			servo0.setChannelLevel(percentage);
 		}
 	} // namespace Core0
 

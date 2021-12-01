@@ -11,7 +11,7 @@ namespace LocalLib {
 		PwmDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin);
 
 		void begin() override;
-		void setRawLevel(const uint16_t& percent);
+		void setChannelLevel(const uint16_t& percent);
 		uint16_t getTop() const;
 
 	  private:
