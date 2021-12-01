@@ -10,6 +10,12 @@
 namespace LocalLib::Helpers::Pico {
 	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {}
 
+	AnalogReader AnalogReader::factory(const gpioPin_t& number) {
+		AnalogReader temp(number);
+		temp.begin();
+		return temp;
+	}
+
 	void AnalogReader::begin() {
 		Predicate pinMustEqualThisNum =
 		  (m_pinNumber == 26 || m_pinNumber == 27 || m_pinNumber == 28);

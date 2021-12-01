@@ -7,14 +7,18 @@
 #include "../Types.hpp"
 
 namespace LocalLib::Helpers::Pico {
-	class AnalogReader : public IClass {
+	class AnalogReader {
 	  public:
-		AnalogReader(const gpioPin_t& number);
-		void begin() override;
+		static AnalogReader factory(const gpioPin_t& number);
 		uint16_t read();
 
 	  private:
+		void begin();
 		AnalogReader() {}
+		AnalogReader(AnalogReader&&) {}
+		AnalogReader(const AnalogReader&) {}
+		AnalogReader(const gpioPin_t& number);
+
 		gpioPin_t m_pinNumber = NULLPIN;
 	};
 

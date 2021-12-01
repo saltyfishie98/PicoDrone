@@ -12,14 +12,11 @@ namespace Application {
 	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 
-	AnalogReader pot0(27);
-	PwmDevices servo0(50, 4);
-
 	namespace Core0 {
-		void setup() {
-			pot0.begin();
-			servo0.begin();
-		}
+		AnalogReader pot0 = AnalogReader::factory(27);
+		PwmDevices servo0 = PwmDevices::factory(50, 4);
+
+		void setup() {}
 
 		void loop() {
 			uint16_t val = pot0.read();

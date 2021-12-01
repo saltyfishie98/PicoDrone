@@ -6,15 +6,19 @@
 
 namespace LocalLib {
 
-	class PwmDevices : public IClass {
+	class PwmDevices {
 	  public:
-		PwmDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin);
-
-		void begin() override;
+		static PwmDevices factory(const pwm_t& drivingFrequency, const gpioPin_t& setPin);
 		void setChannelLevel(const uint16_t& percent);
 		uint16_t getTop() const;
 
 	  private:
+		PwmDevices(){};
+		PwmDevices(const PwmDevices&) {}
+		PwmDevices(PwmDevices&&) {}
+		PwmDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin);
+		void begin();
+
 		gpioPin_t m_pwmPin = NULLPIN;
 		pwm_t m_frequency = 0;
 		pwm_t m_clockSpeed = 0;
