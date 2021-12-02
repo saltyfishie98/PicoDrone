@@ -25,15 +25,19 @@ namespace LocalLib::Helpers::Pico {
 	namespace Mutex {
 		class BasicMutex : public IMutex {
 		  public:
-			BasicMutex();
 			~BasicMutex();
+			static BasicMutex factory();
 
-			void begin() override;
 			void lock() override;
 			void unlock() override;
 			void runIfOwned(const VoidCallback& thisStdFunction);
 
 		  private:
+			BasicMutex() {}
+			BasicMutex(BasicMutex&&) {}
+			BasicMutex(const BasicMutex&) {}
+			void begin() override;
+
 			mutex_t m_mtx;
 		};
 

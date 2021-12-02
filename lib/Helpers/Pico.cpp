@@ -36,10 +36,14 @@ namespace LocalLib::Helpers::Pico {
 namespace LocalLib::Helpers::Pico::Mutex {
 	uint32_t* mtxIdPtr = nullptr;
 
-	BasicMutex::BasicMutex() {}
-
 	BasicMutex::~BasicMutex() {
 		unlock();
+	}
+
+	BasicMutex BasicMutex::factory() {
+		BasicMutex temp;
+		temp.begin();
+		return temp;
 	}
 
 	void BasicMutex::begin() {

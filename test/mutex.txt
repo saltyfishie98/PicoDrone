@@ -1,0 +1,62 @@
+#include "pico/stdlib.h"
+
+#include <iostream>
+#include <stdlib.h>
+
+#include "Helpers/Pico.hpp"
+#include "Helpers/Arduino.hpp"
+#include "PwmDevices.hpp"
+
+namespace Application {
+	using namespace LocalLib::Helpers::Pico;
+	using namespace LocalLib::Helpers;
+	using namespace LocalLib;
+
+	Mutex::BasicMutex test;
+	std::string globalStr = "None";
+
+	void blocking(uint8_t core) {
+		test.lock();
+		globalStr = "core " + std::to_string(core);
+		sleep_ms(1000);
+		test.unlock();
+	}
+
+	void nonblocking(uint8_t core) {
+		test.runIfOwned([&core]() {
+			globalStr = "core " + std::to_string(core);
+			sleep_ms(1000);
+		});
+	}
+
+	void lockguard(uint8_t core) {
+		{
+			Mutex::LockGuard testLg(test);
+			globalStr = "core " + std::to_string(core);
+			sleep_ms(1000);
+		}
+	}
+
+	namespace Core0 {
+		void setup() {
+			test.begin();
+		}
+
+		void loop() {
+			lockguard(0);
+			std::cout << "owed by " << globalStr << '\n';
+		}
+	} // namespace Core0
+
+	namespace Core1 {
+		void setup() {
+			test.begin();
+		}
+
+		void loop() {
+			lockguard(1);
+			std::cout << "owed by " << globalStr << '\n';
+		}
+	} // namespace Core1
+
+} // namespace Application
