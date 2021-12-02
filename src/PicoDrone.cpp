@@ -13,8 +13,8 @@ namespace Application {
 	using namespace LocalLib;
 
 	namespace Core0 {
-		AnalogReader pot0 = AnalogReader::factory(27);
-		PwmDevices servo0 = PwmDevices::factory(50, 4);
+		AnalogReader pot0 = AnalogReader::create(27);
+		PwmDevices servo0 = PwmDevices::create(50, 4);
 
 		void setup() {}
 

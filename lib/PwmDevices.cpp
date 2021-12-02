@@ -14,7 +14,7 @@ namespace LocalLib {
 		// ASSERT_PIN_VALID(setPin);
 	}
 
-	PwmDevices PwmDevices::factory(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
+	PwmDevices PwmDevices::create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
 		PwmDevices temp(drivingFrequency, setPin);
 		temp.begin();
 		return temp;

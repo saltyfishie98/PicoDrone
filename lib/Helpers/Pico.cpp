@@ -10,7 +10,7 @@
 namespace LocalLib::Helpers::Pico {
 	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {}
 
-	AnalogReader AnalogReader::factory(const gpioPin_t& number) {
+	AnalogReader AnalogReader::create(const gpioPin_t& number) {
 		AnalogReader temp(number);
 		temp.begin();
 		return temp;
@@ -40,7 +40,7 @@ namespace LocalLib::Helpers::Pico::Mutex {
 		unlock();
 	}
 
-	BasicMutex BasicMutex::factory() {
+	BasicMutex BasicMutex::create() {
 		BasicMutex temp;
 		temp.begin();
 		return temp;

@@ -9,7 +9,7 @@
 namespace LocalLib::Helpers::Pico {
 	class AnalogReader {
 	  public:
-		static AnalogReader factory(const gpioPin_t& number);
+		static AnalogReader create(const gpioPin_t& number);
 		uint16_t read();
 
 	  private:
@@ -26,7 +26,7 @@ namespace LocalLib::Helpers::Pico {
 		class BasicMutex : public IMutex {
 		  public:
 			~BasicMutex();
-			static BasicMutex factory();
+			static BasicMutex create();
 
 			void lock() override;
 			void unlock() override;

@@ -8,7 +8,7 @@ namespace LocalLib {
 
 	class PwmDevices {
 	  public:
-		static PwmDevices factory(const pwm_t& drivingFrequency, const gpioPin_t& setPin);
+		static PwmDevices create(const pwm_t& drivingFrequency, const gpioPin_t& setPin);
 		void setChannelLevel(const uint16_t& percent);
 		uint16_t getTop() const;
 
