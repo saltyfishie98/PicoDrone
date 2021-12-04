@@ -3,21 +3,26 @@
 
 #include "Types.hpp"
 
-namespace LocalLib {
+namespace LocalLib::PwmDevices {
 
-	class PwmDevices {
+	class GeneralDevices {
 	  public:
-		static PwmDevices create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+		GeneralDevices() noexcept {}
+		GeneralDevices(GeneralDevices&&) noexcept;
+		GeneralDevices& operator=(GeneralDevices&&) noexcept;
+
+		GeneralDevices(const GeneralDevices&) = delete;
+
+		static GeneralDevices create(const pwm_t& drivingFrequency,
+									 const gpioPin_t& setPin) noexcept;
 		void setChannelLevel(const uint16_t& percent) noexcept;
 		uint16_t getTop() const;
 
-	  private:
-		PwmDevices() noexcept {};
-		PwmDevices(const PwmDevices&) noexcept {}
-		PwmDevices(PwmDevices&&) noexcept {}
-		PwmDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+	  protected:
+		GeneralDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
 		void begin() noexcept;
 
+	  private:
 		gpioPin_t m_pwmPin = NULLPIN;
 		pwm_t m_frequency = 0;
 		pwm_t m_clockSpeed = 0;
@@ -27,6 +32,6 @@ namespace LocalLib {
 		pwmWrap_t m_wrap = 0;
 	};
 
-} // namespace LocalLib
+} // namespace LocalLib::PwmDevices
 
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_PWMDEVICES_HPP_

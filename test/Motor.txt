@@ -7,7 +7,7 @@
 #include "Helpers/Arduino.hpp"
 #include "Helpers/Misc.hpp"
 #include "PwmDevices/Servo.hpp"
-#include "PwmDevices/MotorESC.hpp"
+#include "PwmDevices/Motor.hpp"
 
 namespace Application {
 	using namespace LocalLib::Helpers::Pico;
@@ -16,7 +16,7 @@ namespace Application {
 
 	namespace Core0 {
 		AnalogReader pot0 = AnalogReader::create(27);
-		PwmDevices::MotorESC test0 = PwmDevices::MotorESC::create(4);
+		PwmDevices::Motor test0 = PwmDevices::Motor::create(4);
 
 		void setup() {}
 		void loop() {

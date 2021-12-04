@@ -1,6 +1,6 @@
 add_library(Helpers STATIC
-	Helpers/Misc.cpp
-	Helpers/Pico.cpp
+	Misc.cpp
+	Pico.cpp
 )
 target_link_libraries(Helpers
 	pico_stdlib 
@@ -10,7 +10,9 @@ target_include_directories(Helpers PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
 add_library(PwmDevices STATIC
-	PwmDevices.cpp 
+	GeneralDevices.cpp 
+	Servo.cpp
+	MotorESC.cpp
 )
 target_link_libraries(PwmDevices
 	pico_stdlib 
@@ -20,7 +22,7 @@ target_include_directories(PwmDevices PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
 add_library(ErrorHandler STATIC
-	ErrorHandler/ErrorBlinker.cpp 
+	ErrorBlinker.cpp 
 )
 target_link_libraries(ErrorHandler
 	pico_stdlib 

@@ -4,7 +4,7 @@
 #include "hardware/adc.h"
 #include <iostream>
 
-#include "../ErrMacros.hpp"
+#include "ErrMacros.hpp"
 #include "Helpers/Macros.hpp"
 
 namespace LocalLib::Helpers::Pico {
