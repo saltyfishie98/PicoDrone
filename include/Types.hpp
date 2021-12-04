@@ -15,7 +15,6 @@ namespace LocalLib {
 	using pwm_t = unsigned int;
 	using pwmWrap_t = uint16_t;
 
-	using VoidCallback = std::function<void()>;
 } // namespace LocalLib
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_TYPES_HPP_

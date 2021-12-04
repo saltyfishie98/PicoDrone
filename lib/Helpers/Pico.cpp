@@ -34,26 +34,25 @@ namespace LocalLib::Helpers::Pico {
 } // namespace LocalLib::Helpers::Pico
 
 namespace LocalLib::Helpers::Pico::Mutex {
-	uint32_t* mtxIdPtr = nullptr;
 
-	BasicMutex::~BasicMutex() {
+	Mutex::~Mutex() {
 		unlock();
 	}
 
-	BasicMutex BasicMutex::create() {
-		BasicMutex temp;
+	Mutex Mutex::create() {
+		Mutex temp;
 		temp.begin();
 		return temp;
 	}
 
-	void BasicMutex::begin() {
-		if (IMutex::notInit) {
+	void Mutex::begin() {
+		if (Mutex::notInit) {
 			mutex_init(&m_mtx);
-			IMutex::notInit = false;
+			Mutex::notInit = false;
 		}
 	}
 
-	void BasicMutex::lock() {
+	void Mutex::lock() {
 		mutex_enter_blocking(&m_mtx);
 		DEBUG_RUN({
 			sleep_ms(100);
@@ -62,7 +61,7 @@ namespace LocalLib::Helpers::Pico::Mutex {
 		})
 	}
 
-	void BasicMutex::unlock() {
+	void Mutex::unlock() {
 		mutex_exit(&m_mtx);
 		DEBUG_RUN({
 			std::cout
@@ -71,16 +70,8 @@ namespace LocalLib::Helpers::Pico::Mutex {
 		})
 	}
 
-	void BasicMutex::runIfOwned(const VoidCallback& thisStdFunction) {
-		if (mutex_try_enter(&m_mtx, mtxIdPtr)) {
-			DEBUG_RUN({
-				sleep_ms(100);
-				std::cout << "\n\n=========================== entered mutex "
-							 "===========================\n\n";
-			})
-			thisStdFunction();
-			unlock();
-		}
+	uint32_t* mtxIdPtr = nullptr;
+	bool Mutex::entered() {
+		return mutex_try_enter(&m_mtx, mtxIdPtr);
 	}
-
 } // namespace LocalLib::Helpers::Pico::Mutex

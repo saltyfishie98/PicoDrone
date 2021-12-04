@@ -12,7 +12,7 @@ namespace Application {
 	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 
-	Mutex::BasicMutex test;
+	Mutex::Mutex test;
 	std::string globalStr = "None";
 
 	void blocking(uint8_t core) {

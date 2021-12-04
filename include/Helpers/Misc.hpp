@@ -6,14 +6,14 @@
 
 namespace LocalLib::Helpers::Misc {
 	template <typename T>
-	bool arrayFind(T thisElement, T inThisArray) {
+	bool arrayFind(T thisElement, T inThisArray) noexcept {
 		T* condition = std::find(std::begin(inThisArray), std::end(inThisArray), thisElement);
 		if (condition != std::end(inThisArray))
 			return true;
 		return false;
 	}
 
-	void setInterval(const millis_t&, const VoidCallback&);
+	bool interval(const millis_t& setMillis) noexcept;
 } // namespace LocalLib::Helpers::Misc
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_HPP_

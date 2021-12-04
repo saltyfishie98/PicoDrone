@@ -3,49 +3,49 @@
 
 #include "pico/mutex.h"
 
-#include "../Interfaces.hpp"
 #include "../Types.hpp"
 
 namespace LocalLib::Helpers::Pico {
 	class AnalogReader {
 	  public:
-		static AnalogReader create(const gpioPin_t& number);
-		uint16_t read();
+		static AnalogReader create(const gpioPin_t& number) noexcept;
+		uint16_t read() noexcept;
 
 	  private:
 		void begin();
-		AnalogReader() {}
-		AnalogReader(AnalogReader&&) {}
-		AnalogReader(const AnalogReader&) {}
-		AnalogReader(const gpioPin_t& number);
+		AnalogReader() noexcept {}
+		AnalogReader(AnalogReader&&) noexcept {}
+		AnalogReader(const AnalogReader&) noexcept {}
+		AnalogReader(const gpioPin_t& number) noexcept;
 
 		gpioPin_t m_pinNumber = NULLPIN;
 	};
 
 	namespace Mutex {
-		class BasicMutex : public IMutex {
+		class Mutex {
 		  public:
-			~BasicMutex();
-			static BasicMutex create();
+			~Mutex() noexcept;
+			static Mutex create() noexcept;
 
-			void lock() override;
-			void unlock() override;
-			void runIfOwned(const VoidCallback& thisStdFunction);
+			void lock() noexcept;
+			void unlock() noexcept;
+			bool entered() noexcept;
 
 		  private:
-			BasicMutex() {}
-			BasicMutex(BasicMutex&&) {}
-			BasicMutex(const BasicMutex&) {}
-			void begin() override;
+			Mutex() noexcept {}
+			Mutex(Mutex&&) noexcept {}
+			Mutex(const Mutex&) noexcept {}
+			void begin() noexcept;
 
 			mutex_t m_mtx;
+			bool notInit = true;
 		};
 
 		class LockGuard {
 		  public:
 			LockGuard(const LockGuard&) = delete;
 
-			LockGuard(IMutex& mtx) : m_mtx(mtx) {
+			LockGuard(Mutex& mtx) noexcept : m_mtx(mtx) {
 				m_mtx.lock();
 			}
 
@@ -54,7 +54,7 @@ namespace LocalLib::Helpers::Pico {
 			}
 
 		  private:
-			IMutex& m_mtx;
+			Mutex& m_mtx;
 		};
 	} // namespace Mutex
 

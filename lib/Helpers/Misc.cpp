@@ -6,10 +6,11 @@ namespace LocalLib::Helpers::Misc {
 	using namespace LocalLib::Helpers;
 	auto lastTime = Arduino::millis();
 
-	void setInterval(const millis_t& setMillis, const VoidCallback& callThis) {
+	bool interval(const millis_t& setMillis) {
 		if ((Arduino::millis() - lastTime) >= setMillis) {
-			callThis();
 			lastTime = Arduino::millis();
+			return true;
 		}
+		return false;
 	}
 } // namespace LocalLib::Helpers::Misc
