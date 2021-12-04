@@ -1,7 +1,7 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_
 
-#define PRINT_DEBUG
+// #define PRINT_DEBUG
 
 #ifdef PRINT_DEBUG
 	#ifndef NDEBUG
@@ -9,6 +9,8 @@
 	#else
 		#define DEBUG_RUN(func)
 	#endif
+#else
+	#define DEBUG_RUN(func)
 #endif
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_

@@ -4,10 +4,8 @@
 #include <stdlib.h>
 
 #include "Helpers/Pico.hpp"
-#include "Helpers/Arduino.hpp"
 #include "Helpers/Misc.hpp"
-#include "PwmDevices/Servo.hpp"
-#include "PwmDevices/MotorESC.hpp"
+#include "Quad.hpp"
 
 namespace Application {
 	using namespace LocalLib::Helpers::Pico;
@@ -16,11 +14,17 @@ namespace Application {
 
 	namespace Core0 {
 		AnalogReader pot0 = AnalogReader::create(27);
-		PwmDevices::MotorESC test0 = PwmDevices::MotorESC::create(4);
+		Quad::SpeedControls quad0 = Quad::SpeedControls::create({4, 5, 6, 7});
+		Quad::MotorSpeedCfg speedConfig = 0;
 
 		void setup() {}
 		void loop() {
-			test0.setLevel(pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_0, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_1, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_2, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_3, pot0.read());
+
+			quad0.uploadSpeedCfg(speedConfig);
 		}
 	} // namespace Core0
 

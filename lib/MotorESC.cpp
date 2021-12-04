@@ -4,6 +4,26 @@
 namespace LocalLib::PwmDevices {
 	const pwm_t MotorESC::m_freq;
 
+	MotorESC::MotorESC(MotorESC&& other) {
+		m_device = std::move(other.m_device);
+		m_inputMin = other.m_inputMin;
+		m_inputMax = other.m_inputMax;
+		minPercent = other.minPercent;
+		maxPercent = other.maxPercent;
+	}
+
+	MotorESC& MotorESC::operator=(MotorESC&& other) {
+		if (this != &other) {
+			m_device = std::move(other.m_device);
+			m_inputMin = other.m_inputMin;
+			m_inputMax = other.m_inputMax;
+			minPercent = other.minPercent;
+			maxPercent = other.maxPercent;
+		}
+
+		return *this;
+	}
+
 	MotorESC MotorESC::create(const gpioPin_t& setPin) {
 		MotorESC temp;
 		temp.m_device = GeneralDevices::create(m_freq, setPin);

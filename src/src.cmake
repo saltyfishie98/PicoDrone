@@ -22,6 +22,7 @@ target_link_libraries(${BINARY_NAME}
 	PwmDevices
 	Helpers
 	ErrorHandler
+	Quad
 
 	pico_stdlib 
 	hardware_adc

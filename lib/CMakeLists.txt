@@ -9,6 +9,7 @@ target_link_libraries(Helpers
 target_include_directories(Helpers PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
+
 add_library(PwmDevices STATIC
 	GeneralDevices.cpp 
 	Servo.cpp
@@ -21,6 +22,7 @@ target_link_libraries(PwmDevices
 target_include_directories(PwmDevices PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
+
 add_library(ErrorHandler STATIC
 	ErrorBlinker.cpp 
 )
@@ -28,3 +30,14 @@ target_link_libraries(ErrorHandler
 	pico_stdlib 
 )
 target_include_directories(ErrorHandler PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+
+
+add_library(Quad STATIC
+	Quad.cpp 
+)
+target_link_libraries(Quad
+	pico_stdlib 
+	PwmDevices
+)
+target_include_directories(Quad PRIVATE ${PROJECT_SOURCE_DIR}/include)

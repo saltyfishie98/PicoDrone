@@ -7,11 +7,11 @@ namespace LocalLib::PwmDevices {
 
 	class GeneralDevices {
 	  public:
+		GeneralDevices(const GeneralDevices&) = delete;
+
 		GeneralDevices() noexcept {}
 		GeneralDevices(GeneralDevices&&) noexcept;
 		GeneralDevices& operator=(GeneralDevices&&) noexcept;
-
-		GeneralDevices(const GeneralDevices&) = delete;
 
 		static GeneralDevices create(const pwm_t& drivingFrequency,
 									 const gpioPin_t& setPin) noexcept;

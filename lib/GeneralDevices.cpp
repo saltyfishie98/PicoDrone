@@ -10,11 +10,9 @@
 
 namespace LocalLib::PwmDevices {
 	GeneralDevices::GeneralDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin)
-	  : m_frequency(drivingFrequency), m_pwmPin(setPin) {
-		// ASSERT_PIN_VALID(setPin);
-	}
+	  : m_frequency(drivingFrequency), m_pwmPin(setPin) {}
 
-	GeneralDevices::GeneralDevices(GeneralDevices&& other) noexcept {
+	GeneralDevices::GeneralDevices(GeneralDevices&& other) {
 		m_pwmPin = other.m_pwmPin;
 		m_frequency = other.m_frequency;
 		m_clockSpeed = other.m_clockSpeed;
