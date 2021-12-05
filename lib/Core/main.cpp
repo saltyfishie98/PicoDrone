@@ -5,6 +5,7 @@
 
 void sandbox();
 
+#ifndef ONLY_SANDBOX
 namespace Application {
 	namespace Core0 {
 		void setup();
@@ -17,6 +18,7 @@ namespace Application {
 	} // namespace Core1
 } // namespace Application
 
+// clang-format off
 #ifdef MULTICORE
 	#define LAUNCH_CORE_1 multicore_launch_core1(core1_Process)
 
@@ -28,14 +30,14 @@ void core1_Process() {
 		loop();
 	}
 }
+
 #else
 	#define LAUNCH_CORE_1
 #endif
+// clang-format on
 
 int main() {
 	stdio_init_all();
-
-	sandbox();
 
 	LAUNCH_CORE_1;
 
@@ -46,3 +48,11 @@ int main() {
 		loop();
 	}
 }
+
+#else
+int main() {
+	stdio_init_all();
+
+	sandbox();
+}
+#endif

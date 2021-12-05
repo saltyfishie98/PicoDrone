@@ -27,6 +27,7 @@ target_link_libraries(${BINARY_NAME}
 	pico_stdlib 
 	hardware_adc
 	hardware_pwm
+	hardware_i2c
 	pico_multicore
 )
 
