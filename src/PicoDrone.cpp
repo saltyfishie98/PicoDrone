@@ -8,21 +8,20 @@
 #include "Quad.hpp"
 
 namespace Application {
-	using namespace LocalLib::Helpers::Pico;
 	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 
 	namespace Core0 {
-		AnalogReader pot0 = AnalogReader::create(27);
+		Pico::AnalogReader pot0 = Pico::AnalogReader::create(27);
 		Quad::SpeedControls quad0 = Quad::SpeedControls::create({4, 5, 6, 7});
 		Quad::MotorSpeedCfg speedConfig = 0;
 
 		void setup() {}
 		void loop() {
-			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_0, pot0.read());
-			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_1, pot0.read());
-			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_2, pot0.read());
-			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::MOTOR_3, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::_0, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::_1, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::_2, pot0.read());
+			Quad::configureMotorSpeed(&speedConfig, Quad::Motor::_3, pot0.read());
 
 			quad0.uploadSpeedCfg(speedConfig);
 		}

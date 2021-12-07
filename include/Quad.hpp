@@ -14,10 +14,10 @@ namespace LocalLib::Quad {
 
 	// clang-format off
 	enum Motor{
-		MOTOR_0 = 0, 
-		MOTOR_1 = 13, 
-		MOTOR_2 = 26, 
-		MOTOR_3 = 39, 
+		_0 = 0, 
+		_1 = 13, 
+		_2 = 26, 
+		_3 = 39, 
 		UNASSIGNED = 52
 	};
 	// clang-format on

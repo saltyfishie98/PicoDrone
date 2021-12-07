@@ -39,15 +39,15 @@ namespace LocalLib::Quad {
 	}
 
 	void SpeedControls::uploadSpeedCfg(MotorSpeedCfg& motorLevels) {
-		m_motorControls[0].controller.setLevel((uint16_t)((motorLevels >> MOTOR_0) & 8191));
-		m_motorControls[1].controller.setLevel((uint16_t)((motorLevels >> MOTOR_1) & 8191));
-		m_motorControls[2].controller.setLevel((uint16_t)((motorLevels >> MOTOR_2) & 8191));
-		m_motorControls[3].controller.setLevel((uint16_t)((motorLevels >> MOTOR_3) & 8191));
+		m_motorControls[0].controller.setLevel((uint16_t)((motorLevels >> Motor::_0) & 8191));
+		m_motorControls[1].controller.setLevel((uint16_t)((motorLevels >> Motor::_1) & 8191));
+		m_motorControls[2].controller.setLevel((uint16_t)((motorLevels >> Motor::_2) & 8191));
+		m_motorControls[3].controller.setLevel((uint16_t)((motorLevels >> Motor::_3) & 8191));
 
-		uint16_t val0 = (uint16_t)((motorLevels >> MOTOR_0) & 8191);
-		uint16_t val1 = (uint16_t)((motorLevels >> MOTOR_1) & 8191);
-		uint16_t val2 = (uint16_t)((motorLevels >> MOTOR_2) & 8191);
-		uint16_t val3 = (uint16_t)((motorLevels >> MOTOR_3) & 8191);
+		uint16_t val0 = (uint16_t)((motorLevels >> Motor::_0) & 8191);
+		uint16_t val1 = (uint16_t)((motorLevels >> Motor::_1) & 8191);
+		uint16_t val2 = (uint16_t)((motorLevels >> Motor::_2) & 8191);
+		uint16_t val3 = (uint16_t)((motorLevels >> Motor::_3) & 8191);
 
 		std::cout << "Motor 0: " << val0 << '\n';
 		std::cout << "Motor 1: " << val1 << '\n';
