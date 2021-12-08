@@ -5,52 +5,28 @@
 #include <iostream>
 
 #include "I2C/MPU6050.hpp"
+#include "I2C/I2CComms.hpp"
 
 #define I2C_PORT i2c0
 const static uint8_t devAddr = 0x68;
 
-bool mpu_init() {
-	sleep_ms(1000);
-	uint8_t reg = 0x75;
-	uint8_t chipId[1];
-
-	i2c_write_blocking(I2C_PORT, devAddr, &reg, 1, true);
-	i2c_read_blocking(I2C_PORT, devAddr, chipId, 1, false);
-
-	return chipId[0] == 0x68;
-}
-
-void wake() {
-	uint8_t data_buf[2];
-	uint8_t srcAddr = MPU6050_RA_PWR_MGMT_1;
-
-	i2c_write_blocking(I2C_PORT, devAddr, &srcAddr, 1, true);
-	i2c_read_blocking(I2C_PORT, devAddr, data_buf, 1, false);
-}
-
-void get_data() {
-	uint8_t data_buf[2];
-	uint8_t srcAddr = MPU6050_RA_ACCEL_XOUT_H;
-
-	i2c_write_blocking(I2C_PORT, devAddr, &srcAddr, 1, true);
-	i2c_read_blocking(I2C_PORT, devAddr, data_buf, 2, false);
-
-	uint16_t data = (data_buf[0] << 8) | data_buf[1];
-
-	printf("Accel - X: %d\n", data);
-}
+using namespace LocalLib;
 
 void sandbox() {
-	i2c_init(I2C_PORT, 400000);
+	I2CComms mpu6050 = I2CComms::create(devAddr, I2C_PORT, 21, 20, 400000);
+	uint16_t data = 0;
 
-	gpio_set_function(21, GPIO_FUNC_I2C);
-	gpio_set_function(20, GPIO_FUNC_I2C);
-	gpio_pull_up(21);
-	gpio_pull_up(20);
+	if (mpu6050.connected()) {
+		uint8_t data_buf[2];
 
-	if (mpu_init()) {
+		mpu6050.writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, 0);
+
 		while (1) {
-			get_data();
+			mpu6050.readBytes(MPU6050_RA_ACCEL_ZOUT_H, 2, data_buf);
+
+			data = (data_buf[0] << 8) | data_buf[1];
+
+			printf("Accel Z: %d\n", data);
 		}
 
 	} else {

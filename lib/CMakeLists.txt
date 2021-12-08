@@ -41,3 +41,13 @@ target_link_libraries(Quad
 	PwmDevices
 )
 target_include_directories(Quad PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+
+add_library(I2CComms STATIC
+	I2CComms.cpp 
+)
+target_link_libraries(I2CComms
+	pico_stdlib 
+	hardware_i2c
+)
+target_include_directories(I2CComms PRIVATE ${PROJECT_SOURCE_DIR}/include)

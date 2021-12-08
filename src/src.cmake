@@ -23,6 +23,7 @@ target_link_libraries(${BINARY_NAME}
 	Helpers
 	ErrorHandler
 	Quad
+	I2CComms
 
 	pico_stdlib 
 	hardware_adc
