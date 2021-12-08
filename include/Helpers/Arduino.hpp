@@ -10,7 +10,12 @@ namespace LocalLib::Helpers::Arduino {
 	}
 
 	inline uint32_t millis() {
+		// TODO: refactor this to use method forced by pico sdk
+#ifndef NDEBUG
 		return static_cast<uint32_t>(get_absolute_time()._private_us_since_boot / 1000ull);
+#else
+		return static_cast<uint32_t>(get_absolute_time() / 1000ull);
+#endif
 	}
 } // namespace LocalLib::Helpers::Arduino
 
