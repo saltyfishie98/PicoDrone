@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "I2C/MPU6050.hpp"
-#include "I2C/I2CComms.hpp"
+#include "I2C/Comms.hpp"
 
 #define I2C_PORT i2c0
 const static uint8_t devAddr = 0x68;
@@ -13,18 +13,18 @@ const static uint8_t devAddr = 0x68;
 using namespace LocalLib;
 
 void sandbox() {
-	I2CComms mpu6050 = I2CComms::create(devAddr, I2C_PORT, 21, 20, 400000);
+	I2C::Comms mpu6050 = I2C::Comms::create(devAddr, I2C_PORT, 21, 20, 400000);
 	uint16_t data = 0;
+	uint8_t dataBuf[2];
 
 	if (mpu6050.connected()) {
-		uint8_t data_buf[2];
 
 		mpu6050.writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, 0);
 
 		while (1) {
-			mpu6050.readBytes(MPU6050_RA_ACCEL_ZOUT_H, 2, data_buf);
+			mpu6050.readBytes(MPU6050_RA_ACCEL_ZOUT_H, 2, dataBuf);
 
-			data = (data_buf[0] << 8) | data_buf[1];
+			data = (dataBuf[0] << 8) | dataBuf[1];
 
 			printf("Accel Z: %d\n", data);
 		}

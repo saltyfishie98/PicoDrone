@@ -37,7 +37,9 @@ void core1_Process() {
 // clang-format on
 
 int main() {
+	#ifndef NDEBUG
 	stdio_init_all();
+	#endif
 
 	LAUNCH_CORE_1;
 

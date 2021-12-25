@@ -8,16 +8,16 @@
 
 #define I2CDEV_DEFAULT_READ_TIMEOUT ((uint32_t)1000000)
 
-namespace LocalLib {
-	class I2CComms {
+namespace LocalLib::I2C {
+	class Comms {
 	  public:
-		I2CComms(const I2CComms&) = delete;
-		I2CComms& operator=(const I2CComms&) = delete;
+		Comms(const Comms&) = delete;
+		Comms& operator=(const Comms&) = delete;
 
-		I2CComms(I2CComms&&) noexcept;
-		I2CComms& operator=(I2CComms&&) noexcept;
+		Comms(Comms&&) noexcept;
+		Comms& operator=(Comms&&) noexcept;
 
-		static I2CComms create(uint8_t deviceAddress, i2c_inst_t* port, gpioPin_t sda, gpioPin_t scl, uint32_t baudrate);
+		static Comms create(uint8_t deviceAddress, i2c_inst_t* port, gpioPin_t sda, gpioPin_t scl, uint32_t baudrate);
 
 		bool connected();
 
@@ -30,7 +30,7 @@ namespace LocalLib {
 		bool writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
 
 	  private:
-		I2CComms(uint8_t deviceAddress, i2c_inst_t* port, gpioPin_t sda, gpioPin_t scl, uint32_t baudrate) noexcept;
+		Comms(uint8_t deviceAddress, i2c_inst_t* port, gpioPin_t sda, gpioPin_t scl, uint32_t baudrate) noexcept;
 
 		void begin();
 
@@ -40,6 +40,6 @@ namespace LocalLib {
 		uint32_t m_baudrate = 0;
 		i2c_inst_t* m_port;
 	};
-} // namespace LocalLib
+} // namespace LocalLib::I2C
 
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_I2C_I2C_HPP_
