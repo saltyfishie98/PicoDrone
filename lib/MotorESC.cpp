@@ -24,6 +24,12 @@ namespace LocalLib::PwmDevices {
 		return *this;
 	}
 
+	/**
+	 * @brief Factory method to create an instance of PwmDevices::MotorESC
+	 *
+	 * @param setPin GPIO pin number
+	 * @return MotorESC
+	 */
 	MotorESC MotorESC::create(const gpioPin_t& setPin) {
 		MotorESC temp;
 		temp.m_device = GeneralDevices::create(m_freq, setPin);
@@ -31,11 +37,23 @@ namespace LocalLib::PwmDevices {
 		return temp;
 	}
 
+	/**
+	 * @brief Configure the range of the input for use in the Arduino's map function
+	 *
+	 * @param min The minimum value of the input
+	 * @param max The maximum value of the input
+	 */
 	void MotorESC::setInputRange(uint16_t&& min, uint16_t&& max) {
 		m_inputMin = min;
 		m_inputMax = max;
 	}
 
+	/**
+	 * @brief Configure the range of the input for use in the Arduino's map function
+	 *
+	 * @param min The minimum value of the input
+	 * @param max The maximum value of the input
+	 */
 	void MotorESC::setInputRange(const uint16_t& min, const uint16_t& max) {
 		m_inputMin = min;
 		m_inputMax = max;
@@ -51,6 +69,6 @@ namespace LocalLib::PwmDevices {
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
 								  (uint16_t)(m_device.getTop() * maxPercent));
 
-		m_device.setChannelLevel(level);
+		m_device.setLevel(level);
 	}
 } // namespace LocalLib::PwmDevices

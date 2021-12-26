@@ -1,31 +1,32 @@
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
+#include "PwmDevices/PwmDevices.hpp"
+#include "Helpers/Pico.hpp"
+#include "Helpers/Macros.hpp"
+#include "Quad.hpp"
 #include <iostream>
 
 void sandbox() {
-	adc_init();
+	using namespace LocalLib;
+	using namespace LocalLib::Helpers;
 
-	adc_gpio_init(26);
-	adc_gpio_init(27);
-	adc_gpio_init(28);
+	Pico::AnalogReader thrust = Pico::AnalogReader::create(26);
+	Pico::AnalogReader yaw = Pico::AnalogReader::create(27);
+	Pico::AnalogReader pitch = Pico::AnalogReader::create(28);
+
+	PwmDevices::GeneralDevices motor0 = PwmDevices::GeneralDevices::create(50, 4);
+	PwmDevices::GeneralDevices motor1 = PwmDevices::GeneralDevices::create(50, 5);
+	PwmDevices::GeneralDevices motor2 = PwmDevices::GeneralDevices::create(50, 6);
 
 	while (true) {
-		adc_select_input(0);
-		uint16_t out = adc_read();
-		if (out > 4095)
-			out = 4095;
-		std::cout << adc_read() << '\n';
+		uint64_t motor_0 = thrust.read() + yaw.read() + pitch.read();
+		uint64_t motor_1 = thrust.read() - yaw.read() + pitch.read();
+		uint64_t motor_2 = thrust.read() + yaw.read() - pitch.read();
 
-		adc_select_input(1);
-		out = adc_read();
-		if (out > 4095)
-			out = 4095;
-		std::cout << adc_read() << '\n';
+		motor0.setLevel(motor_0);
+		motor1.setLevel(motor_1);
+		motor2.setLevel(motor_2);
 
-		adc_select_input(2);
-		out = adc_read();
-		if (out > 4095)
-			out = 4095;
-		std::cout << adc_read() << "\n\n";
+		DEBUG_RUN(std::cout << '\n';)
 	}
 }

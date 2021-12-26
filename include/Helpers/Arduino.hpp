@@ -5,7 +5,7 @@
 
 namespace LocalLib::Helpers::Arduino {
 	template <typename T>
-	T map(const T& x, const T& in_min, const T& in_max, const T& out_min, const T& out_max) {
+	constexpr T map(const T& x, const T& in_min, const T& in_max, const T& out_min, const T& out_max) {
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
 

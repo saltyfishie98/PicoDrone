@@ -11,7 +11,6 @@ namespace LocalLib::PwmDevices {
 		static Servo create(const gpioPin_t& setPin) noexcept;
 		void setInputRange(uint16_t&& max, uint16_t&& min) noexcept;
 		void setInputRange(const uint16_t& max, const uint16_t& min) noexcept;
-		void setLevel(uint16_t&& input) noexcept;
 		void setLevel(const uint16_t& input) noexcept;
 
 	  protected:

@@ -22,7 +22,6 @@ namespace Application {
 		Pico::AnalogReader yaw = Pico::AnalogReader::create(27);
 		Pico::AnalogReader pitch = Pico::AnalogReader::create(28);
 
-		PwmDevices::MotorESC test = PwmDevices::MotorESC::create(7);
 		Quad::Controls testQuad = Quad::Controls::create({4, 5, 6, 7});
 
 		void setup() {}

@@ -8,7 +8,9 @@
 #include "Helpers/Macros.hpp"
 
 namespace LocalLib::Helpers::Pico {
-	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {}
+	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {
+		m_input = m_pinNumber - 26;
+	}
 
 	AnalogReader AnalogReader::create(const gpioPin_t& number) {
 		AnalogReader temp(number);
@@ -27,7 +29,7 @@ namespace LocalLib::Helpers::Pico {
 
 	uint16_t AnalogReader::read() {
 		DEBUG_RUN(std::cout << "Pico.cpp: adc_read: INFO: level: " << adc_read() << '\n';)
-		adc_select_input(m_pinNumber - 26);
+		adc_select_input(m_input);
 		return adc_read();
 	}
 

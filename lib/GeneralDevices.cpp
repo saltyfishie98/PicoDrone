@@ -36,12 +36,6 @@ namespace LocalLib::PwmDevices {
 		return *this;
 	}
 
-	GeneralDevices GeneralDevices::create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
-		GeneralDevices temp(drivingFrequency, setPin);
-		temp.begin();
-		return temp;
-	}
-
 	void GeneralDevices::begin() {
 		gpio_set_function(m_pwmPin, GPIO_FUNC_PWM);
 
@@ -61,11 +55,34 @@ namespace LocalLib::PwmDevices {
 		pwm_set_enabled(m_sliceNum, true);
 	}
 
-	void GeneralDevices::setChannelLevel(const uint16_t& val) {
+	/**
+	 * @brief Factory method to create an instance of PwmDevices::GeneralDevices
+	 *
+	 * @param drivingFrequency The frequency of the pwm signal
+	 * @param setPin The gpio pin number
+	 * @return GeneralDevices
+	 */
+	GeneralDevices GeneralDevices::create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
+		GeneralDevices temp(drivingFrequency, setPin);
+		temp.begin();
+		return temp;
+	}
+
+	/**
+	 * @brief Set the level of the pwm signal
+	 *
+	 * @param val literal value that is smaller than the wrap value
+	 */
+	void GeneralDevices::setLevel(const uint16_t& val) {
 		pwm_set_chan_level(m_sliceNum, m_channel, val);
 		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: Level: " << val << '\n';)
 	}
 
+	/**
+	 * @brief Returns the wrap value
+	 *
+	 * @return uint16_t
+	 */
 	uint16_t GeneralDevices::getTop() const {
 		return m_wrap;
 	}

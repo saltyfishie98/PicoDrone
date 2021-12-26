@@ -19,6 +19,7 @@ namespace LocalLib::Helpers::Pico {
 		AnalogReader(const gpioPin_t& number) noexcept;
 
 		gpioPin_t m_pinNumber = NULLPIN;
+		uint m_input = 4;
 	};
 
 	namespace Mutex {
