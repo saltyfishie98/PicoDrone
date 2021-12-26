@@ -31,16 +31,25 @@ namespace LocalLib::PwmDevices {
 		return temp;
 	}
 
-	void MotorESC::setLevelScale(uint16_t&& inputMin, uint16_t&& inputMax) {
-		m_inputMin = inputMin;
-		m_inputMax = inputMax;
+	void MotorESC::setInputRange(uint16_t&& min, uint16_t&& max) {
+		m_inputMin = min;
+		m_inputMax = max;
 	}
 
+	void MotorESC::setInputRange(const uint16_t& min, const uint16_t& max) {
+		m_inputMin = min;
+		m_inputMax = max;
+	}
+
+	/**
+	 * @brief Set the pwm level that controls the motor esc
+	 *
+	 * @param input literal input
+	 */
 	void MotorESC::setLevel(const uint16_t& input) {
 		using namespace Helpers;
-		auto level =
-		  Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
-					   (uint16_t)(m_device.getTop() * maxPercent));
+		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
+								  (uint16_t)(m_device.getTop() * maxPercent));
 
 		m_device.setChannelLevel(level);
 	}

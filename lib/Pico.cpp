@@ -17,17 +17,17 @@ namespace LocalLib::Helpers::Pico {
 	}
 
 	void AnalogReader::begin() {
-		Predicate pinMustEqualThisNum =
-		  (m_pinNumber == 26 || m_pinNumber == 27 || m_pinNumber == 28);
+		Predicate pinMustEqualThisNum = (m_pinNumber == 26 || m_pinNumber == 27 || m_pinNumber == 28);
 
 		CHECK_ERROR(pinMustEqualThisNum, ERR_ADC, ERR_DT_ADC_INVALID_PIN, {
 			adc_init();
 			adc_gpio_init(m_pinNumber);
-			adc_select_input(m_pinNumber - 26);
 		});
 	}
 
 	uint16_t AnalogReader::read() {
+		DEBUG_RUN(std::cout << "Pico.cpp: adc_read: INFO: level: " << adc_read() << '\n';)
+		adc_select_input(m_pinNumber - 26);
 		return adc_read();
 	}
 
@@ -56,16 +56,14 @@ namespace LocalLib::Helpers::Pico::Mutex {
 		mutex_enter_blocking(&m_mtx);
 		DEBUG_RUN({
 			sleep_ms(100);
-			std::cout
-			  << "\n\n=========================== entered mutex ===========================\n\n";
+			std::cout << "\n\n=========================== entered mutex ===========================\n\n";
 		})
 	}
 
 	void Mutex::unlock() {
 		mutex_exit(&m_mtx);
 		DEBUG_RUN({
-			std::cout
-			  << "\n\n=========================== exit mutex ===========================\n\n";
+			std::cout << "\n\n=========================== exit mutex ===========================\n\n";
 			sleep_ms(100);
 		})
 	}

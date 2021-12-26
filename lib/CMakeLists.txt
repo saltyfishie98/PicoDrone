@@ -44,7 +44,7 @@ target_include_directories(Quad PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
 add_library(I2CComms STATIC
-	I2CComms.cpp 
+	I2C_Comms.cpp 
 )
 target_link_libraries(I2CComms
 	pico_stdlib 

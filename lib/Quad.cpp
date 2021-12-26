@@ -1,64 +1,51 @@
 #include "Quad.hpp"
 #include "Helpers/Macros.hpp"
 
-#include <iostream>
+using namespace LocalLib;
 
 namespace LocalLib::Quad {
-	SpeedControls::SpeedControls(const MotorPinArray& controlPins) {
-		uint8_t i = 0;
-		for (auto controlPin : controlPins) {
-			m_motorControls[i].pin = controlPin;
-			++i;
-		}
+	Controls::Controls(std::array<gpioPin_t, 4>&& pinsArray) : m_pinsArray(pinsArray) {
+		m_motor0 = PwmDevices::MotorESC::create(m_pinsArray[0]);
+		m_motor1 = PwmDevices::MotorESC::create(m_pinsArray[1]);
+		m_motor2 = PwmDevices::MotorESC::create(m_pinsArray[2]);
+		m_motor3 = PwmDevices::MotorESC::create(m_pinsArray[3]);
 	}
 
-	SpeedControls::SpeedControls(SpeedControls&& other) {
-		m_motorControls = std::move(other.m_motorControls);
-	}
-
-	SpeedControls& SpeedControls::operator=(SpeedControls&& other) {
-		if (this != &other) {
-			m_motorControls = std::move(other.m_motorControls);
-		}
-
-		return *this;
-	}
-
-	SpeedControls SpeedControls::create(const MotorPinArray& controlPins) {
-		SpeedControls temp(controlPins);
+	Controls Controls::create(std::array<gpioPin_t, 4>&& pinsArray) {
+		Controls temp = Controls(std::move(pinsArray));
 		temp.begin();
 		return temp;
 	}
 
-	void SpeedControls::begin() {
-		using namespace LocalLib::PwmDevices;
+	void Controls::begin() {}
 
-		for (int i = 0; i < m_motorControls.size(); ++i) {
-			m_motorControls[i].controller = MotorESC::create(m_motorControls[i].pin);
-		}
+	void Controls::input(uint16_t&& thrust, uint16_t&& yaw, uint16_t&& pitch, uint16_t&& roll) {
+		DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: data moved\n";)
+
+		uint64_t motor_0 = thrust + yaw + pitch + roll;
+		uint64_t motor_1 = thrust - yaw + pitch - roll;
+		uint64_t motor_2 = thrust + yaw - pitch - roll;
+		uint64_t motor_3 = thrust - yaw - pitch + roll;
+
+		m_motor0.setLevel(motor_0);
+		m_motor1.setLevel(motor_1);
+		m_motor2.setLevel(motor_2);
+		m_motor3.setLevel(motor_3);
 	}
 
-	void SpeedControls::uploadSpeedCfg(MotorSpeedCfg& motorLevels) {
-		m_motorControls[0].controller.setLevel((uint16_t)((motorLevels >> Motor::_0) & 8191));
-		m_motorControls[1].controller.setLevel((uint16_t)((motorLevels >> Motor::_1) & 8191));
-		m_motorControls[2].controller.setLevel((uint16_t)((motorLevels >> Motor::_2) & 8191));
-		m_motorControls[3].controller.setLevel((uint16_t)((motorLevels >> Motor::_3) & 8191));
+	void Controls::input(const uint16_t& thrust, const uint16_t& yaw, const uint16_t& pitch, const uint16_t& roll) {
+		DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: const ref data\n";)
 
-		uint16_t val0 = (uint16_t)((motorLevels >> Motor::_0) & 8191);
-		uint16_t val1 = (uint16_t)((motorLevels >> Motor::_1) & 8191);
-		uint16_t val2 = (uint16_t)((motorLevels >> Motor::_2) & 8191);
-		uint16_t val3 = (uint16_t)((motorLevels >> Motor::_3) & 8191);
+		uint64_t speeds = 0;
 
-		std::cout << "Motor 0: " << val0 << '\n';
-		std::cout << "Motor 1: " << val1 << '\n';
-		std::cout << "Motor 2: " << val2 << '\n';
-		std::cout << "Motor 3: " << val3 << "\n\n";
+		uint64_t motor_0 = thrust + yaw + pitch + roll;
+		uint64_t motor_1 = thrust - yaw + pitch - roll;
+		uint64_t motor_2 = thrust + yaw - pitch - roll;
+		uint64_t motor_3 = thrust - yaw - pitch + roll;
 
-		motorLevels = 0;
-	}
-
-	void configureMotorSpeed(MotorSpeedCfg* config, Motor selectMotor, const uint16_t& speed) {
-		*config |= ((uint64_t)speed << selectMotor);
-		std::cout << "Config: " << *config << "\n\n";
+		m_motor0.setLevel(motor_0);
+		m_motor1.setLevel(motor_1);
+		m_motor2.setLevel(motor_2);
+		m_motor3.setLevel(motor_3);
 	}
 } // namespace LocalLib::Quad

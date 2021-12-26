@@ -1,7 +1,9 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_
 
-// #define PRINT_DEBUG
+#include <iostream>
+
+#define PRINT_DEBUG
 
 #ifdef PRINT_DEBUG
 	#ifndef NDEBUG

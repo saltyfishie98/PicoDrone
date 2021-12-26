@@ -63,7 +63,7 @@ namespace LocalLib::PwmDevices {
 
 	void GeneralDevices::setChannelLevel(const uint16_t& val) {
 		pwm_set_chan_level(m_sliceNum, m_channel, val);
-		DEBUG_RUN(std::cout << "Level: " << val << '\n';)
+		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: Level: " << val << '\n';)
 	}
 
 	uint16_t GeneralDevices::getTop() const {

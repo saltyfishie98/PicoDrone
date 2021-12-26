@@ -8,13 +8,14 @@ namespace LocalLib::PwmDevices {
 	class MotorESC {
 	  public:
 		MotorESC(const MotorESC&) = delete;
+		MotorESC() = default;
 
-		MotorESC() noexcept {}
 		MotorESC(MotorESC&&) noexcept;
 		MotorESC& operator=(MotorESC&&) noexcept;
 
 		static MotorESC create(const gpioPin_t& setPin) noexcept;
-		void setLevelScale(uint16_t&& inputMin, uint16_t&& inputMax) noexcept;
+		void setInputRange(uint16_t&& min, uint16_t&& max) noexcept;
+		void setInputRange(const uint16_t& min, const uint16_t& max) noexcept;
 		void setLevel(const uint16_t& input) noexcept;
 
 	  protected:

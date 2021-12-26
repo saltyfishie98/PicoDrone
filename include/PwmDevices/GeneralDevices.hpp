@@ -13,9 +13,8 @@ namespace LocalLib::PwmDevices {
 		GeneralDevices(GeneralDevices&&) noexcept;
 		GeneralDevices& operator=(GeneralDevices&&) noexcept;
 
-		static GeneralDevices create(const pwm_t& drivingFrequency,
-									 const gpioPin_t& setPin) noexcept;
-		void setChannelLevel(const uint16_t& percent) noexcept;
+		static GeneralDevices create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+		void setChannelLevel(const uint16_t& val) noexcept;
 		uint16_t getTop() const;
 
 	  protected:

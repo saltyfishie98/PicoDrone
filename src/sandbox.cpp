@@ -1,37 +1,31 @@
 #include "pico/stdlib.h"
-#include "hardware/i2c.h"
-
-#include <stdio.h>
+#include "hardware/adc.h"
 #include <iostream>
 
-#include "I2C/MPU6050.hpp"
-#include "I2C/Comms.hpp"
-
-#define I2C_PORT i2c0
-const static uint8_t devAddr = 0x68;
-
-using namespace LocalLib;
-
 void sandbox() {
-	I2C::Comms mpu6050 = I2C::Comms::create(devAddr, I2C_PORT, 21, 20, 400000);
-	uint16_t data = 0;
-	uint8_t dataBuf[2];
+	adc_init();
 
-	if (mpu6050.connected()) {
+	adc_gpio_init(26);
+	adc_gpio_init(27);
+	adc_gpio_init(28);
 
-		mpu6050.writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, 0);
+	while (true) {
+		adc_select_input(0);
+		uint16_t out = adc_read();
+		if (out > 4095)
+			out = 4095;
+		std::cout << adc_read() << '\n';
 
-		while (1) {
-			mpu6050.readBytes(MPU6050_RA_ACCEL_ZOUT_H, 2, dataBuf);
+		adc_select_input(1);
+		out = adc_read();
+		if (out > 4095)
+			out = 4095;
+		std::cout << adc_read() << '\n';
 
-			data = (dataBuf[0] << 8) | dataBuf[1];
-
-			printf("Accel Z: %d\n", data);
-		}
-
-	} else {
-		puts("Error!\n");
+		adc_select_input(2);
+		out = adc_read();
+		if (out > 4095)
+			out = 4095;
+		std::cout << adc_read() << "\n\n";
 	}
-
-	while (1) {}
 }
