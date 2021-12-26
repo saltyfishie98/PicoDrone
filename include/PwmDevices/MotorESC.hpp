@@ -25,7 +25,7 @@ namespace LocalLib::PwmDevices {
 		GeneralDevices m_device;
 		const static pwm_t m_freq = 50;
 		uint16_t m_inputMin = 0;
-		uint16_t m_inputMax = 4065;
+		uint16_t m_inputMax = 1023;
 		float minPercent = 0.035f;
 		float maxPercent = 0.115f;
 	};
