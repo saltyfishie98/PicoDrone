@@ -16,7 +16,7 @@ namespace LocalLib::PwmDevices {
 		static MotorESC create(const gpioPin_t& setPin) noexcept;
 		void setInputRange(uint16_t&& min, uint16_t&& max) noexcept;
 		void setInputRange(const uint16_t& min, const uint16_t& max) noexcept;
-		void setLevel(const uint16_t& input) noexcept;
+		void setRangedLevel(const uint16_t& input) noexcept;
 
 	  protected:
 		MotorESC(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;

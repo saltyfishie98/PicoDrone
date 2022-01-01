@@ -41,12 +41,12 @@ namespace LocalLib::PwmDevices {
 	 *
 	 * @param input literal input
 	 */
-	void Servo::setLevel(const uint16_t& input) {
-		DEBUG_RUN(std::cout << "Server.cpp: setLevel(): INFO: const ref data\n";)
+	void Servo::setRangedLevel(const uint16_t& input) {
+		DEBUG_RUN(std::cout << "Server.cpp: setRangedLevel(): INFO: const ref data\n";)
 		using namespace Helpers;
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
 								  (uint16_t)(m_device.getTop() * maxPercent));
 
-		m_device.setLevel(level);
+		m_device.setsLevel(level);
 	}
 } // namespace LocalLib::PwmDevices

@@ -36,6 +36,19 @@ namespace LocalLib::PwmDevices {
 		return *this;
 	}
 
+	/**
+	 * @brief Factory method to create an instance of PwmDevices::GeneralDevices
+	 *
+	 * @param drivingFrequency The frequency of the pwm signal
+	 * @param setPin The gpio pin number
+	 * @return GeneralDevices
+	 */
+	GeneralDevices GeneralDevices::create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
+		GeneralDevices temp(drivingFrequency, setPin);
+		temp.begin();
+		return temp;
+	}
+
 	void GeneralDevices::begin() {
 		gpio_set_function(m_pwmPin, GPIO_FUNC_PWM);
 
@@ -53,19 +66,6 @@ namespace LocalLib::PwmDevices {
 		pwm_set_clkdiv_int_frac(m_sliceNum, m_clockDiv / 16, m_clockDiv & 0xF);
 		pwm_set_wrap(m_sliceNum, m_wrap);
 		pwm_set_enabled(m_sliceNum, true);
-	}
-
-	/**
-	 * @brief Factory method to create an instance of PwmDevices::GeneralDevices
-	 *
-	 * @param drivingFrequency The frequency of the pwm signal
-	 * @param setPin The gpio pin number
-	 * @return GeneralDevices
-	 */
-	GeneralDevices GeneralDevices::create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
-		GeneralDevices temp(drivingFrequency, setPin);
-		temp.begin();
-		return temp;
 	}
 
 	/**

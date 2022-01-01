@@ -42,10 +42,10 @@ namespace LocalLib::Quad {
 		uint64_t motor_2 = thrust + yaw - pitch - roll;
 		uint64_t motor_3 = thrust - yaw - pitch + roll;
 
-		m_motor0.setLevel(motor_0);
-		m_motor1.setLevel(motor_1);
-		m_motor2.setLevel(motor_2);
-		m_motor3.setLevel(motor_3);
+		m_motor0.setRangedLevel(motor_0);
+		m_motor1.setRangedLevel(motor_1);
+		m_motor2.setRangedLevel(motor_2);
+		m_motor3.setRangedLevel(motor_3);
 	}
 
 	/**
@@ -66,9 +66,9 @@ namespace LocalLib::Quad {
 		uint64_t motor_2 = thrust + yaw - pitch - roll;
 		uint64_t motor_3 = thrust - yaw - pitch + roll;
 
-		m_motor0.setLevel(motor_0);
-		m_motor1.setLevel(motor_1);
-		m_motor2.setLevel(motor_2);
-		m_motor3.setLevel(motor_3);
+		m_motor0.setRangedLevel(motor_0);
+		m_motor1.setRangedLevel(motor_1);
+		m_motor2.setRangedLevel(motor_2);
+		m_motor3.setRangedLevel(motor_3);
 	}
 } // namespace LocalLib::Quad

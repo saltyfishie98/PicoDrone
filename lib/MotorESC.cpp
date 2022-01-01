@@ -64,7 +64,7 @@ namespace LocalLib::PwmDevices {
 	 *
 	 * @param input literal input
 	 */
-	void MotorESC::setLevel(const uint16_t& input) {
+	void MotorESC::setRangedLevel(const uint16_t& input) {
 		using namespace Helpers;
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
 								  (uint16_t)(m_device.getTop() * maxPercent));
