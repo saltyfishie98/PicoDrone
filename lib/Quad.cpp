@@ -5,10 +5,12 @@ using namespace LocalLib;
 
 namespace LocalLib::Quad {
 	Controls::Controls(std::array<gpioPin_t, 4>&& pinsArray) : m_pinsArray(pinsArray) {
-		m_motor0 = PwmDevices::MotorESC::create(m_pinsArray[0]);
-		m_motor1 = PwmDevices::MotorESC::create(m_pinsArray[1]);
-		m_motor2 = PwmDevices::MotorESC::create(m_pinsArray[2]);
-		m_motor3 = PwmDevices::MotorESC::create(m_pinsArray[3]);
+		m_motors = {
+		  PwmDevices::MotorESC::create(m_pinsArray[0]),
+		  PwmDevices::MotorESC::create(m_pinsArray[1]),
+		  PwmDevices::MotorESC::create(m_pinsArray[2]),
+		  PwmDevices::MotorESC::create(m_pinsArray[3]),
+		};
 	}
 
 	void Controls::begin() {}
@@ -34,18 +36,18 @@ namespace LocalLib::Quad {
 	 * @param roll
 	 */
 	void Controls::input(uint16_t&& thrust, uint16_t&& yaw, uint16_t&& pitch, uint16_t&& roll) {
-		DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: data moved\n";)
+		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: data moved\n";)
 
 		// parsing the speed from input to each of the quad's motors
-		uint64_t motor_0 = thrust + yaw + pitch + roll;
-		uint64_t motor_1 = thrust - yaw + pitch - roll;
-		uint64_t motor_2 = thrust + yaw - pitch - roll;
-		uint64_t motor_3 = thrust - yaw - pitch + roll;
+		uint64_t motorSpeed[4];
+		motorSpeed[0] = thrust + yaw + pitch + roll;
+		motorSpeed[1] = thrust - yaw + pitch - roll;
+		motorSpeed[2] = thrust + yaw - pitch - roll;
+		motorSpeed[3] = thrust - yaw - pitch + roll;
 
-		m_motor0.setRangedLevel(motor_0);
-		m_motor1.setRangedLevel(motor_1);
-		m_motor2.setRangedLevel(motor_2);
-		m_motor3.setRangedLevel(motor_3);
+		for (auto i = 0; i < m_motors.size(); ++i) {
+			m_motors[i].setRangedLevel(motorSpeed[i]);
+		}
 	}
 
 	/**
@@ -57,18 +59,23 @@ namespace LocalLib::Quad {
 	 * @param roll value to set the quad's roll
 	 */
 	void Controls::input(const uint16_t& thrust, const uint16_t& yaw, const uint16_t& pitch, const uint16_t& roll) {
-		DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: const ref data\n";)
+		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: const ref data\n";)
 
-		uint64_t speeds = 0;
+		// parsing the speed from input to each of the quad's motors
+		uint64_t motorSpeed[4];
+		motorSpeed[0] = thrust + yaw + pitch + roll;
+		motorSpeed[1] = thrust - yaw + pitch - roll;
+		motorSpeed[2] = thrust + yaw - pitch - roll;
+		motorSpeed[3] = thrust - yaw - pitch + roll;
 
-		uint64_t motor_0 = thrust + yaw + pitch + roll;
-		uint64_t motor_1 = thrust - yaw + pitch - roll;
-		uint64_t motor_2 = thrust + yaw - pitch - roll;
-		uint64_t motor_3 = thrust - yaw - pitch + roll;
+		for (auto i = 0; i < m_motors.size(); ++i) {
+			m_motors[i].setRangedLevel(motorSpeed[i]);
+		}
+	}
 
-		m_motor0.setRangedLevel(motor_0);
-		m_motor1.setRangedLevel(motor_1);
-		m_motor2.setRangedLevel(motor_2);
-		m_motor3.setRangedLevel(motor_3);
+	void Controls::debugPrint() const {
+		for (auto& motor : m_motors) {
+			motor.debugPrint();
+		}
 	}
 } // namespace LocalLib::Quad

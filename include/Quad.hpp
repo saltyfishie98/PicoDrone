@@ -13,6 +13,7 @@ namespace LocalLib::Quad {
 		static Controls create(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
 		void input(uint16_t&& thrust, uint16_t&& yaw, uint16_t&& pitch, uint16_t&& roll) noexcept;
 		void input(const uint16_t& thrust, const uint16_t& yaw, const uint16_t& pitch, const uint16_t& roll) noexcept;
+		void debugPrint() const noexcept;
 
 	  protected:
 		Controls(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
@@ -20,10 +21,7 @@ namespace LocalLib::Quad {
 
 	  private:
 		std::array<gpioPin_t, 4> m_pinsArray;
-		LocalLib::PwmDevices::MotorESC m_motor0;
-		LocalLib::PwmDevices::MotorESC m_motor1;
-		LocalLib::PwmDevices::MotorESC m_motor2;
-		LocalLib::PwmDevices::MotorESC m_motor3;
+		std::array<LocalLib::PwmDevices::MotorESC, 4> m_motors;
 	};
 } // namespace LocalLib::Quad
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_QUAD_HPP_

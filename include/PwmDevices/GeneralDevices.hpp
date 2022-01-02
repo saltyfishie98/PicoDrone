@@ -7,28 +7,31 @@ namespace LocalLib::PwmDevices {
 
 	class GeneralDevices {
 	  public:
+		static GeneralDevices create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+
+		GeneralDevices() = default;
 		GeneralDevices(const GeneralDevices&) = delete;
 
-		GeneralDevices() noexcept {}
 		GeneralDevices(GeneralDevices&&) noexcept;
 		GeneralDevices& operator=(GeneralDevices&&) noexcept;
 
-		static GeneralDevices create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+		void begin() noexcept;
 		void setLevel(const uint16_t& val) noexcept;
-		uint16_t getTop() const;
+		uint16_t getTop() const noexcept;
+		void debugPrint() const noexcept;
 
 	  protected:
-		GeneralDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
-		void begin() noexcept;
+		pwm_t m_frequency = 0;
+		gpioPin_t m_pwmPin = NULLPIN;
+		pwmWrap_t m_wrap = 0;
 
 	  private:
-		gpioPin_t m_pwmPin = NULLPIN;
-		pwm_t m_frequency = 0;
+		GeneralDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
 		pwm_t m_clockSpeed = 0;
 		pwm_t m_sliceNum = 8;
 		pwm_t m_channel = 2;
 		pwm_t m_clockDiv = 0;
-		pwmWrap_t m_wrap = 0;
+		uint16_t m_level = 0;
 	};
 
 } // namespace LocalLib::PwmDevices

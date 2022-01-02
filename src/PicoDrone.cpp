@@ -17,18 +17,15 @@ namespace Application {
 	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 
+	Quad::Controls testQuad = Quad::Controls::create({10, 11, 12, 13});
+	Pico::AnalogReader thrust = Pico::AnalogReader::create(26);
+	Pico::AnalogReader yaw = Pico::AnalogReader::create(27);
+	Pico::AnalogReader pitch = Pico::AnalogReader::create(28);
+
 	namespace Core0 {
-		Pico::AnalogReader thrust = Pico::AnalogReader::create(26);
-		Pico::AnalogReader yaw = Pico::AnalogReader::create(27);
-		Pico::AnalogReader pitch = Pico::AnalogReader::create(28);
-
-		Quad::Controls testQuad = Quad::Controls::create({4, 5, 6, 7});
-
 		void setup() {}
 		void loop() {
 			testQuad.input(thrust.read(), yaw.read(), pitch.read(), (uint16_t)0);
-
-			DEBUG_RUN(std::cout << '\n';)
 		}
 	} // namespace Core0
 
@@ -38,6 +35,14 @@ namespace Application {
 		}
 		void loop() {
 			Misc::Blink::start();
+
+			thrust.debugPrint();
+			yaw.debugPrint();
+			pitch.debugPrint();
+
+			testQuad.debugPrint();
+			sleep_ms(100);
+			printf("\033[2J");
 		}
 	} // namespace Core1
 

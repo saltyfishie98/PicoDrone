@@ -28,9 +28,14 @@ namespace LocalLib::Helpers::Pico {
 	}
 
 	uint16_t AnalogReader::read() {
-		DEBUG_RUN(std::cout << "Pico.cpp: adc_read: INFO: level: " << adc_read() << '\n';)
+		// DEBUG_RUN(std::cout << "Pico.cpp: adc_read: INFO: level: " << adc_read() << '\n';)
 		adc_select_input(m_input);
+		DEBUG_RUN(m_val = adc_read();)
 		return adc_read();
+	}
+
+	void AnalogReader::debugPrint() const {
+		DEBUG_RUN(std::cout << "Pico.cpp: debugPrint: INFO: " << m_val << '\n';)
 	}
 
 } // namespace LocalLib::Helpers::Pico

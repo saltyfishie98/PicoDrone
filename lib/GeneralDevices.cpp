@@ -74,8 +74,8 @@ namespace LocalLib::PwmDevices {
 	 * @param val literal value that is smaller than the wrap value
 	 */
 	void GeneralDevices::setLevel(const uint16_t& val) {
+		DEBUG_RUN(m_level = val;)
 		pwm_set_chan_level(m_sliceNum, m_channel, val);
-		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: Level: " << val << '\n';)
 	}
 
 	/**
@@ -85,5 +85,9 @@ namespace LocalLib::PwmDevices {
 	 */
 	uint16_t GeneralDevices::getTop() const {
 		return m_wrap;
+	}
+
+	void GeneralDevices::debugPrint() const {
+		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: Level: " << m_level << '\n';)
 	}
 } // namespace LocalLib::PwmDevices

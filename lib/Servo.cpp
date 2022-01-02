@@ -3,11 +3,37 @@
 #include "Helpers/Macros.hpp"
 
 namespace LocalLib::PwmDevices {
-	const pwm_t Servo::m_freq;
+	Servo::Servo(Servo&& other) {
+		m_inputMin = other.m_inputMin;
+		m_inputMax = other.m_inputMax;
+		minPercent = other.minPercent;
+		maxPercent = other.maxPercent;
+		GeneralDevices::m_frequency = other.m_frequency;
+		GeneralDevices::m_pwmPin = other.m_pwmPin;
+
+		GeneralDevices::begin();
+	}
+
+	Servo& Servo::operator=(Servo&& other) {
+		if (this != &other) {
+			m_inputMin = other.m_inputMin;
+			m_inputMax = other.m_inputMax;
+			minPercent = other.minPercent;
+			maxPercent = other.maxPercent;
+			GeneralDevices::m_frequency = other.m_frequency;
+			GeneralDevices::m_pwmPin = other.m_pwmPin;
+
+			GeneralDevices::begin();
+		}
+
+		return *this;
+	}
 
 	Servo Servo::create(const gpioPin_t& setPin) {
 		Servo temp;
-		temp.m_device = GeneralDevices::create(Servo::m_freq, setPin);
+		temp.m_frequency = 50;
+		temp.m_pwmPin = setPin;
+		temp.begin();
 
 		return temp;
 	}
@@ -44,9 +70,9 @@ namespace LocalLib::PwmDevices {
 	void Servo::setRangedLevel(const uint16_t& input) {
 		DEBUG_RUN(std::cout << "Server.cpp: setRangedLevel(): INFO: const ref data\n";)
 		using namespace Helpers;
-		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
-								  (uint16_t)(m_device.getTop() * maxPercent));
+		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(GeneralDevices::getTop() * minPercent),
+								  (uint16_t)(GeneralDevices::getTop() * maxPercent));
 
-		m_device.setsLevel(level);
+		GeneralDevices::setLevel(level);
 	}
 } // namespace LocalLib::PwmDevices

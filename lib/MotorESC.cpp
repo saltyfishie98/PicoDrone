@@ -2,23 +2,27 @@
 #include "Helpers/Arduino.hpp"
 
 namespace LocalLib::PwmDevices {
-	const pwm_t MotorESC::m_freq;
-
 	MotorESC::MotorESC(MotorESC&& other) {
-		m_device = std::move(other.m_device);
 		m_inputMin = other.m_inputMin;
 		m_inputMax = other.m_inputMax;
 		minPercent = other.minPercent;
 		maxPercent = other.maxPercent;
+		GeneralDevices::m_frequency = other.m_frequency;
+		GeneralDevices::m_pwmPin = other.m_pwmPin;
+
+		GeneralDevices::begin();
 	}
 
 	MotorESC& MotorESC::operator=(MotorESC&& other) {
 		if (this != &other) {
-			m_device = std::move(other.m_device);
 			m_inputMin = other.m_inputMin;
 			m_inputMax = other.m_inputMax;
 			minPercent = other.minPercent;
 			maxPercent = other.maxPercent;
+			GeneralDevices::m_frequency = other.m_frequency;
+			GeneralDevices::m_pwmPin = other.m_pwmPin;
+
+			GeneralDevices::begin();
 		}
 
 		return *this;
@@ -32,7 +36,9 @@ namespace LocalLib::PwmDevices {
 	 */
 	MotorESC MotorESC::create(const gpioPin_t& setPin) {
 		MotorESC temp;
-		temp.m_device = GeneralDevices::create(m_freq, setPin);
+		temp.m_frequency = 50;
+		temp.m_pwmPin = setPin;
+		temp.begin();
 
 		return temp;
 	}
@@ -66,9 +72,8 @@ namespace LocalLib::PwmDevices {
 	 */
 	void MotorESC::setRangedLevel(const uint16_t& input) {
 		using namespace Helpers;
-		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(m_device.getTop() * minPercent),
-								  (uint16_t)(m_device.getTop() * maxPercent));
-
-		m_device.setLevel(level);
+		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(GeneralDevices::getTop() * minPercent),
+								  (uint16_t)(GeneralDevices::getTop() * maxPercent));
+		GeneralDevices::setLevel(level);
 	}
 } // namespace LocalLib::PwmDevices
