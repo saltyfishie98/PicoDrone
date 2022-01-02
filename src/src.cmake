@@ -24,6 +24,7 @@ target_link_libraries(${BINARY_NAME}
 	ErrorHandler
 	Quad
 	I2CComms
+	MPU9250
 
 	pico_stdlib 
 	hardware_adc
