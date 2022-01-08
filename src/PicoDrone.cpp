@@ -9,12 +9,9 @@
 #include "Helpers/Misc.hpp"
 #include "Helpers/Macros.hpp"
 #include "PwmDevices/PwmDevices.hpp"
-#include "I2C/Comms.hpp"
-#include "I2C/MPU6050.hpp"
 #include "Quad.hpp"
 
 namespace Application {
-	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 
 	Quad::Controls testQuad = Quad::Controls::create({10, 11, 12, 13});

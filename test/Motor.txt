@@ -10,7 +10,7 @@
 #include "PwmDevices/Motor.hpp"
 
 namespace Application {
-	using namespace LocalLib::Helpers::Pico;
+	using namespace LocalLib::Pico;
 	using namespace LocalLib::Helpers;
 	using namespace LocalLib;
 

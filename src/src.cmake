@@ -23,13 +23,13 @@ target_link_libraries(${BINARY_NAME}
 	Helpers
 	ErrorHandler
 	Quad
-	I2CComms
 	MPU9250
 
 	pico_stdlib 
 	hardware_adc
 	hardware_pwm
 	hardware_i2c
+	hardware_spi
 	pico_multicore
 )
 

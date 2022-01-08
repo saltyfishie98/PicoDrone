@@ -39,11 +39,15 @@ namespace LocalLib::Quad {
 		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: data moved\n";)
 
 		// parsing the speed from input to each of the quad's motors
-		uint64_t motorSpeed[4];
-		motorSpeed[0] = thrust + yaw + pitch + roll;
-		motorSpeed[1] = thrust - yaw + pitch - roll;
-		motorSpeed[2] = thrust + yaw - pitch - roll;
-		motorSpeed[3] = thrust - yaw - pitch + roll;
+		float motorSpeed[4];
+		motorSpeed[0] =
+		  (thrust * spdAlloc[Z_TRANS]) + (yaw * spdAlloc[Z_ROT]) + (pitch * spdAlloc[XY_ROT]) + (roll * spdAlloc[XY_ROT]);
+		motorSpeed[1] =
+		  (thrust * spdAlloc[Z_TRANS]) - (yaw * spdAlloc[Z_ROT]) + (pitch * spdAlloc[XY_ROT]) - (roll * spdAlloc[XY_ROT]);
+		motorSpeed[2] =
+		  (thrust * spdAlloc[Z_TRANS]) + (yaw * spdAlloc[Z_ROT]) - (pitch * spdAlloc[XY_ROT]) - (roll * spdAlloc[XY_ROT]);
+		motorSpeed[3] =
+		  (thrust * spdAlloc[Z_TRANS]) - (yaw * spdAlloc[Z_ROT]) - (pitch * spdAlloc[XY_ROT]) + (roll * spdAlloc[XY_ROT]);
 
 		for (auto i = 0; i < m_motors.size(); ++i) {
 			m_motors[i].setRangedLevel(motorSpeed[i]);
@@ -62,7 +66,7 @@ namespace LocalLib::Quad {
 		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: const ref data\n";)
 
 		// parsing the speed from input to each of the quad's motors
-		uint64_t motorSpeed[4];
+		float motorSpeed[4];
 		motorSpeed[0] = thrust + yaw + pitch + roll;
 		motorSpeed[1] = thrust - yaw + pitch - roll;
 		motorSpeed[2] = thrust + yaw - pitch - roll;

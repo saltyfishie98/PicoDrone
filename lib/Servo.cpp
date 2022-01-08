@@ -69,7 +69,7 @@ namespace LocalLib::PwmDevices {
 	 */
 	void Servo::setRangedLevel(const uint16_t& input) {
 		DEBUG_RUN(std::cout << "Server.cpp: setRangedLevel(): INFO: const ref data\n";)
-		using namespace Helpers;
+		using namespace LocalLib;
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(GeneralDevices::getTop() * minPercent),
 								  (uint16_t)(GeneralDevices::getTop() * maxPercent));
 

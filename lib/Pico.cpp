@@ -7,7 +7,7 @@
 #include "ErrMacros.hpp"
 #include "Helpers/Macros.hpp"
 
-namespace LocalLib::Helpers::Pico {
+namespace LocalLib::Pico {
 	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {
 		m_input = m_pinNumber - 26;
 	}
@@ -38,9 +38,44 @@ namespace LocalLib::Helpers::Pico {
 		DEBUG_RUN(std::cout << "Pico.cpp: debugPrint: INFO: " << m_val << '\n';)
 	}
 
-} // namespace LocalLib::Helpers::Pico
+} // namespace LocalLib::Pico
 
-namespace LocalLib::Helpers::Pico::Mutex {
+namespace LocalLib::Pico {
+	SPI::SPI(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) : m_miso(miso), m_cs(cs), m_sck(sck), m_mosi(mosi) {}
+
+	void SPI::begin() {
+		spi_init(SPI_PORT, 500 * 1000);
+		gpio_set_function(m_miso, GPIO_FUNC_SPI);
+		gpio_set_function(m_sck, GPIO_FUNC_SPI);
+		gpio_set_function(m_mosi, GPIO_FUNC_SPI);
+
+		// Chip select is active-low, so we'll initialise it to a driven-high state
+		gpio_init(m_cs);
+		gpio_set_dir(m_cs, GPIO_OUT);
+		gpio_put(m_cs, 1);
+	}
+
+	SPI SPI::create(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) {
+		SPI temp(std::move(miso), std::move(cs), std::move(sck), std::move(mosi));
+		temp.begin();
+		return temp;
+	}
+
+	void SPI::csSelect() {
+		asm volatile("nop \n nop \n nop");
+		gpio_put(m_cs, 0); // Active low
+		asm volatile("nop \n nop \n nop");
+	}
+
+	void SPI::csDeselect() {
+		asm volatile("nop \n nop \n nop");
+		gpio_put(m_cs, 1);
+		asm volatile("nop \n nop \n nop");
+	}
+
+} // namespace LocalLib::Pico
+
+namespace LocalLib::Pico::Mutex {
 
 	Mutex::~Mutex() {
 		unlock();
@@ -79,4 +114,4 @@ namespace LocalLib::Helpers::Pico::Mutex {
 	bool Mutex::entered() {
 		return mutex_try_enter(&m_mtx, mtxIdPtr);
 	}
-} // namespace LocalLib::Helpers::Pico::Mutex
+} // namespace LocalLib::Pico::Mutex

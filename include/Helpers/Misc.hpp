@@ -4,7 +4,7 @@
 #include "Types.hpp"
 #include "pico/stdlib.h"
 
-namespace LocalLib::Helpers::Misc {
+namespace LocalLib::Misc {
 
 	template <typename T>
 	bool arrayFind(T thisElement, T inThisArray) noexcept {
@@ -20,6 +20,6 @@ namespace LocalLib::Helpers::Misc {
 		void start() noexcept;
 		void setup() noexcept;
 	} // namespace Blink
-} // namespace LocalLib::Helpers::Misc
+} // namespace LocalLib::Misc
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_HPP_

@@ -88,6 +88,6 @@ namespace LocalLib::PwmDevices {
 	}
 
 	void GeneralDevices::debugPrint() const {
-		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: Level: " << m_level << '\n';)
+		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: duty percent: " << (float)m_level / (float)m_wrap << '\n';)
 	}
 } // namespace LocalLib::PwmDevices

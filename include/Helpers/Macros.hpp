@@ -4,6 +4,7 @@
 #include <iostream>
 
 #define PRINT_DEBUG
+#define ANALOG_MAX 4095
 
 #ifdef PRINT_DEBUG
 	#ifndef NDEBUG

@@ -24,7 +24,7 @@ namespace LocalLib::PwmDevices {
 		MotorESC(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
 		uint16_t m_inputMin = 0;
 		uint16_t m_inputMax = 4095;
-		float minPercent = 0.05f;
+		float minPercent = 0.04f;
 		float maxPercent = 0.115f;
 	};
 } // namespace LocalLib::PwmDevices

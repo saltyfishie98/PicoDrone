@@ -2,8 +2,8 @@
 
 #include "Helpers/Arduino.hpp"
 
-namespace LocalLib::Helpers::Misc {
-	using namespace LocalLib::Helpers;
+namespace LocalLib::Misc {
+	using namespace LocalLib;
 	auto lastTime = Arduino::millis();
 
 	bool interval(const millis_t& setMillis) {
@@ -38,4 +38,4 @@ namespace LocalLib::Helpers::Misc {
 		}
 
 	} // namespace Blink
-} // namespace LocalLib::Helpers::Misc
+} // namespace LocalLib::Misc

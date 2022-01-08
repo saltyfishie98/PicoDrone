@@ -5,6 +5,7 @@ add_library(Helpers STATIC
 target_link_libraries(Helpers
 	pico_stdlib 
 	hardware_adc
+	hardware_spi
 )
 target_include_directories(Helpers PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
@@ -42,15 +43,6 @@ target_link_libraries(Quad
 )
 target_include_directories(Quad PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
-
-add_library(I2CComms STATIC
-	I2C_Comms.cpp 
-)
-target_link_libraries(I2CComms
-	pico_stdlib 
-	hardware_i2c
-)
-target_include_directories(I2CComms PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
 add_library(MPU9250 STATIC

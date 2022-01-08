@@ -6,14 +6,20 @@
 #include "Types.hpp"
 #include "PwmDevices/MotorESC.hpp"
 
+#define Z_TRANS 0
+#define XY_ROT	1
+#define Z_ROT	2
+
 namespace LocalLib::Quad {
 	class Controls {
 	  public:
 		Controls() = default;
 		static Controls create(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
+
 		void input(uint16_t&& thrust, uint16_t&& yaw, uint16_t&& pitch, uint16_t&& roll) noexcept;
 		void input(const uint16_t& thrust, const uint16_t& yaw, const uint16_t& pitch, const uint16_t& roll) noexcept;
 		void debugPrint() const noexcept;
+		float spdAlloc[3] = {0.7f, 0.15f, 0.15f};
 
 	  protected:
 		Controls(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
