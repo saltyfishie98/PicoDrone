@@ -36,29 +36,14 @@ namespace LocalLib::Pico {
 
 		SPI() = default;
 		SPI(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) noexcept;
+
 		void begin();
-
-		template <std::size_t len>
-		std::array<uint8_t, len> readRegister(uint8_t&& reg) noexcept {
-			std::array<uint8_t, len> out;
-			uint8_t buf[len];
-
-			reg |= 0x80;
-			csSelect();
-			spi_write_blocking(SPI_PORT, buf, len);
-			sleep_ms(10);
-			spi_read_blocking(SPI_PORT, 0, buf, len);
-			csDeselect();
-			sleep_ms(10);
-
-			std::move(std::begin(buf), std::end(buf), out.begin());
-
-			return out;
-		}
-
-	  private:
 		void csSelect() noexcept;
 		void csDeselect() noexcept;
+		void writeRegister(uint8_t* buffer, std::size_t len) noexcept;
+		void readRegister(uint8_t&& reg, uint8_t* buffer, std::size_t len) noexcept;
+
+	  private:
 		uint m_miso = 0;
 		uint m_cs = 0;
 		uint m_sck = 0;

@@ -40,6 +40,7 @@ namespace LocalLib::Quad {
 
 		// parsing the speed from input to each of the quad's motors
 		float motorSpeed[4];
+
 		motorSpeed[0] =
 		  (thrust * spdAlloc[Z_TRANS]) + (yaw * spdAlloc[Z_ROT]) + (pitch * spdAlloc[XY_ROT]) + (roll * spdAlloc[XY_ROT]);
 		motorSpeed[1] =

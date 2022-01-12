@@ -1,6 +1,7 @@
 add_library(Helpers STATIC
 	Misc.cpp
 	Pico.cpp
+	../include/Helpers/Pico.hpp
 )
 target_link_libraries(Helpers
 	pico_stdlib 

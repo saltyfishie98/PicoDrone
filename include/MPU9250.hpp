@@ -1,16 +1,42 @@
+#ifndef C__PROJECTS_PICO_PICODRONE_INCLUDE_MPU9250_HPP_
+#define C__PROJECTS_PICO_PICODRONE_INCLUDE_MPU9250_HPP_
+
 #include "pico/stdlib.h"
+#include <array>
 
-#ifndef mpuObject_h
-	#define mpuObject_h
+#include "Helpers/Pico.hpp"
 
-class mpu9250 {
-  public:
-	int16_t acceleration[3], gyro[3], gyroCal[3], eulerAngles[2], fullAngles[2];
-	absolute_time_t timeOfLastCheck;
+namespace LocalLib {
+	class mpu9250 {
+	  public:
+		struct Vec3 {
+			int16_t X = 0;
+			int16_t Y = 0;
+			int16_t Z = 0;
+		};
 
-	mpu9250(int loop);
-	void updateAngles();
-	void printData();
-};
+		struct Motion {
+			int16_t roll = 0;
+			int16_t pitch = 0;
+			int16_t yaw = 0;
+		};
 
-#endif
+		static mpu9250 create(uint&& miso = 4, uint&& cs = 5, uint&& sck = 6, uint&& mosi = 7);
+
+		mpu9250() = default;
+
+		void update();
+		Vec3 rawAccel() noexcept;
+		Vec3 rawGyro() noexcept;
+		void calibrateGyro(uint8_t&& numLoop) noexcept;
+		void reset() noexcept;
+
+	  protected:
+		mpu9250(uint&& miso, uint&& cs, uint&& sck, uint&& mosi);
+
+	  private:
+		Pico::SPI m_spi;
+		Vec3 m_gyroCal;
+	};
+} // namespace LocalLib
+#endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_MPU9250_HPP_}

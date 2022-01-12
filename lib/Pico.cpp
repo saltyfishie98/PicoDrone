@@ -73,6 +73,22 @@ namespace LocalLib::Pico {
 		asm volatile("nop \n nop \n nop");
 	}
 
+	void SPI::writeRegister(uint8_t* buffer, std::size_t len) noexcept {
+		csSelect();
+		spi_write_blocking(SPI_PORT, buffer, len);
+		csDeselect();
+	}
+
+	void SPI::readRegister(uint8_t&& reg, uint8_t* buffer, std::size_t len) noexcept {
+		reg |= 0x80;
+		csSelect();
+		spi_write_blocking(SPI_PORT, buffer, len);
+		sleep_ms(10);
+		spi_read_blocking(SPI_PORT, 0, buffer, len);
+		csDeselect();
+		sleep_ms(10);
+	}
+
 } // namespace LocalLib::Pico
 
 namespace LocalLib::Pico::Mutex {

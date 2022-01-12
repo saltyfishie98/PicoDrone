@@ -10,7 +10,15 @@ void sandbox() {
 	using namespace LocalLib;
 
 	mpu9250 mpu = mpu9250::create();
-	sleep_ms(10000);
 
-	while (1) {}
+	while (1) {
+		auto accel = mpu.rawAccel();
+		auto gyro = mpu.rawGyro();
+
+		printf("accel: X: %d, Y:%d, Z:%d \n", accel.X, accel.Y, accel.Z);
+		printf("gyro: X: %d, Y:%d, Z:%d \n\n", gyro.X, gyro.Y, gyro.Z);
+
+		sleep_ms(100);
+		printf("\033[2J");
+	}
 }

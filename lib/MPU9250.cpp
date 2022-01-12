@@ -1,37 +1,61 @@
 #include "mpu9250.hpp"
-extern "C" {
-#include "mpu9250.h"
-}
+#include <stdio.h>
 
-mpu9250::mpu9250(int loop) {
-	// Starts the mpu and calibrates the gyro
+namespace LocalLib {
+	mpu9250 mpu9250::create(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) {
+		mpu9250 temp(std::move(miso), std::move(cs), std::move(sck), std::move(mosi));
+		temp.reset();
+		temp.calibrateGyro(100);
+		return temp;
+	}
 
-	start_spi();
-	calibrate_gyro(gyroCal, loop);
-	mpu9250_read_raw_accel(acceleration);
-	calculate_angles_from_accel(eulerAngles, acceleration);
-	timeOfLastCheck = get_absolute_time();
-}
+	mpu9250::mpu9250(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) {
+		m_spi = Pico::SPI::create(std::move(miso), std::move(cs), std::move(sck), std::move(mosi));
+	}
 
-void mpu9250::updateAngles() {
-	// Calculates the angles based on the sensor readings
+	void mpu9250::reset() {
+		uint8_t reg[2] = {0x6B, 0x00};
+		m_spi.writeRegister(reg, 2);
+	}
 
-	mpu9250_read_raw_accel(acceleration);
-	mpu9250_read_raw_gyro(gyro);
-	gyro[0] -= gyroCal[0];
-	gyro[1] -= gyroCal[1];
-	gyro[2] -= gyroCal[2];
-	calculate_angles(eulerAngles, acceleration, gyro, absolute_time_diff_us(timeOfLastCheck, get_absolute_time()));
-	timeOfLastCheck = get_absolute_time();
+	void mpu9250::calibrateGyro(uint8_t&& numLoop) {
+		mpu9250::Vec3 temp;
 
-	convert_to_full(eulerAngles, acceleration, fullAngles);
-}
+		for (int i = 0; i < numLoop; i++) {
+			temp = rawGyro();
+			m_gyroCal.X += temp.X;
+			m_gyroCal.Y += temp.Y;
+			m_gyroCal.Z += temp.Z;
+			printf("gyrocal0: %d, gyrocal1: %d, gyrocal2: %d\n", m_gyroCal.X / i, m_gyroCal.Y / i, m_gyroCal.Z / i);
+		}
+		m_gyroCal.X /= numLoop;
+		m_gyroCal.Y /= numLoop;
+		m_gyroCal.Z /= numLoop;
+	}
 
-void mpu9250::printData() {
-	// Prints out the sensor readings and calculated values
+	mpu9250::Vec3 mpu9250::rawAccel() {
+		mpu9250::Vec3 out;
 
-	printf("Acc. X = %d, Y = %d, Z = %d\n", acceleration[0], acceleration[1], acceleration[2]);
-	printf("Gyro. X = %d, Y = %d, Z = %d\n", gyro[0] - gyroCal[0], gyro[1] - gyroCal[1], gyro[2] - gyroCal[2]);
-	printf("Euler. Roll = %d, Pitch = %d\n", eulerAngles[0], eulerAngles[1]);
-	printf("Full. Roll = %d, Pitch = %d\n", fullAngles[0], fullAngles[1]);
-}
+		uint8_t data[6];
+		m_spi.readRegister(0x3B, data, 6);
+
+		out.X = (data[1] << 8 | data[2]);
+		out.Y = (data[2] << 8 | data[3]);
+		out.Z = (data[4] << 8 | data[5]);
+
+		return out;
+	}
+
+	mpu9250::Vec3 mpu9250::rawGyro() {
+		mpu9250::Vec3 out;
+
+		uint8_t data[6];
+		m_spi.readRegister(0x43, data, 6);
+
+		out.X = (data[1] << 8 | data[2]);
+		out.Y = (data[2] << 8 | data[3]);
+		out.Z = (data[4] << 8 | data[5]);
+
+		return out;
+	}
+} // namespace LocalLib
