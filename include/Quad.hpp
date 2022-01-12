@@ -16,8 +16,8 @@ namespace LocalLib::Quad {
 		Controls() = default;
 		static Controls create(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
 
-		void input(uint16_t&& thrust, uint16_t&& yaw, uint16_t&& pitch, uint16_t&& roll) noexcept;
-		void input(const uint16_t& thrust, const uint16_t& yaw, const uint16_t& pitch, const uint16_t& roll) noexcept;
+		void input(int16_t&& thrust, int16_t&& yaw, int16_t&& pitch, int16_t&& roll) noexcept;
+		void input(const int16_t& thrust, const int16_t& yaw, const int16_t& pitch, const int16_t& roll) noexcept;
 		void debugPrint() const noexcept;
 		float spdAlloc[3] = {0.7f, 0.15f, 0.15f};
 

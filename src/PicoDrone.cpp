@@ -22,7 +22,7 @@ namespace Application {
 	namespace Core0 {
 		void setup() {}
 		void loop() {
-			testQuad.input(thrust.read(), yaw.read(), pitch.read(), (uint16_t)0);
+			testQuad.input(thrust.read(), yaw.read(), pitch.read(), (uint16_t)2047);
 		}
 	} // namespace Core0
 
