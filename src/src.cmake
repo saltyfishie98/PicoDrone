@@ -16,7 +16,7 @@ pico_set_program_version(${BINARY_NAME} "0.1")
 pico_enable_stdio_uart(${BINARY_NAME} 1)
 pico_enable_stdio_usb(${BINARY_NAME} 0)
 
-target_include_directories(${BINARY_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${BINARY_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/vendor/pico-lora/src)
 
 target_link_libraries(${BINARY_NAME} 
 	PwmDevices
@@ -24,6 +24,7 @@ target_link_libraries(${BINARY_NAME}
 	ErrorHandler
 	Quad
 	MPU9250
+	Remote
 
 	pico_stdlib 
 	hardware_adc

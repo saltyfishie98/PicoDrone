@@ -15,7 +15,10 @@ include(cmake/set_options.cmake)
 pico_sdk_init()
 suppress_tinyusb_warnings()
 
+add_subdirectory(vendor/pico-lora)
 add_subdirectory(lib)
+
+include_directories(${PROJECT_SOURCE_DIR}/vendor/pico-lora/src)
 
 # can't link pico_sdk without doing this
 include(src/src.cmake)

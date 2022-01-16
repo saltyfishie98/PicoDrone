@@ -1,24 +1,34 @@
 #include <iostream>
 #include <stdio.h>
-#include "pico/stdlib.h"
-#include "pico/binary_info.h"
 
-#include "hardware/i2c.h"
-#include "MPU9250.hpp"
+#include "LoRa-RP2040.h"
 
 void sandbox() {
-	using namespace LocalLib;
+	LoRa.setPins(17, 27, 26);
 
-	mpu9250 mpu = mpu9250::create();
+	if (!LoRa.begin(433E6)) {
+		printf("Failed\n");
+		sleep_ms(500);
+		abort();
+	}
+
+	printf("Success!\n");
 
 	while (1) {
-		auto accel = mpu.rawAccel();
-		auto gyro = mpu.rawGyro();
+		int packetSize = LoRa.parsePacket();
+		if (packetSize) {
+			std::string dataStr = "";
+			while (LoRa.available()) {
+				dataStr.push_back((char)LoRa.read());
+			}
 
-		printf("accel: X: %d, Y:%d, Z:%d \n", accel.X, accel.Y, accel.Z);
-		printf("gyro: X: %d, Y:%d, Z:%d \n\n", gyro.X, gyro.Y, gyro.Z);
+			int data = std::stoi(dataStr);
 
-		sleep_ms(100);
-		printf("\033[2J");
+			printf("%d", data);
+
+			// print RSSI of packet
+			printf("\nRSSI: ");
+			printf("%d\n", LoRa.packetRssi());
+		}
 	}
 }
