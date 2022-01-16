@@ -2,6 +2,7 @@
 #include "Helpers/Macros.hpp"
 
 using namespace LocalLib;
+using namespace LocalLib::PwmDevices;
 
 namespace LocalLib::Quad {
 	Controls::Controls(std::array<gpioPin_t, 4>&& pinsArray) : m_pinsArray(pinsArray) {
@@ -39,16 +40,16 @@ namespace LocalLib::Quad {
 		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: data moved\n";)
 
 		// parsing the speed from input to each of the quad's motors
-		float motorSpeed[4];
+		float motorSpeed[4] = {0, 0, 0, 0};
 
-		motorSpeed[0] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - 2047) * spdAlloc[Z_ROT]) +
-						((pitch - 2047) * spdAlloc[XY_ROT]) + ((roll - 2047) * spdAlloc[XY_ROT]);
-		motorSpeed[1] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - 2047) * spdAlloc[Z_ROT]) +
-						((pitch - 2047) * spdAlloc[XY_ROT]) - ((roll - 2047) * spdAlloc[XY_ROT]);
-		motorSpeed[2] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - 2047) * spdAlloc[Z_ROT]) -
-						((pitch - 2047) * spdAlloc[XY_ROT]) - ((roll - 2047) * spdAlloc[XY_ROT]);
-		motorSpeed[3] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - 2047) * spdAlloc[Z_ROT]) -
-						((pitch - 2047) * spdAlloc[XY_ROT]) + ((roll - 2047) * spdAlloc[XY_ROT]);
+		motorSpeed[0] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) +
+						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
+		motorSpeed[1] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) +
+						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
+		motorSpeed[2] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) -
+						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
+		motorSpeed[3] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) -
+						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
 
 		for (auto i = 0; i < m_motors.size(); ++i) {
 			if (motorSpeed[i] <= 0) {
@@ -70,11 +71,16 @@ namespace LocalLib::Quad {
 		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: const ref data\n";)
 
 		// parsing the speed from input to each of the quad's motors
-		float motorSpeed[4];
-		motorSpeed[0] = thrust + yaw + pitch + roll;
-		motorSpeed[1] = thrust - yaw + pitch - roll;
-		motorSpeed[2] = thrust + yaw - pitch - roll;
-		motorSpeed[3] = thrust - yaw - pitch + roll;
+		float motorSpeed[4] = {0, 0, 0, 0};
+
+		motorSpeed[0] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) +
+						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
+		motorSpeed[1] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) +
+						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
+		motorSpeed[2] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) -
+						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
+		motorSpeed[3] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) -
+						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
 
 		for (auto i = 0; i < m_motors.size(); ++i) {
 			if (motorSpeed[i] <= 0) {

@@ -10,19 +10,26 @@
 #include "Helpers/Macros.hpp"
 #include "PwmDevices/PwmDevices.hpp"
 #include "Quad.hpp"
+#include "Remote.hpp"
 
 namespace Application {
 	using namespace LocalLib;
 
 	Quad::Controls testQuad = Quad::Controls::create({10, 11, 12, 13});
-	Pico::AnalogReader thrust = Pico::AnalogReader::create(26);
-	Pico::AnalogReader yaw = Pico::AnalogReader::create(27);
-	Pico::AnalogReader pitch = Pico::AnalogReader::create(28);
+	Remote remote0 = Remote::create();
+	bool started = false;
 
 	namespace Core0 {
-		void setup() {}
+		void setup() {
+			while (remote0.getPacketData().rssi == 0) {
+				std::cout << "waiting for signal...\n";
+				sleep_ms(1000);
+			}
+			started = true;
+		}
 		void loop() {
-			testQuad.input(thrust.read(), yaw.read(), pitch.read(), (uint16_t)2047);
+			int16_t thrustData = remote0.getPacketData().data;
+			testQuad.input(std::move(thrustData), (int16_t)511, (int16_t)511, (int16_t)511);
 		}
 	} // namespace Core0
 
@@ -32,14 +39,12 @@ namespace Application {
 		}
 		void loop() {
 			Misc::Blink::start();
+			if (started) {
+				testQuad.debugPrint();
 
-			thrust.debugPrint();
-			yaw.debugPrint();
-			pitch.debugPrint();
-
-			testQuad.debugPrint();
-			sleep_ms(100);
-			printf("\033[2J");
+				sleep_ms(100);
+				printf("\033[2J");
+			}
 		}
 	} // namespace Core1
 

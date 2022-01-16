@@ -28,6 +28,7 @@ namespace LocalLib::Quad {
 	  private:
 		std::array<gpioPin_t, 4> m_pinsArray;
 		std::array<LocalLib::PwmDevices::MotorESC, 4> m_motors;
+		int16_t m_offset = LocalLib::PwmDevices::MotorESC::inputHalf();
 	};
 } // namespace LocalLib::Quad
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_QUAD_HPP_

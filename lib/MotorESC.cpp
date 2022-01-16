@@ -2,6 +2,13 @@
 #include "Helpers/Arduino.hpp"
 
 namespace LocalLib::PwmDevices {
+	uint16_t MotorESC::m_inputMin = 0;
+	uint16_t MotorESC::m_inputMax = 1023;
+
+	uint16_t MotorESC::inputHalf() {
+		return m_inputMax / 2;
+	}
+
 	MotorESC::MotorESC(MotorESC&& other) {
 		m_inputMin = other.m_inputMin;
 		m_inputMax = other.m_inputMax;

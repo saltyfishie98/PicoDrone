@@ -8,6 +8,7 @@ namespace LocalLib::PwmDevices {
 	class MotorESC : private GeneralDevices {
 	  public:
 		static MotorESC create(const gpioPin_t& setPin) noexcept;
+		static uint16_t inputHalf() noexcept;
 
 		MotorESC() = default;
 		MotorESC(const MotorESC&) = delete;
@@ -18,12 +19,13 @@ namespace LocalLib::PwmDevices {
 		void setInputRange(uint16_t&& min, uint16_t&& max) noexcept;
 		void setInputRange(const uint16_t& min, const uint16_t& max) noexcept;
 		void setRangedLevel(const uint16_t& input) noexcept;
+
 		using GeneralDevices::debugPrint;
 
 	  private:
 		MotorESC(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
-		uint16_t m_inputMin = 0;
-		uint16_t m_inputMax = 4095;
+		static uint16_t m_inputMin;
+		static uint16_t m_inputMax;
 		float minPercent = 0.04f;
 		float maxPercent = 0.115f;
 	};

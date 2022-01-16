@@ -55,3 +55,15 @@ target_link_libraries(MPU9250
 	hardware_spi
 )
 target_include_directories(MPU9250 PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+
+
+add_library(Remote STATIC
+	Remote.cpp 
+)
+target_link_libraries(Remote
+	pico_stdlib 
+	LoRa_pico_lib
+	LoRa_print
+)
+target_include_directories(Remote PRIVATE ${PROJECT_SOURCE_DIR}/include)
