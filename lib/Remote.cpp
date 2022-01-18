@@ -25,7 +25,10 @@ namespace LocalLib {
 				dataStr.push_back((char)LoRaClass::read());
 			}
 
-			m_packetData.data = stoi(dataStr);
+			if (dataStr.size() <= 4) {
+				m_packetData.data = stoi(dataStr);
+			}
+
 			m_packetData.rssi = LoRaClass::packetRssi();
 			m_packetData.snr = LoRaClass::packetSnr();
 		}
