@@ -6,7 +6,7 @@
 
 #include "../vendor/pico-lora/src/LoRa-RP2040.h"
 
-namespace LocalLib {
+namespace PicoPilot {
 	class Remote : public LoRaClass {
 	  public:
 		Remote() = default;
@@ -26,6 +26,6 @@ namespace LocalLib {
 	  private:
 		Packet m_packetData;
 	};
-} // namespace LocalLib
+} // namespace PicoPilot
 
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_REMOTE_HPP_

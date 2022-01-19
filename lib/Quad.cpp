@@ -1,11 +1,11 @@
 #include "Quad.hpp"
 #include "Helpers/Macros.hpp"
 
-using namespace LocalLib;
-using namespace LocalLib::PwmDevices;
+using namespace PicoPilot;
+using namespace PicoPilot::PwmDevices;
 
-namespace LocalLib::Quad {
-	Controls::Controls(std::array<gpioPin_t, 4>&& pinsArray) : m_pinsArray(pinsArray) {
+namespace PicoPilot::Quad {
+	Controls::Controls(std::array<Pico::gpioPin_t, 4>&& pinsArray) : m_pinsArray(pinsArray) {
 		m_motors = {
 		  PwmDevices::MotorESC::create(m_pinsArray[0]),
 		  PwmDevices::MotorESC::create(m_pinsArray[1]),
@@ -22,7 +22,7 @@ namespace LocalLib::Quad {
 	 * @param pinsArray The number of the 4 pins used for outputing the pwm signals
 	 * @return Controls
 	 */
-	Controls Controls::create(std::array<gpioPin_t, 4>&& pinsArray) {
+	Controls Controls::create(std::array<Pico::gpioPin_t, 4>&& pinsArray) {
 		Controls temp = Controls(std::move(pinsArray));
 		temp.begin();
 		return temp;
@@ -95,4 +95,4 @@ namespace LocalLib::Quad {
 			motor.debugPrint();
 		}
 	}
-} // namespace LocalLib::Quad
+} // namespace PicoPilot::Quad

@@ -7,12 +7,12 @@
 #include "ErrMacros.hpp"
 #include "Helpers/Macros.hpp"
 
-namespace LocalLib::Pico {
-	AnalogReader::AnalogReader(const gpioPin_t& number) : m_pinNumber(number) {
+namespace Pico {
+	AnalogReader::AnalogReader(const Pico::gpioPin_t& number) : m_pinNumber(number) {
 		m_input = m_pinNumber - 26;
 	}
 
-	AnalogReader AnalogReader::create(const gpioPin_t& number) {
+	AnalogReader AnalogReader::create(const Pico::gpioPin_t& number) {
 		AnalogReader temp(number);
 		temp.begin();
 		return temp;
@@ -38,60 +38,63 @@ namespace LocalLib::Pico {
 		DEBUG_RUN(std::cout << "Pico.cpp: debugPrint: INFO: " << m_val << '\n';)
 	}
 
-} // namespace LocalLib::Pico
+} // namespace Pico
 
-namespace LocalLib::Pico {
-	SPI::SPI(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) : m_miso(miso), m_cs(cs), m_sck(sck), m_mosi(mosi) {}
+namespace Pico {
+	SPI::SPI(spi_inst_t* port, Pins&& gpioPins) : m_port(port), m_pins(gpioPins) {}
 
-	void SPI::begin() {
-		spi_init(SPI_PORT, 500 * 1000);
-		gpio_set_function(m_miso, GPIO_FUNC_SPI);
-		gpio_set_function(m_sck, GPIO_FUNC_SPI);
-		gpio_set_function(m_mosi, GPIO_FUNC_SPI);
-
-		// Chip select is active-low, so we'll initialise it to a driven-high state
-		gpio_init(m_cs);
-		gpio_set_dir(m_cs, GPIO_OUT);
-		gpio_put(m_cs, 1);
-	}
-
-	SPI SPI::create(uint&& miso, uint&& cs, uint&& sck, uint&& mosi) {
-		SPI temp(std::move(miso), std::move(cs), std::move(sck), std::move(mosi));
+	SPI SPI::create(spi_inst_t* port, Pins&& pins) {
+		SPI temp(port, std::move(pins));
 		temp.begin();
 		return temp;
 	}
 
-	void SPI::csSelect() {
+	void SPI::begin() {
+		spi_init(m_port, 500 * 1000);
+		gpio_set_function(m_pins.miso, GPIO_FUNC_SPI);
+		gpio_set_function(m_pins.sck, GPIO_FUNC_SPI);
+		gpio_set_function(m_pins.mosi, GPIO_FUNC_SPI);
+
+		// Chip select is active-low, so we'll initialise it to a driven-high state
+		gpio_init(m_pins.cs);
+		gpio_set_dir(m_pins.cs, GPIO_OUT);
+		gpio_put(m_pins.cs, 1);
+	}
+
+	void SPI::cs_select() {
 		asm volatile("nop \n nop \n nop");
-		gpio_put(m_cs, 0); // Active low
+		gpio_put(m_pins.cs, 0); // Active low
 		asm volatile("nop \n nop \n nop");
 	}
 
-	void SPI::csDeselect() {
+	void SPI::cs_deselect() {
 		asm volatile("nop \n nop \n nop");
-		gpio_put(m_cs, 1);
+		gpio_put(m_pins.cs, 1);
 		asm volatile("nop \n nop \n nop");
 	}
 
-	void SPI::writeRegister(uint8_t* buffer, std::size_t len) noexcept {
-		csSelect();
-		spi_write_blocking(SPI_PORT, buffer, len);
-		csDeselect();
-	}
+	void SPI::read_registers(uint8_t reg, uint8_t* buf, uint16_t len) {
+		// For this particular device, we send the device the register we want to read
+		// first, then subsequently read from the device. The register is auto incrementing
+		// so we don't need to keep sending the register we want, just the first.
 
-	void SPI::readRegister(uint8_t&& reg, uint8_t* buffer, std::size_t len) noexcept {
-		reg |= 0x80;
-		csSelect();
-		spi_write_blocking(SPI_PORT, buffer, len);
+		reg |= READ_BIT;
+		cs_select();
+		spi_write_blocking(m_port, &reg, 1);
 		sleep_ms(10);
-		spi_read_blocking(SPI_PORT, 0, buffer, len);
-		csDeselect();
+		spi_read_blocking(m_port, 0, buf, len);
+		cs_deselect();
 		sleep_ms(10);
 	}
 
-} // namespace LocalLib::Pico
+	void SPI::write_registers(const uint8_t* buf, size_t len) {
+		cs_select();
+		spi_write_blocking(m_port, buf, 2);
+		cs_deselect();
+	}
+} // namespace Pico
 
-namespace LocalLib::Pico::Mutex {
+namespace Pico::Mutex {
 
 	Mutex::~Mutex() {
 		unlock();
@@ -130,4 +133,4 @@ namespace LocalLib::Pico::Mutex {
 	bool Mutex::entered() {
 		return mutex_try_enter(&m_mtx, mtxIdPtr);
 	}
-} // namespace LocalLib::Pico::Mutex
+} // namespace Pico::Mutex

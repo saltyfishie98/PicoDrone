@@ -2,7 +2,7 @@
 #include "Helpers/Arduino.hpp"
 #include "Helpers/Macros.hpp"
 
-namespace LocalLib::PwmDevices {
+namespace PicoPilot::PwmDevices {
 	Servo::Servo(Servo&& other) {
 		m_inputMin = other.m_inputMin;
 		m_inputMax = other.m_inputMax;
@@ -29,7 +29,7 @@ namespace LocalLib::PwmDevices {
 		return *this;
 	}
 
-	Servo Servo::create(const gpioPin_t& setPin) {
+	Servo Servo::create(const Pico::gpioPin_t& setPin) {
 		Servo temp;
 		temp.m_frequency = 50;
 		temp.m_pwmPin = setPin;
@@ -69,10 +69,10 @@ namespace LocalLib::PwmDevices {
 	 */
 	void Servo::setRangedLevel(const uint16_t& input) {
 		DEBUG_RUN(std::cout << "Server.cpp: setRangedLevel(): INFO: const ref data\n";)
-		using namespace LocalLib;
+		using namespace PicoPilot;
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(GeneralDevices::getTop() * minPercent),
 								  (uint16_t)(GeneralDevices::getTop() * maxPercent));
 
 		GeneralDevices::setLevel(level);
 	}
-} // namespace LocalLib::PwmDevices
+} // namespace PicoPilot::PwmDevices

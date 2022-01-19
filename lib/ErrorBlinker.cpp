@@ -5,7 +5,7 @@
 #include "Types.hpp"
 #include "Helpers/Macros.hpp"
 
-namespace LocalLib::ErrorHandler {
+namespace PicoPilot::ErrorHandler {
 	void setErrorLocation(ErrorNum* numAddr, ErrorLocation setType) {
 		(*numAddr) |= (1 << (setType - 1));
 	}
@@ -34,11 +34,10 @@ namespace LocalLib::ErrorHandler {
 
 		class BlinkerLed {
 		  public:
-			BlinkerLed(const gpioPin_t& number = PICO_DEFAULT_LED_PIN) : m_pinNum(number) {
+			BlinkerLed(const Pico::gpioPin_t& number = PICO_DEFAULT_LED_PIN) : m_pinNum(number) {
 				gpio_init(m_pinNum);
 				gpio_set_dir(m_pinNum, 1);
-				DEBUG_RUN(std::cout
-							<< "\n\n================== created Blicker =================\n\n";)
+				DEBUG_RUN(std::cout << "\n\n================== created Blicker =================\n\n";)
 			}
 
 			void setSpeed(const float& speed) {
@@ -79,7 +78,7 @@ namespace LocalLib::ErrorHandler {
 			uint32_t longInterval = 400;
 			uint32_t spaceInterval = 600;
 			float m_scale = 1.f;
-			gpioPin_t m_pinNum = NULLPIN;
+			Pico::gpioPin_t m_pinNum = NULLPIN;
 		} errorLed;
 
 		void blink(const ErrorCode& input, const float& speed) {
@@ -98,4 +97,4 @@ namespace LocalLib::ErrorHandler {
 			sleep_ms(400);
 		}
 	} // namespace Blinker
-} // namespace LocalLib::ErrorHandler
+} // namespace PicoPilot::ErrorHandler

@@ -10,11 +10,11 @@
 #define XY_ROT	1
 #define Z_ROT	2
 
-namespace LocalLib::Quad {
+namespace PicoPilot::Quad {
 	class Controls {
 	  public:
 		Controls() = default;
-		static Controls create(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
+		static Controls create(std::array<Pico::gpioPin_t, 4>&& pinsArray) noexcept;
 
 		void input(int16_t&& thrust, int16_t&& yaw, int16_t&& pitch, int16_t&& roll) noexcept;
 		void input(const int16_t& thrust, const int16_t& yaw, const int16_t& pitch, const int16_t& roll) noexcept;
@@ -22,13 +22,13 @@ namespace LocalLib::Quad {
 		float spdAlloc[3] = {0.7f, 0.15f, 0.15f};
 
 	  protected:
-		Controls(std::array<gpioPin_t, 4>&& pinsArray) noexcept;
+		Controls(std::array<Pico::gpioPin_t, 4>&& pinsArray) noexcept;
 		void begin() noexcept;
 
 	  private:
-		std::array<gpioPin_t, 4> m_pinsArray;
-		std::array<LocalLib::PwmDevices::MotorESC, 4> m_motors;
-		int16_t m_offset = LocalLib::PwmDevices::MotorESC::inputHalf();
+		std::array<Pico::gpioPin_t, 4> m_pinsArray;
+		std::array<PicoPilot::PwmDevices::MotorESC, 4> m_motors;
+		int16_t m_offset = PicoPilot::PwmDevices::MotorESC::inputHalf();
 	};
-} // namespace LocalLib::Quad
+} // namespace PicoPilot::Quad
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_QUAD_HPP_

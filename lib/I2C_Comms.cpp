@@ -1,6 +1,6 @@
 #include "I2C/Comms.hpp"
 
-namespace LocalLib::I2C {
+namespace PicoPilot::I2C {
 	Comms::Comms(Comms&& other) {
 		m_devAddr = other.m_devAddr;
 	}
@@ -13,10 +13,11 @@ namespace LocalLib::I2C {
 		return *this;
 	}
 
-	Comms::Comms(uint8_t deviceAddress, i2c_inst_t* port, gpioPin_t sda, gpioPin_t scl, uint32_t baudrate)
+	Comms::Comms(uint8_t deviceAddress, i2c_inst_t* port, Pico::gpioPin_t sda, Pico::gpioPin_t scl, uint32_t baudrate)
 	  : m_devAddr(deviceAddress), m_port(port), m_sda(sda), m_scl(scl), m_baudrate(baudrate) {}
 
-	Comms Comms::create(uint8_t deviceAddress, i2c_inst_t* port, gpioPin_t sda, gpioPin_t scl, uint32_t baudrate) {
+	Comms
+	  Comms::create(uint8_t deviceAddress, i2c_inst_t* port, Pico::gpioPin_t sda, Pico::gpioPin_t scl, uint32_t baudrate) {
 		Comms temp(deviceAddress, port, sda, scl, baudrate);
 		temp.begin();
 		return temp;
@@ -75,4 +76,4 @@ namespace LocalLib::I2C {
 		return writeByte(regAddr, b);
 	}
 
-} // namespace LocalLib::I2C
+} // namespace PicoPilot::I2C

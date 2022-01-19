@@ -8,8 +8,8 @@
 #include "ErrMacros.hpp"
 #include "Helpers/Macros.hpp"
 
-namespace LocalLib::PwmDevices {
-	GeneralDevices::GeneralDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin)
+namespace PicoPilot::PwmDevices {
+	GeneralDevices::GeneralDevices(const Pico::pwm_t& drivingFrequency, const Pico::gpioPin_t& setPin)
 	  : m_frequency(drivingFrequency), m_pwmPin(setPin) {}
 
 	GeneralDevices::GeneralDevices(GeneralDevices&& other) {
@@ -43,7 +43,7 @@ namespace LocalLib::PwmDevices {
 	 * @param setPin The gpio pin number
 	 * @return GeneralDevices
 	 */
-	GeneralDevices GeneralDevices::create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) {
+	GeneralDevices GeneralDevices::create(const Pico::pwm_t& drivingFrequency, const Pico::gpioPin_t& setPin) {
 		GeneralDevices temp(drivingFrequency, setPin);
 		temp.begin();
 		return temp;
@@ -90,4 +90,4 @@ namespace LocalLib::PwmDevices {
 	void GeneralDevices::debugPrint() const {
 		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: duty percent: " << (float)m_level / (float)m_wrap << '\n';)
 	}
-} // namespace LocalLib::PwmDevices
+} // namespace PicoPilot::PwmDevices

@@ -6,7 +6,7 @@
 
 #include "Errors.hpp"
 
-namespace LocalLib::ErrorHandler {
+namespace PicoPilot::ErrorHandler {
 	using ErrorCode = std::array<bool, 16>;
 	using ErrorNum = uint16_t;
 	using ErrorLocation = uint8_t;
@@ -30,6 +30,6 @@ namespace LocalLib::ErrorHandler {
 		Blinker::printErrorCode(errorCode);
 		Blinker::blink(errorCode);
 	}
-} // namespace LocalLib::ErrorHandler
+} // namespace PicoPilot::ErrorHandler
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_ERRORBLINKER_HPP_

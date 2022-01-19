@@ -2,11 +2,11 @@
 
 #include "Helpers/Arduino.hpp"
 
-namespace LocalLib::Misc {
-	using namespace LocalLib;
+namespace PicoPilot::Misc {
+	using namespace PicoPilot;
 	auto lastTime = Arduino::millis();
 
-	bool interval(const millis_t& setMillis) {
+	bool interval(const Pico::millis_t& setMillis) {
 		if ((Arduino::millis() - lastTime) >= setMillis) {
 			lastTime = Arduino::millis();
 			return true;
@@ -38,4 +38,4 @@ namespace LocalLib::Misc {
 		}
 
 	} // namespace Blink
-} // namespace LocalLib::Misc
+} // namespace PicoPilot::Misc

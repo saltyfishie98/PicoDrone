@@ -10,9 +10,9 @@
 #include "PwmDevices/Motor.hpp"
 
 namespace Application {
-	using namespace LocalLib::Pico;
-	using namespace LocalLib::Helpers;
-	using namespace LocalLib;
+	using namespace PicoPilot::Pico;
+	using namespace PicoPilot::Helpers;
+	using namespace PicoPilot;
 
 	namespace Core0 {
 		AnalogReader pot0 = AnalogReader::create(27);

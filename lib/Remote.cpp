@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-namespace LocalLib {
+namespace PicoPilot {
 	Remote Remote::create(long&& freq, uint&& ss, uint&& reset, uint&& dio0) {
 		Remote temp;
 		temp.setPins(ss, reset, dio0);
@@ -35,4 +35,4 @@ namespace LocalLib {
 
 		return m_packetData;
 	}
-} // namespace LocalLib
+} // namespace PicoPilot

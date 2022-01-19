@@ -4,10 +4,10 @@
 #include "GeneralDevices.hpp"
 #include "../Types.hpp"
 
-namespace LocalLib::PwmDevices {
+namespace PicoPilot::PwmDevices {
 	class Servo : private GeneralDevices {
 	  public:
-		static Servo create(const gpioPin_t& setPin) noexcept;
+		static Servo create(const Pico::gpioPin_t& setPin) noexcept;
 
 		Servo() = default;
 		Servo(const Servo&) = delete;
@@ -21,12 +21,12 @@ namespace LocalLib::PwmDevices {
 		using GeneralDevices::debugPrint;
 
 	  private:
-		Servo(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+		Servo(const Pico::pwm_t& drivingFrequency, const Pico::gpioPin_t& setPin) noexcept;
 		uint16_t m_inputMin = 0;
 		uint16_t m_inputMax = 4095;
 		float minPercent = 0.024f;
 		float maxPercent = 0.124f;
 	};
-} // namespace LocalLib::PwmDevices
+} // namespace PicoPilot::PwmDevices
 
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_PWMDEVICES_SERVO_HPP_

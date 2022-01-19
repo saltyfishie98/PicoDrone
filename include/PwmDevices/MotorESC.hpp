@@ -4,10 +4,10 @@
 #include "GeneralDevices.hpp"
 #include "../Types.hpp"
 
-namespace LocalLib::PwmDevices {
+namespace PicoPilot::PwmDevices {
 	class MotorESC : private GeneralDevices {
 	  public:
-		static MotorESC create(const gpioPin_t& setPin) noexcept;
+		static MotorESC create(const Pico::gpioPin_t& setPin) noexcept;
 		static uint16_t inputHalf() noexcept;
 
 		MotorESC() = default;
@@ -23,12 +23,12 @@ namespace LocalLib::PwmDevices {
 		using GeneralDevices::debugPrint;
 
 	  private:
-		MotorESC(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+		MotorESC(const Pico::pwm_t& drivingFrequency, const Pico::gpioPin_t& setPin) noexcept;
 		static uint16_t m_inputMin;
 		static uint16_t m_inputMax;
 		float minPercent = 0.04f;
 		float maxPercent = 0.115f;
 	};
-} // namespace LocalLib::PwmDevices
+} // namespace PicoPilot::PwmDevices
 
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_PWMDEVICES_MOTOR_HPP_

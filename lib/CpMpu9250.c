@@ -3,22 +3,26 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include <math.h>
-#include "mpu9250.h"
+#include "CpMpu9250.h"
 
 /* Example code to talk to a MPU9250 MEMS accelerometer and gyroscope.
 
    NOTE: Ensure the device is capable of being driven at 3.3v NOT 5v. The Pico
    GPIO (and therefor SPI) cannot be used at 5v.
+
    You will need to use a level shifter on the I2C lines if you want to run the
    board at 5v.
+
    Connections on Raspberry Pi Pico board and a generic MPU9250 board, other
    boards may vary.
+
    GPIO 4 (pin 6) MISO/spi0_rx-> ADO on MPU9250 board
    GPIO 5 (pin 7) Chip select -> NCS on MPU9250 board
    GPIO 6 (pin 9) SCK/spi0_sclk -> SCL on MPU9250 board
    GPIO 7 (pin 10) MOSI/spi0_tx -> SDA on MPU9250 board
    3.3v (pin 36) -> VCC on MPU9250 board
    GND (pin 38)  -> GND on MPU9250 board
+
    Note: SPI devices can have a number of different naming schemes for pins. See
    the Wikipedia page at https://en.wikipedia.org/wiki/Serial_Peripheral_Interface
    for variations.
@@ -26,12 +30,12 @@
    using of I2C names
 */
 
-#define PIN_MISO 4
-#define PIN_CS	 5
-#define PIN_SCK	 6
-#define PIN_MOSI 7
+#define PIN_MISO 12
+#define PIN_CS	 13
+#define PIN_SCK	 14
+#define PIN_MOSI 15
 
-#define SPI_PORT spi0
+#define SPI_PORT spi1
 #define READ_BIT 0x80
 
 void cs_select() {
@@ -81,7 +85,7 @@ void mpu9250_read_raw_accel(int16_t accel[3]) { // Used to get the raw accelerat
 }
 
 void mpu9250_read_raw_gyro(int16_t gyro[3]) { // Used to get the raw gyro values from the mpu
-	uint8_t buffer[6] = {0, 0, 0, 0, 0, 0};
+	uint8_t buffer[6];
 
 	read_registers(0x43, buffer, 6);
 
@@ -99,7 +103,6 @@ void calibrate_gyro(int16_t gyroCal[3],
 		gyroCal[0] += temp[0];
 		gyroCal[1] += temp[1];
 		gyroCal[2] += temp[2];
-		printf("gyrocal0: %d, gyrocal1: %d, gyrocal2: %d\n", gyroCal[0] / i, gyroCal[1] / i, gyroCal[2] / i);
 	}
 	gyroCal[0] /= loop;
 	gyroCal[1] /= loop;
@@ -186,5 +189,7 @@ void start_spi() // Starts the mpu and resets it
 	// See if SPI is working - interrograte the device for its I2C ID number, should be 0x71
 	uint8_t id;
 	read_registers(0x75, &id, 1);
-	printf("I2C address is 0x%x\n", id);
+	if (id != 0x71) {
+		printf("Mpu9250 begin error!");
+	}
 }

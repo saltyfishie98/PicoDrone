@@ -3,11 +3,11 @@
 
 #include "Types.hpp"
 
-namespace LocalLib::PwmDevices {
+namespace PicoPilot::PwmDevices {
 
 	class GeneralDevices {
 	  public:
-		static GeneralDevices create(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
+		static GeneralDevices create(const Pico::pwm_t& drivingFrequency, const Pico::gpioPin_t& setPin) noexcept;
 
 		GeneralDevices() = default;
 		GeneralDevices(const GeneralDevices&) = delete;
@@ -21,19 +21,19 @@ namespace LocalLib::PwmDevices {
 		void debugPrint() const noexcept;
 
 	  protected:
-		pwm_t m_frequency = 0;
-		gpioPin_t m_pwmPin = NULLPIN;
-		pwmWrap_t m_wrap = 0;
+		Pico::pwm_t m_frequency = 0;
+		Pico::gpioPin_t m_pwmPin = NULLPIN;
+		Pico::pwmWrap_t m_wrap = 0;
 
 	  private:
-		GeneralDevices(const pwm_t& drivingFrequency, const gpioPin_t& setPin) noexcept;
-		pwm_t m_clockSpeed = 0;
-		pwm_t m_sliceNum = 8;
-		pwm_t m_channel = 2;
-		pwm_t m_clockDiv = 0;
+		GeneralDevices(const Pico::pwm_t& drivingFrequency, const Pico::gpioPin_t& setPin) noexcept;
+		Pico::pwm_t m_clockSpeed = 0;
+		Pico::pwm_t m_sliceNum = 8;
+		Pico::pwm_t m_channel = 2;
+		Pico::pwm_t m_clockDiv = 0;
 		uint16_t m_level = 0;
 	};
 
-} // namespace LocalLib::PwmDevices
+} // namespace PicoPilot::PwmDevices
 
 #endif // C__PROJECTS_PICO_PICODRONE_INCLUDE_PWMDEVICES_HPP_

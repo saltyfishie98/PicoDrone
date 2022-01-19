@@ -4,7 +4,7 @@
 #include "Types.hpp"
 #include "pico/stdlib.h"
 
-namespace LocalLib::Misc {
+namespace PicoPilot::Misc {
 
 	template <typename T>
 	bool arrayFind(T thisElement, T inThisArray) noexcept {
@@ -14,12 +14,12 @@ namespace LocalLib::Misc {
 		return false;
 	}
 
-	bool interval(const millis_t& setMillis) noexcept;
+	bool interval(const Pico::millis_t& setMillis) noexcept;
 
 	namespace Blink {
 		void start() noexcept;
 		void setup() noexcept;
 	} // namespace Blink
-} // namespace LocalLib::Misc
+} // namespace PicoPilot::Misc
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_HPP_

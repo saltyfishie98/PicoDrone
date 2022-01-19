@@ -1,7 +1,7 @@
 #include "PwmDevices/MotorESC.hpp"
 #include "Helpers/Arduino.hpp"
 
-namespace LocalLib::PwmDevices {
+namespace PicoPilot::PwmDevices {
 	uint16_t MotorESC::m_inputMin = 0;
 	uint16_t MotorESC::m_inputMax = 1023;
 
@@ -41,7 +41,7 @@ namespace LocalLib::PwmDevices {
 	 * @param setPin GPIO pin number
 	 * @return MotorESC
 	 */
-	MotorESC MotorESC::create(const gpioPin_t& setPin) {
+	MotorESC MotorESC::create(const Pico::gpioPin_t& setPin) {
 		MotorESC temp;
 		temp.m_frequency = 50;
 		temp.m_pwmPin = setPin;
@@ -78,9 +78,9 @@ namespace LocalLib::PwmDevices {
 	 * @param input literal input
 	 */
 	void MotorESC::setRangedLevel(const uint16_t& input) {
-		using namespace LocalLib;
+		using namespace PicoPilot;
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(GeneralDevices::getTop() * minPercent),
 								  (uint16_t)(GeneralDevices::getTop() * maxPercent));
 		GeneralDevices::setLevel(level);
 	}
-} // namespace LocalLib::PwmDevices
+} // namespace PicoPilot::PwmDevices

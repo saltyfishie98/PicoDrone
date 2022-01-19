@@ -8,9 +8,9 @@
 #include "PwmDevices.hpp"
 
 namespace Application {
-	using namespace LocalLib::Pico;
-	using namespace LocalLib::Helpers;
-	using namespace LocalLib;
+	using namespace PicoPilot::Pico;
+	using namespace PicoPilot::Helpers;
+	using namespace PicoPilot;
 
 	Mutex::Mutex test;
 	std::string globalStr = "None";

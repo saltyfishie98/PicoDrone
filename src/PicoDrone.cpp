@@ -13,7 +13,7 @@
 #include "Remote.hpp"
 
 namespace Application {
-	using namespace LocalLib;
+	using namespace PicoPilot;
 
 	Quad::Controls testQuad = Quad::Controls::create({10, 11, 12, 13});
 	Remote remote0 = Remote::create();

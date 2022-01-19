@@ -1,34 +1,40 @@
-#include <iostream>
 #include <stdio.h>
+#include "pico/stdlib.h"
 
-#include "LoRa-RP2040.h"
+#include "CpMpu9250.hpp"
+#include "MPU9250.hpp"
+#include "Helpers/Pico.hpp"
+
+// mpu9250 mpu(100); // Creates an mpu object
+
+// void sandbox() {
+// 	printf("Hello, MPU9250! Reading raw data from registers via SPI...\n");
+
+// 	while (1) {
+// 		mpu.updateAngles(); // Uses the object to calculate the angles
+// 		mpu.printData();	// Uses the object to print the data
+// 	}
+// }
 
 void sandbox() {
-	LoRa.setPins(17, 27, 26);
+	using namespace PicoPilot;
 
-	if (!LoRa.begin(433E6)) {
-		printf("Failed\n");
-		sleep_ms(500);
-		abort();
-	}
-
-	printf("Success!\n");
+	Pico::SPI::Pins pins;
+	Mpu9250 test = Mpu9250::create(spi1, std::move(pins), 100);
 
 	while (1) {
-		int packetSize = LoRa.parsePacket();
-		if (packetSize) {
-			std::string dataStr = "";
-			while (LoRa.available()) {
-				dataStr.push_back((char)LoRa.read());
-			}
+		auto euler = test.eulerAngles();
+		auto abs = test.AbsAngles();
+		auto raw = test.rawGyro();
+		auto calGyro = test.calibratedGyro();
 
-			int data = std::stoi(dataStr);
+		printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", raw.X, raw.Y, raw.Z);
+		printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n", calGyro.X, calGyro.Y, calGyro.Z);
+		printf("Euler - Pitch: %d, Roll: %d \n", euler.pitch, euler.roll);
+		printf("Abs   - Pitch: %d, Roll: %d \n", abs.pitch, abs.roll);
 
-			printf("%d", data);
+		sleep_ms(100);
 
-			// print RSSI of packet
-			printf("\nRSSI: ");
-			printf("%d\n", LoRa.packetRssi());
-		}
+		printf("\033[2J");
 	}
 }
