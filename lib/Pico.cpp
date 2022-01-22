@@ -41,7 +41,7 @@ namespace Pico {
 } // namespace Pico
 
 namespace Pico {
-	SPI::SPI(spi_inst_t* port, Pins&& gpioPins) : m_port(port), m_pins(gpioPins) {}
+	SPI::SPI(spi_inst_t* port, Pins&& gpioPins) : m_port(std::move(port)), m_pins(std::move(gpioPins)) {}
 
 	SPI SPI::create(spi_inst_t* port, Pins&& pins) {
 		SPI temp(port, std::move(pins));

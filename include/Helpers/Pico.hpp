@@ -40,7 +40,7 @@ namespace Pico {
 
 			Pins() = default;
 
-			Pins(const Pins& other) {
+			Pins(Pins&& other) {
 				miso = other.miso;
 				cs = other.cs;
 				sck = other.sck;
