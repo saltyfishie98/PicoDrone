@@ -2,6 +2,7 @@
 #define C__PROJECTS_PICO_PICODRONE_INCLUDE_MPU9250_HPP_
 
 #include "Helpers/Pico.hpp"
+#include "pico/time.h"
 
 namespace PicoPilot {
 	class Mpu9250 : public Pico::SPI {
@@ -27,8 +28,8 @@ namespace PicoPilot {
 		Vec3 rawAccel() noexcept;
 		Vec3 rawGyro() noexcept;
 		Vec3 calibratedGyro() noexcept;
-		Rotation AbsAngles() noexcept;
-		Rotation eulerAngles() noexcept;
+		Rotation anglesFromAccel() noexcept;
+		Rotation filteredAngles(double&& pitchTau = 0.75, double&& rollTau = 0.75) noexcept;
 
 	  protected:
 		Mpu9250(spi_inst_t* port, SPI::Pins&& gpioPins);
@@ -37,7 +38,10 @@ namespace PicoPilot {
 	  private:
 		Vec3 m_gyroCal;
 		Vec3 m_accel;
-		absolute_time_t m_usSinceLastReading;
+		Rotation m_filteredAngles;
+		absolute_time_t m_compLastTime = get_absolute_time();
+
+		void m_updateGyroAngles();
 	};
 } // namespace PicoPilot
 

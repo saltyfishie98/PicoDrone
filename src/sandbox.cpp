@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "hardware/clocks.h"
 
 #include "CpMpu9250.hpp"
 #include "MPU9250.hpp"
 #include "Helpers/Pico.hpp"
 
-// mpu9250 mpu(100); // Creates an mpu object
+mpu9250 mpu(100); // Creates an mpu object
 
 // void sandbox() {
 // 	printf("Hello, MPU9250! Reading raw data from registers via SPI...\n");
@@ -23,17 +24,18 @@ void sandbox() {
 	Mpu9250 test = Mpu9250::create(spi1, std::move(pins), 100);
 
 	while (1) {
-		auto euler = test.eulerAngles();
-		auto abs = test.AbsAngles();
+		auto euler = test.anglesFromAccel();
 		auto raw = test.rawGyro();
 		auto calGyro = test.calibratedGyro();
+		auto filtered = test.filteredAngles(0.75, 0.75);
 
+		printf("Cpu Clock: %lu\n", clock_get_hz(clk_sys));
 		printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", raw.X, raw.Y, raw.Z);
 		printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n", calGyro.X, calGyro.Y, calGyro.Z);
-		printf("Euler - Pitch: %d, Roll: %d \n", euler.pitch, euler.roll);
-		printf("Abs   - Pitch: %d, Roll: %d \n", abs.pitch, abs.roll);
+		printf("Accel Angles     - Pitch: %d, Roll: %d \n", euler.pitch, euler.roll);
+		printf("filtered Angles  - Pitch: %d, Roll: %d \n", filtered.pitch, filtered.roll);
 
-		sleep_ms(100);
+		sleep_ms(60);
 
 		printf("\033[2J");
 	}
