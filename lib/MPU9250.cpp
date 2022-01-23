@@ -118,7 +118,7 @@ namespace PicoPilot {
 		double accelPitch = accelAngles.pitch;
 
 		m_filteredAngles.roll = rollTau * (m_filteredAngles.roll + rollRate * deltaT) + (1 - rollTau) * accelRoll;
-		m_filteredAngles.pitch = pitchTau * (m_filteredAngles.pitch + pitchRate * deltaT) - (1 - pitchTau) * accelPitch;
+		m_filteredAngles.pitch = pitchTau * (m_filteredAngles.pitch + pitchRate * deltaT) + (1 - pitchTau) * accelPitch;
 
 		return m_filteredAngles;
 	}

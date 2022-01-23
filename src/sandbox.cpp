@@ -5,6 +5,7 @@
 #include "CpMpu9250.hpp"
 #include "MPU9250.hpp"
 #include "Helpers/Pico.hpp"
+#include "Helpers/Misc.hpp"
 
 mpu9250 mpu(100); // Creates an mpu object
 
@@ -22,8 +23,11 @@ void sandbox() {
 
 	Pico::SPI::Pins pins;
 	Mpu9250 test = Mpu9250::create(spi1, std::move(pins), 100);
+	Misc::Blink::setup();
 
 	while (1) {
+		Misc::Blink::start();
+
 		auto euler = test.anglesFromAccel();
 		auto raw = test.rawGyro();
 		auto calGyro = test.calibratedGyro();
