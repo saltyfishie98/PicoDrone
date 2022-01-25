@@ -14,7 +14,8 @@
 
 namespace Application {
 	using namespace PicoPilot;
-
+	
+	// TODO: consider gpio 6,7,8,9
 	Quad::Controls testQuad = Quad::Controls::create({10, 11, 12, 13});
 	Remote remote0 = Remote::create();
 	bool started = false;
