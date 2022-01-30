@@ -1,3 +1,6 @@
 [submodule "vendor/pico-lora"]
 	path = vendor/pico-lora
 	url = https://github.com/akshayabali/pico-lora.git
+[submodule "vendor/MiniPID"]
+	path = vendor/MiniPID
+	url = https://github.com/tekdemo/MiniPID.git
