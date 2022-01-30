@@ -1,7 +1,6 @@
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 
-#include <iostream>
 #include <array>
 #include <stdlib.h>
 

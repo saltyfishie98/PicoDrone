@@ -1,7 +1,7 @@
 #ifndef C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_
 #define C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_MACROS_HPP_
 
-#include <iostream>
+#include <stdio.h>
 
 #define PRINT_DEBUG
 #define ANALOG_MAX 4095

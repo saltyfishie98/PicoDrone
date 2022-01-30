@@ -37,8 +37,6 @@ namespace PicoPilot::Quad {
 	 * @param roll
 	 */
 	void Controls::input(int16_t&& thrust, int16_t&& yaw, int16_t&& pitch, int16_t&& roll) {
-		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: data moved\n";)
-
 		// parsing the speed from input to each of the quad's motors
 		float motorSpeed[4] = {0, 0, 0, 0};
 
@@ -68,8 +66,6 @@ namespace PicoPilot::Quad {
 	 * @param roll value to set the quad's roll
 	 */
 	void Controls::input(const int16_t& thrust, const int16_t& yaw, const int16_t& pitch, const int16_t& roll) {
-		// DEBUG_RUN(std::cout << "Quad.cpp: input(): INFO: const ref data\n";)
-
 		// parsing the speed from input to each of the quad's motors
 		float motorSpeed[4] = {0, 0, 0, 0};
 

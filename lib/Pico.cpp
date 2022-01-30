@@ -2,7 +2,6 @@
 
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
-#include <iostream>
 
 #include "ErrMacros.hpp"
 #include "Helpers/Macros.hpp"
@@ -28,14 +27,13 @@ namespace Pico {
 	}
 
 	uint16_t AnalogReader::read() {
-		// DEBUG_RUN(std::cout << "Pico.cpp: adc_read: INFO: level: " << adc_read() << '\n';)
 		adc_select_input(m_input);
 		DEBUG_RUN(m_val = adc_read();)
 		return adc_read();
 	}
 
 	void AnalogReader::debugPrint() const {
-		DEBUG_RUN(std::cout << "Pico.cpp: debugPrint: INFO: " << m_val << '\n';)
+		DEBUG_RUN(printf("Pico.cpp: debugPrint: INFO: %d\n", (uint)m_val);)
 	}
 
 } // namespace Pico
@@ -117,14 +115,14 @@ namespace Pico::Mutex {
 		mutex_enter_blocking(&m_mtx);
 		DEBUG_RUN({
 			sleep_ms(100);
-			std::cout << "\n\n=========================== entered mutex ===========================\n\n";
+			printf("\n\n=========================== entered mutex ===========================\n\n");
 		})
 	}
 
 	void Mutex::unlock() {
 		mutex_exit(&m_mtx);
 		DEBUG_RUN({
-			std::cout << "\n\n=========================== exit mutex ===========================\n\n";
+			printf("\n\n=========================== exit mutex ===========================\n\n");
 			sleep_ms(100);
 		})
 	}

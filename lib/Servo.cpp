@@ -45,7 +45,6 @@ namespace PicoPilot::PwmDevices {
 	 * @param max The maximum value of the input
 	 */
 	void Servo::setInputRange(uint16_t&& min, uint16_t&& max) {
-		DEBUG_RUN(std::cout << "Server.cpp: setInputRange(): INFO: data moved\n";)
 		m_inputMin = min;
 		m_inputMax = max;
 	}
@@ -57,7 +56,6 @@ namespace PicoPilot::PwmDevices {
 	 * @param max The maximum value of the input
 	 */
 	void Servo::setInputRange(const uint16_t& min, const uint16_t& max) {
-		DEBUG_RUN(std::cout << "Server.cpp: setInputRange(): INFO: const ref data\n";)
 		m_inputMin = min;
 		m_inputMax = max;
 	}
@@ -68,7 +66,6 @@ namespace PicoPilot::PwmDevices {
 	 * @param input literal input
 	 */
 	void Servo::setRangedLevel(const uint16_t& input) {
-		DEBUG_RUN(std::cout << "Server.cpp: setRangedLevel(): INFO: const ref data\n";)
 		using namespace PicoPilot;
 		auto level = Arduino::map(input, m_inputMin, m_inputMax, (uint16_t)(GeneralDevices::getTop() * minPercent),
 								  (uint16_t)(GeneralDevices::getTop() * maxPercent));

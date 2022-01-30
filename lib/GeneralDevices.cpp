@@ -1,6 +1,5 @@
 #include "PwmDevices/GeneralDevices.hpp"
 
-#include <iostream>
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 #include "hardware/clocks.h"
@@ -88,6 +87,6 @@ namespace PicoPilot::PwmDevices {
 	}
 
 	void GeneralDevices::debugPrint() const {
-		DEBUG_RUN(std::cout << "GeneralDevices.cpp: INFO: duty percent: " << (float)m_level / (float)m_wrap << '\n';)
+		DEBUG_RUN(printf("GeneralDevices.cpp: INFO: duty percent: %f\n", (float)m_level / (float)m_wrap);)
 	}
 } // namespace PicoPilot::PwmDevices
