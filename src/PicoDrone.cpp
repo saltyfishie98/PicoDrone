@@ -8,29 +8,30 @@
 #include "Helpers/Pico.hpp"
 #include "Helpers/Misc.hpp"
 #include "Helpers/Macros.hpp"
-#include "PwmDevices/PwmDevices.hpp"
+
+#include "PwmDevices/MotorESC.hpp"
 #include "Quad.hpp"
 #include "Remote.hpp"
+#include "MPU9250.hpp"
 
 namespace Application {
 	using namespace PicoPilot;
-	
-	// TODO: consider gpio 6,7,8,9
-	Quad::Controls testQuad = Quad::Controls::create({10, 11, 12, 13});
-	Remote remote0 = Remote::create();
+
 	bool started = false;
+	int16_t thrustData = 0;
+	Pico::SPI::Pins pins;
+
+	auto mpu9250 = Mpu9250::create(spi1, std::move(pins), 100);
+	auto quadControls = Quad::Controls::create({6, 7, 8, 9});
+	auto remote = Remote::create();
 
 	namespace Core0 {
 		void setup() {
-			while (remote0.getPacketData().rssi == 0) {
-				std::cout << "waiting for signal...\n";
-				sleep_ms(1000);
-			}
+			remote.waitForSignal();
 			started = true;
 		}
 		void loop() {
-			int16_t thrustData = remote0.getPacketData().data;
-			testQuad.input(std::move(thrustData), (int16_t)511, (int16_t)511, (int16_t)511);
+			thrustData = remote.getPacketData().data;
 		}
 	} // namespace Core0
 
@@ -40,11 +41,19 @@ namespace Application {
 		}
 		void loop() {
 			Misc::Blink::start();
+
 			if (started) {
-				testQuad.debugPrint();
+				int16_t thrust = thrustData;
+				int16_t yaw = 511;
+				int16_t pitch = 511;
+				int16_t roll = 511;
+
+				quadControls.input(std::move(thrust), std::move(yaw), std::move(pitch), std::move(roll));
+				// quadControls.debugPrint();
+				mpu9250.debugPrint();
 
 				sleep_ms(100);
-				printf("\033[2J");
+				Misc::clearConsole();
 			}
 		}
 	} // namespace Core1

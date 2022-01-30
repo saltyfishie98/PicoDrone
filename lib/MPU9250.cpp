@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <cmath>
+#include "hardware/clocks.h"
+#include "Helpers/Macros.hpp"
 
 using namespace Pico;
 
@@ -123,4 +125,14 @@ namespace PicoPilot {
 		return m_filteredAngles;
 	}
 
+	void Mpu9250::debugPrint() noexcept {
+		DEBUG_RUN(auto euler = anglesFromAccel(); auto raw = rawGyro(); auto calGyro = calibratedGyro();
+				  auto filtered = filteredAngles(0.75, 0.75);
+
+				  printf("Cpu Clock: %lu\n", clock_get_hz(clk_sys));
+				  printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", raw.X, raw.Y, raw.Z);
+				  printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n", calGyro.X, calGyro.Y, calGyro.Z);
+				  printf("Accel Angles     - Pitch: %d, Roll: %d \n", euler.pitch, euler.roll);
+				  printf("filtered Angles  - Pitch: %d, Roll: %d \n", filtered.pitch, filtered.roll);)
+	}
 } // namespace PicoPilot

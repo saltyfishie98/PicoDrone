@@ -27,12 +27,18 @@ namespace PicoPilot {
 
 			if (dataStr.size() <= 4) {
 				m_packetData.data = stoi(dataStr);
+				m_packetData.rssi = LoRaClass::packetRssi();
+				m_packetData.snr = LoRaClass::packetSnr();
 			}
-
-			m_packetData.rssi = LoRaClass::packetRssi();
-			m_packetData.snr = LoRaClass::packetSnr();
 		}
 
 		return m_packetData;
+	}
+
+	void Remote::waitForSignal() {
+		while (getPacketData().rssi == 0) {
+			printf("waiting for signal...\n");
+			sleep_ms(1000);
+		}
 	}
 } // namespace PicoPilot

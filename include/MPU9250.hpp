@@ -25,6 +25,7 @@ namespace PicoPilot {
 
 		void reset() noexcept;
 		void calibrate(uint loop = 100) noexcept;
+		void debugPrint() noexcept;
 		Vec3 rawAccel() noexcept;
 		Vec3 rawGyro() noexcept;
 		Vec3 calibratedGyro() noexcept;

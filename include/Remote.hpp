@@ -19,6 +19,7 @@ namespace PicoPilot {
 
 		static Remote create(long&& freq = 433E6, uint&& ss = 17, uint&& reset = 27, uint&& Dio0 = 26);
 		Packet getPacketData();
+		void waitForSignal();
 
 	  protected:
 		Remote(long&& freq, uint&& ss, uint&& reset, uint&& Dio0);

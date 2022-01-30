@@ -4,7 +4,10 @@
 
 namespace PicoPilot::Misc {
 	using namespace PicoPilot;
-	auto lastTime = Arduino::millis();
+
+	namespace {
+		auto lastTime = Arduino::millis();
+	}
 
 	bool interval(const Pico::millis_t& setMillis) {
 		if ((Arduino::millis() - lastTime) >= setMillis) {
