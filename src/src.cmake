@@ -6,7 +6,6 @@ set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} 
 	lib/Core/main.cpp 
 	src/PicoDrone.cpp 
-	src/sandbox.cpp
 )
 target_compile_options(${BINARY_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 
