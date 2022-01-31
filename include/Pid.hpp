@@ -3,30 +3,31 @@
 
 #include "pico/stdlib.h"
 #include "pico/time.h"
+#include <stdio.h>
 
 namespace PicoPilot {
 	class Pid {
 	  public:
 		struct Configs {
-			float Kp = 2.f;
+			float Kp = 5.f;
 			float Ki = 0.5f;
-			float Kd = 0.25f;
+			float Kd = 2.5f;
 
 			float tau = 0.02f;
 
-			float outMin = -50.f;
-			float outMax = 50.f;
+			float outMin = -511.f;
+			float outMax = 511.f;
 
-			float integralMin = -100.f;
-			float integralMax = 100.f;
+			float integralMin = -500.f;
+			float integralMax = 500.f;
 		};
 
-		static Pid create(Configs&& configurations) noexcept;
+		static Pid create(const Configs& configurations) noexcept;
 
 		Pid() = default;
 
 		template <typename T_out>
-		T_out update(float setpoint, float measurement) noexcept {
+		T_out update(const float& setpoint, const float& measurement) noexcept {
 			float sampleTime = (float)absolute_time_diff_us(m_last, absolute_time_t()) / 1000000.f;
 			m_last = get_absolute_time();
 
@@ -52,9 +53,17 @@ namespace PicoPilot {
 
 			if (out > m_configs.outMax) {
 				out = m_configs.outMax;
-			} else if (m_configs.outMin) {
+			} else if (out < m_configs.outMin) {
 				out = m_configs.outMin;
 			}
+
+			// printf("setpoint: %f\n", setpoint);
+			// printf("measurement: %f\n", measurement);
+			// printf("error: %f\n", error);
+			// printf("proportional: %f\n", proportional);
+			// printf("integrator: %f\n", m_integrator);
+			// printf("differentiator: %f\n", m_differentiator);
+			// printf("raw output: %d\n\n", out);
 
 			return out;
 		}

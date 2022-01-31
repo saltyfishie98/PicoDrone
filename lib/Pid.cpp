@@ -1,7 +1,7 @@
 #include "Pid.hpp"
 
 namespace PicoPilot {
-	Pid Pid::create(Configs&& configurations) {
+	Pid Pid::create(const Configs& configurations) {
 		Configs temp(configurations);
 		return temp;
 	}

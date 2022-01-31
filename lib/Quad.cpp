@@ -40,14 +40,24 @@ namespace PicoPilot::Quad {
 		// parsing the speed from input to each of the quad's motors
 		float motorSpeed[4] = {0, 0, 0, 0};
 
-		motorSpeed[0] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) +
-						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
-		motorSpeed[1] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) +
-						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
-		motorSpeed[2] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) -
-						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
-		motorSpeed[3] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) -
-						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
+		int16_t m_thrust = (thrust * spdAlloc[Z_TRANS]);
+
+		// if (m_thrust > 100) {
+		int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
+		int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
+		int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];
+
+		motorSpeed[0] = m_thrust + m_yaw + m_pitch + m_roll;
+		motorSpeed[1] = m_thrust - m_yaw + m_pitch - m_roll;
+		motorSpeed[2] = m_thrust + m_yaw - m_pitch - m_roll;
+		motorSpeed[3] = m_thrust - m_yaw - m_pitch + m_roll;
+
+		// } else {
+		// 	motorSpeed[0] = m_thrust;
+		// 	motorSpeed[1] = m_thrust;
+		// 	motorSpeed[2] = m_thrust;
+		// 	motorSpeed[3] = m_thrust;
+		// }
 
 		for (auto i = 0; i < m_motors.size(); ++i) {
 			if (motorSpeed[i] <= 0) {
@@ -69,14 +79,15 @@ namespace PicoPilot::Quad {
 		// parsing the speed from input to each of the quad's motors
 		float motorSpeed[4] = {0, 0, 0, 0};
 
-		motorSpeed[0] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) +
-						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
-		motorSpeed[1] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) +
-						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
-		motorSpeed[2] = (thrust * spdAlloc[Z_TRANS]) + ((yaw - m_offset) * spdAlloc[Z_ROT]) -
-						((pitch - m_offset) * spdAlloc[XY_ROT]) - ((roll - m_offset) * spdAlloc[XY_ROT]);
-		motorSpeed[3] = (thrust * spdAlloc[Z_TRANS]) - ((yaw - m_offset) * spdAlloc[Z_ROT]) -
-						((pitch - m_offset) * spdAlloc[XY_ROT]) + ((roll - m_offset) * spdAlloc[XY_ROT]);
+		int16_t m_thrust = (thrust * spdAlloc[Z_TRANS]);
+		int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
+		int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
+		int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];
+
+		motorSpeed[0] = m_thrust + m_yaw + m_pitch + m_roll;
+		motorSpeed[1] = m_thrust - m_yaw + m_pitch - m_roll;
+		motorSpeed[2] = m_thrust + m_yaw - m_pitch - m_roll;
+		motorSpeed[3] = m_thrust - m_yaw - m_pitch + m_roll;
 
 		for (auto i = 0; i < m_motors.size(); ++i) {
 			if (motorSpeed[i] <= 0) {

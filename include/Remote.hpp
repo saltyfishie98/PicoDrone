@@ -12,10 +12,10 @@ namespace PicoPilot {
 		Remote() = default;
 
 		struct Packet {
-			uint16_t thrust = 0;
-			uint16_t yaw = 0;
-			uint16_t pitch = 0;
-			uint16_t roll = 0;
+			uint16_t thrust = 250;
+			uint16_t yaw = 511;
+			uint16_t pitch = 511;
+			uint16_t roll = 511;
 			int rssi = 0;
 			float snr = 0;
 		};
