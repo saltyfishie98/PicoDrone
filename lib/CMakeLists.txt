@@ -69,3 +69,13 @@ target_link_libraries(Remote
 	LoRa_print
 )
 target_include_directories(Remote PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+
+
+add_library(Pid STATIC
+	Pid.cpp 
+)
+target_link_libraries(Pid
+	pico_stdlib 
+)
+target_include_directories(Pid PRIVATE ${PROJECT_SOURCE_DIR}/include)

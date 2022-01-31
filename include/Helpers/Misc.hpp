@@ -22,7 +22,7 @@ namespace PicoPilot::Misc {
 	bool interval(const Pico::millis_t& setMillis) noexcept;
 
 	namespace Blink {
-		void start() noexcept;
+		void start(uint interval) noexcept;
 		void setup() noexcept;
 	} // namespace Blink
 } // namespace PicoPilot::Misc

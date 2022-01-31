@@ -24,6 +24,7 @@ target_link_libraries(${BINARY_NAME}
 	Quad
 	MPU9250
 	Remote
+	Pid
 
 	pico_stdlib 
 	hardware_adc

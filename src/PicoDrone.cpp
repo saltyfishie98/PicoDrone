@@ -12,15 +12,18 @@
 #include "Quad.hpp"
 #include "Remote.hpp"
 #include "MPU9250.hpp"
+#include "Pid.hpp"
 
 namespace Application {
 	using namespace PicoPilot;
 
 	bool started = false;
-	int16_t thrustData = 0;
-	Pico::SPI::Pins pins;
+	auto remoteData = Remote::Packet();
+	auto defaultPins = Pico::SPI::Pins();
+	auto defaultConfigs = Pid::Configs();
 
-	auto mpu9250 = Mpu9250::create(spi1, std::move(pins), 100);
+	auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
+	auto pitchPid = Pid::create(std::move(defaultConfigs));
 	auto quadControls = Quad::Controls::create({6, 7, 8, 9});
 	auto remote = Remote::create();
 
@@ -30,7 +33,7 @@ namespace Application {
 			started = true;
 		}
 		void loop() {
-			thrustData = remote.getPacketData().data;
+			remoteData = remote.getPacketData();
 		}
 	} // namespace Core0
 
@@ -39,16 +42,18 @@ namespace Application {
 			Misc::Blink::setup();
 		}
 		void loop() {
-			Misc::Blink::start();
+			if (!started) {
+				Misc::Blink::start(70);
 
-			if (started) {
-				int16_t thrust = thrustData;
-				int16_t yaw = 511;
-				int16_t pitch = 511;
-				int16_t roll = 511;
+			} else {
+				Misc::Blink::start(250);
+				int16_t thrust = remoteData.thrust;
+				int16_t yaw = 115;
+				int16_t pitch = 115;
+				int16_t roll = 115;
 
 				quadControls.input(std::move(thrust), std::move(yaw), std::move(pitch), std::move(roll));
-				// quadControls.debugPrint();
+				quadControls.debugPrint();
 				mpu9250.debugPrint();
 
 				sleep_ms(100);

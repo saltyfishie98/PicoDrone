@@ -26,7 +26,7 @@ namespace PicoPilot {
 			}
 
 			if (dataStr.size() <= 4) {
-				m_packetData.data = stoi(dataStr);
+				m_packetData.thrust = stoi(dataStr);
 				m_packetData.rssi = LoRaClass::packetRssi();
 				m_packetData.snr = LoRaClass::packetSnr();
 			}

@@ -37,25 +37,6 @@ namespace Pico {
 			gpioPin_t cs = 13;
 			gpioPin_t sck = 14;
 			gpioPin_t mosi = 15;
-
-			Pins() = default;
-
-			Pins(Pins&& other) {
-				miso = other.miso;
-				cs = other.cs;
-				sck = other.sck;
-				mosi = other.mosi;
-			}
-
-			Pins& operator=(Pins&& other) {
-				if (this != &other) {
-					miso = other.miso;
-					cs = other.cs;
-					sck = other.sck;
-					mosi = other.mosi;
-				}
-				return *this;
-			}
 		};
 
 		static SPI create(spi_inst_t* port, Pins&& gpioPins) noexcept;

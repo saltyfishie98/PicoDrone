@@ -33,8 +33,8 @@ namespace PicoPilot::Misc {
 		 * @brief start the blinking of the built-in LED
 		 *
 		 */
-		void start() {
-			if (Misc::interval(250)) {
+		void start(uint interval) {
+			if (Misc::interval(interval)) {
 				toggle ^= 1UL << 0;
 				gpio_put(PICO_DEFAULT_LED_PIN, toggle);
 			}
