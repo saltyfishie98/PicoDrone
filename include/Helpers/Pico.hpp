@@ -60,6 +60,7 @@ namespace Pico {
 	namespace Mutex {
 		class Mutex {
 		  public:
+			Mutex() = default;
 			~Mutex() noexcept;
 			static Mutex create() noexcept;
 
@@ -68,7 +69,6 @@ namespace Pico {
 			bool entered() noexcept;
 
 		  private:
-			Mutex() noexcept {}
 			Mutex(Mutex&&) noexcept {}
 			Mutex(const Mutex&) noexcept {}
 			void begin() noexcept;

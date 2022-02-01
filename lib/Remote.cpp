@@ -25,7 +25,7 @@ namespace PicoPilot {
 				dataStr.push_back((char)LoRaClass::read());
 			}
 
-			if (dataStr.size() <= 4) {
+			if (dataStr.size() <= 4 && std::isdigit(dataStr.at(0))) {
 				m_packetData.thrust = stoi(dataStr);
 				m_packetData.rssi = LoRaClass::packetRssi();
 				m_packetData.snr = LoRaClass::packetSnr();

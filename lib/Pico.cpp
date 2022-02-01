@@ -113,18 +113,10 @@ namespace Pico::Mutex {
 
 	void Mutex::lock() {
 		mutex_enter_blocking(&m_mtx);
-		DEBUG_RUN({
-			sleep_ms(100);
-			printf("\n\n=========================== entered mutex ===========================\n\n");
-		})
 	}
 
 	void Mutex::unlock() {
 		mutex_exit(&m_mtx);
-		DEBUG_RUN({
-			printf("\n\n=========================== exit mutex ===========================\n\n");
-			sleep_ms(100);
-		})
 	}
 
 	uint32_t* mtxIdPtr = nullptr;
