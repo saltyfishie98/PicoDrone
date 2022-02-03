@@ -4,15 +4,15 @@
 #include <array>
 #include <stdlib.h>
 
+#include "FastPID.h"
+
 #include "Helpers/Pico.hpp"
 #include "Helpers/Misc.hpp"
 #include "Helpers/Macros.hpp"
-
 #include "PwmDevices/MotorESC.hpp"
 #include "Quad.hpp"
 #include "Remote.hpp"
 #include "MPU9250.hpp"
-#include "Pid.hpp"
 
 namespace Application {
 	using namespace PicoPilot;
@@ -24,12 +24,11 @@ namespace Application {
 
 	namespace Core0 {
 		auto defaultPins = Pico::SPI::Pins();
-		auto defaultConfigs = Pid::Configs();
 
-		auto pitchPid = Pid::create(defaultConfigs);
-		auto rollPid = Pid::create(defaultConfigs);
 		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
 		auto remote = Remote::create();
+
+		FastPID pitchPid;
 
 		void setup() {
 			remote.waitForSignal();
@@ -38,12 +37,11 @@ namespace Application {
 		void loop() {
 			auto remoteData = Remote::Packet();
 			remoteData = remote.getPacketData();
-			float percent = (((float)remoteData.pitch - (float)centerOffset) / (float)centerOffset) * (float)45;
+			// float percent = (((float)remoteData.pitch - (float)centerOffset) / (float)centerOffset) * (float)45;
 
 			mtx.lock();
-			// controllerData.roll = 511;
-			controllerData.pitch = pitchPid.update<int16_t>(percent, mpu9250.filteredAngles().pitch) + centerOffset;
-			controllerData.roll = rollPid.update<int16_t>(percent, mpu9250.filteredAngles().roll) + centerOffset;
+			controllerData.pitch = remoteData.pitch;
+			controllerData.roll = remoteData.roll;
 			controllerData.thrust = remoteData.thrust;
 			controllerData.yaw = remoteData.yaw;
 			mtx.unlock();

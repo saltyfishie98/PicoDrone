@@ -15,6 +15,7 @@ pico_sdk_init()
 suppress_tinyusb_warnings()
 
 add_subdirectory(vendor/pico-lora)
+add_subdirectory(vendor/FastPID)
 add_subdirectory(lib)
 
 include_directories(${PROJECT_SOURCE_DIR}/vendor/pico-lora/src)

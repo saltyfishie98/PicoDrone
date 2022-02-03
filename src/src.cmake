@@ -15,7 +15,10 @@ pico_set_program_version(${BINARY_NAME} "0.1")
 pico_enable_stdio_uart(${BINARY_NAME} 1)
 pico_enable_stdio_usb(${BINARY_NAME} 0)
 
-target_include_directories(${BINARY_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/vendor/pico-lora/src)
+target_include_directories(${BINARY_NAME} PRIVATE 
+${PROJECT_SOURCE_DIR}/include 
+${PROJECT_SOURCE_DIR}/vendor/pico-lora/src
+${PROJECT_SOURCE_DIR}/vendor/FastPID/src)
 
 target_link_libraries(${BINARY_NAME} 
 	PwmDevices
@@ -25,6 +28,7 @@ target_link_libraries(${BINARY_NAME}
 	MPU9250
 	Remote
 	Pid
+	FastPID
 
 	pico_stdlib 
 	hardware_adc
