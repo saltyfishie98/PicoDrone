@@ -1,19 +1,10 @@
 #include "pico/stdlib.h"
-#include "hardware/timer.h"
 #include "hardware/clocks.h"
 
-#include <array>
-#include <stdlib.h>
-
-#include "FastPID.h"
-
+#include "Drone.hpp"
 #include "Helpers/Pico.hpp"
 #include "Helpers/Misc.hpp"
 #include "Helpers/Macros.hpp"
-#include "PwmDevices/MotorESC.hpp"
-#include "Quad.hpp"
-#include "Remote.hpp"
-#include "MPU9250.hpp"
 
 namespace Application {
 	using namespace PicoPilot;
@@ -21,11 +12,11 @@ namespace Application {
 	const float centerOffset = 511.f;
 	bool started = false;
 	auto remoteData = Remote::Packet();
-
 	auto quadControls = Quad::Controls::create({6, 7, 8, 9});
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// The remote stuff was separated from the other process is due to it being slow.
 	namespace Core0 {
 		auto remote = Remote::create();
 
@@ -81,5 +72,4 @@ namespace Application {
 			}
 		}
 	} // namespace Core1
-
 } // namespace Application
