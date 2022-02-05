@@ -8,9 +8,10 @@
 
 namespace PicoPilot::Misc {
 
-	inline void clearConsole() {
-		DEBUG_RUN(printf("\033[2J");)
-	}
+	namespace Blink {
+		void start(uint interval) noexcept;
+		void setup() noexcept;
+	} // namespace Blink
 
 	template <typename T>
 	bool arrayFind(T thisElement, T inThisArray) noexcept {
@@ -20,12 +21,17 @@ namespace PicoPilot::Misc {
 		return false;
 	}
 
-	bool interval(const Pico::millis_t& setMillis) noexcept;
+	template <typename T>
+	inline T milli(const T& value) noexcept {
+		T out = (float)value * 1000.f;
+		return out;
+	}
 
-	namespace Blink {
-		void start(uint interval) noexcept;
-		void setup() noexcept;
-	} // namespace Blink
+	inline void clearConsole() {
+		DEBUG_RUN(printf("\033[2J");)
+	}
+
+	bool interval(const Pico::millis_t& setMillis) noexcept;
 } // namespace PicoPilot::Misc
 
 #endif // C__PROJECTS_PICO_PICODRONE_LIB_HELPERS_HPP_

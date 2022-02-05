@@ -12,8 +12,8 @@ target_compile_options(${BINARY_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 pico_set_program_name(${BINARY_NAME} "${BINARY_NAME}")
 pico_set_program_version(${BINARY_NAME} "0.1")
 
-pico_enable_stdio_uart(${BINARY_NAME} 1)
-pico_enable_stdio_usb(${BINARY_NAME} 0)
+pico_enable_stdio_uart(${BINARY_NAME} 0)
+pico_enable_stdio_usb(${BINARY_NAME} 1)
 
 target_include_directories(${BINARY_NAME} PRIVATE 
 ${PROJECT_SOURCE_DIR}/include 

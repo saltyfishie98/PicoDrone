@@ -4,6 +4,7 @@
 #include <cmath>
 #include "hardware/clocks.h"
 #include "Helpers/Macros.hpp"
+#include "Helpers/Misc.hpp"
 
 using namespace Pico;
 
@@ -35,7 +36,7 @@ namespace PicoPilot {
 
 		// Read and set DLPF_CFG
 		SPI::read_registers(0x1A, &data, 1);
-		data |= 6 << 0;
+		data |= 4 << 0;
 		uint8_t dlpfCfgBuf[] = {0x1A, data};
 		SPI::write_registers(dlpfCfgBuf, 2);
 
@@ -47,7 +48,7 @@ namespace PicoPilot {
 
 		// Read and set A_DLPF_CFG and ACCEL_FCHOICE to use A_DLPF_CFG
 		SPI::read_registers(0x1C, &data, 1);
-		data |= 6 << 0;
+		data |= 4 << 0;
 		data |= 0 << 3;
 		uint8_t accelDlpfCfgBuf[] = {0x1C, data};
 		SPI::write_registers(accelDlpfCfgBuf, 2);
@@ -75,16 +76,20 @@ namespace PicoPilot {
 		vec3Out.Y = (buffer[2] << 8 | buffer[3]);
 		vec3Out.Z = (buffer[4] << 8 | buffer[5]);
 
+		// https://github.com/MarkSherstan/MPU-6050-9250-I2C-CompFilter/blob/master/Arduino/main/main.ino
+		vec3Out.X = (double)vec3Out.X / 131.0;
+		vec3Out.Y = (double)vec3Out.Y / 131.0;
+		vec3Out.Z = (double)vec3Out.Z / 131.0;
+
 		return vec3Out;
 	}
 
 	Mpu9250::Vec3 Mpu9250::calibratedGyro() noexcept {
 		auto raw = rawGyro();
 
-		// https://github.com/MarkSherstan/MPU-6050-9250-I2C-CompFilter/blob/master/Arduino/main/main.ino
-		vec3Out.X = (double)(raw.X - m_gyroCal.X) / 131.0;
-		vec3Out.Y = (double)(raw.Y - m_gyroCal.Y) / 131.0;
-		vec3Out.Z = (double)(raw.Z - m_gyroCal.Z) / 131.0;
+		vec3Out.X = raw.X - m_gyroCal.X;
+		vec3Out.Y = raw.Y - m_gyroCal.Y;
+		vec3Out.Z = raw.Z - m_gyroCal.Z;
 
 		return vec3Out;
 	}
@@ -98,20 +103,37 @@ namespace PicoPilot {
 		vec3Out.Y = (buffer[2] << 8 | buffer[3]);
 		vec3Out.Z = (buffer[4] << 8 | buffer[5]);
 
+		vec3Out.X = Misc::milli((double)vec3Out.X / 16384.0);
+		vec3Out.Y = Misc::milli((double)vec3Out.Y / 16384.0);
+		vec3Out.Z = Misc::milli((double)vec3Out.Z / 16384.0);
+
 		return vec3Out;
 	}
 
 	void Mpu9250::calibrate(uint loop) {
-		Mpu9250::Vec3 temp;
+		Mpu9250::Vec3 tempGyro;
+		Mpu9250::Vec3 tempAccel;
+
 		for (int i = 0; i < loop; i++) {
-			temp = rawGyro();
-			m_gyroCal.X += temp.X;
-			m_gyroCal.Y += temp.Y;
-			m_gyroCal.Z += temp.Z;
+			tempGyro = rawGyro();
+			tempAccel = rawAccel();
+
+			m_gyroCal.X += tempGyro.X;
+			m_gyroCal.Y += tempGyro.Y;
+			m_gyroCal.Z += tempGyro.Z;
+
+			m_accelCal.X += tempAccel.X;
+			m_accelCal.Y += tempAccel.Y;
+			m_accelCal.Z += tempAccel.Z;
 		}
+
 		m_gyroCal.X /= loop;
 		m_gyroCal.Y /= loop;
 		m_gyroCal.Z /= loop;
+
+		m_accelCal.X /= loop;
+		m_accelCal.Y /= loop;
+		m_accelCal.Z /= loop;
 	}
 
 	Mpu9250::Rotation Mpu9250::anglesFromAccel() noexcept {
@@ -127,8 +149,6 @@ namespace PicoPilot {
 	}
 
 	Mpu9250::Rotation Mpu9250::filteredAngles(double&& pitchTau, double&& rollTau) noexcept {
-		// FilteredAngle = 0.98 * (FilteredAngle + d°/ s * time_between_cycles) + 0.02 * AccelerometerAngle;
-
 		auto gyroRate = calibratedGyro();
 		auto accelAngles = anglesFromAccel();
 
@@ -148,25 +168,27 @@ namespace PicoPilot {
 	}
 
 	void Mpu9250::debugPrint() noexcept {
-		DEBUG_RUN({
-			auto euler = anglesFromAccel();
-			auto raw = rawGyro();
-			auto calGyro = calibratedGyro();
-			auto filtered = filteredAngles(0.75, 0.75);
-			auto rawAcc = rawAccel();
-			uint8_t data = 0;
+		// DEBUG_RUN({
+		auto gyroRaw = rawGyro();
+		auto accelRaw = rawAccel();
 
-			SPI::read_registers(0x1A, &data, 1);
-			printf("DLPF_CFG = %d\n", data & 0b111);
+		auto calGyro = calibratedGyro();
+		auto accelAngles = anglesFromAccel();
+		auto angleFiltered = filteredAngles(0.8, 0.8);
 
-			SPI::read_registers(0x1B, &data, 1);
-			printf("FCHOICE_B = %d\n", data & 0b11);
+		uint8_t data = 0;
+		SPI::read_registers(0x1A, &data, 1);
+		printf("DLPF_CFG = %d\n", data & 0b111);
 
-			printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", raw.X, raw.Y, raw.Z);
-			printf("Raw Acc. X = %d, Y = %d, Z = %d\n", rawAcc.X, rawAcc.Y, rawAcc.Z);
-			printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n", calGyro.X, calGyro.Y, calGyro.Z);
-			printf("Accel Angles     - Pitch: %d, Roll: %d \n", euler.pitch, euler.roll);
-			printf("filtered Angles  - Pitch: %d, Roll: %d \n", filtered.pitch, filtered.roll);
-		})
+		SPI::read_registers(0x1B, &data, 1);
+		printf("FCHOICE_B = %d\n\n", data & 0b11);
+
+		printf("Raw Acc. X = %d, Y = %d, Z = %d\n", accelRaw.X, accelRaw.Y, accelRaw.Z);
+		printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", gyroRaw.X, gyroRaw.Y, gyroRaw.Z);
+		printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n\n", calGyro.X, calGyro.Y, calGyro.Z);
+
+		printf("Angles from Accel. Pitch = %d, roll = %d\n", accelAngles.pitch, accelAngles.roll);
+		printf("filtered angles.   Pitch = %d, roll = %d\n", angleFiltered.pitch, angleFiltered.roll);
+		// })
 	}
 } // namespace PicoPilot

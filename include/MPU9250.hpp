@@ -38,6 +38,7 @@ namespace PicoPilot {
 
 	  private:
 		Vec3 m_gyroCal;
+		Vec3 m_accelCal;
 		Vec3 m_accel;
 		Rotation m_filteredAngles;
 		absolute_time_t m_compLastTime = get_absolute_time();
