@@ -19,7 +19,7 @@ namespace PicoPilot::Quad {
 		void input(int16_t&& thrust, int16_t&& yaw, int16_t&& pitch, int16_t&& roll) noexcept;
 		void input(const int16_t& thrust, const int16_t& yaw, const int16_t& pitch, const int16_t& roll) noexcept;
 		void debugPrint() const noexcept;
-		float spdAlloc[3] = {0.7f, 0.15f, 0.15f};
+		float spdAlloc[3] = {0.5f, 0.25f, 0.25f};
 
 	  protected:
 		Controls(std::array<Pico::gpioPin_t, 4>&& pinsArray) noexcept;

@@ -80,14 +80,23 @@ namespace PicoPilot::Quad {
 		float motorSpeed[4] = {0, 0, 0, 0};
 
 		int16_t m_thrust = (thrust * spdAlloc[Z_TRANS]);
-		int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
-		int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
-		int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];
 
-		motorSpeed[0] = m_thrust + m_yaw + m_pitch + m_roll;
-		motorSpeed[1] = m_thrust - m_yaw + m_pitch - m_roll;
-		motorSpeed[2] = m_thrust + m_yaw - m_pitch - m_roll;
-		motorSpeed[3] = m_thrust - m_yaw - m_pitch + m_roll;
+		if (m_thrust > 170) {
+			int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
+			int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
+			int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];
+
+			motorSpeed[0] = m_thrust + m_yaw + m_pitch + m_roll;
+			motorSpeed[1] = m_thrust - m_yaw + m_pitch - m_roll;
+			motorSpeed[2] = m_thrust + m_yaw - m_pitch - m_roll;
+			motorSpeed[3] = m_thrust - m_yaw - m_pitch + m_roll;
+
+		} else {
+			motorSpeed[0] = m_thrust;
+			motorSpeed[1] = m_thrust;
+			motorSpeed[2] = m_thrust;
+			motorSpeed[3] = m_thrust;
+		}
 
 		for (auto i = 0; i < m_motors.size(); ++i) {
 			if (motorSpeed[i] <= 0) {

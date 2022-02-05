@@ -9,9 +9,9 @@ namespace PicoPilot {
 	class Pid {
 	  public:
 		struct Configs {
-			float Kp = 25.f;
-			float Ki = 0.0f;
-			float Kd = 10.0f;
+			float Kp = 2.f;
+			float Ki = 0.1f;
+			float Kd = 0.9f;
 
 			float tau = 0.000f;
 
@@ -31,7 +31,7 @@ namespace PicoPilot {
 			float sampleTime = (float)absolute_time_diff_us(m_last, absolute_time_t()) / 1000000.f;
 			m_last = get_absolute_time();
 
-			float error = -(setpoint - measurement);
+			float error = (setpoint - measurement);
 			float proportional = m_configs.Kp * error;
 			m_integrator = m_integrator + 0.5f * m_configs.Ki * sampleTime * (error + m_prevError);
 			m_differentiator = -(2.0f * m_configs.Kd * (measurement - m_prevMeasurement) +
@@ -63,7 +63,7 @@ namespace PicoPilot {
 			// printf("proportional: %f\n", proportional);
 			// printf("integrator: %f\n", m_integrator);
 			// printf("differentiator: %f\n", m_differentiator);
-			printf("raw output: %d\n", out);
+			// printf("raw output: %d\n", out);
 
 			return out;
 		}

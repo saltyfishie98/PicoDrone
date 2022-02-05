@@ -79,10 +79,8 @@ namespace Pico {
 		reg |= READ_BIT;
 		cs_select();
 		spi_write_blocking(m_port, &reg, 1);
-		sleep_ms(10);
 		spi_read_blocking(m_port, 0, buf, len);
 		cs_deselect();
-		sleep_ms(10);
 	}
 
 	void SPI::write_registers(const uint8_t* buf, size_t len) {

@@ -4,11 +4,12 @@
 #include "Types.hpp"
 #include "pico/stdlib.h"
 #include "stdio.h"
+#include "Helpers/Macros.hpp"
 
 namespace PicoPilot::Misc {
 
 	inline void clearConsole() {
-		printf("\033[2J");
+		DEBUG_RUN(printf("\033[2J");)
 	}
 
 	template <typename T>

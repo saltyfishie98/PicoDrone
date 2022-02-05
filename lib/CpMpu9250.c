@@ -4,6 +4,7 @@
 #include "hardware/spi.h"
 #include <math.h>
 #include "CpMpu9250.h"
+#include "Helpers/Macros.hpp"
 
 /* Example code to talk to a MPU9250 MEMS accelerometer and gyroscope.
 
@@ -190,6 +191,6 @@ void start_spi() // Starts the mpu and resets it
 	uint8_t id;
 	read_registers(0x75, &id, 1);
 	if (id != 0x71) {
-		printf("Mpu9250 begin error!");
+		DEBUG_RUN(printf("Mpu9250 begin error!");)
 	}
 }

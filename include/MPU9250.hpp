@@ -41,6 +41,8 @@ namespace PicoPilot {
 		Vec3 m_accel;
 		Rotation m_filteredAngles;
 		absolute_time_t m_compLastTime = get_absolute_time();
+		Vec3 vec3Out;
+		Rotation rotationOut;
 
 		void m_updateGyroAngles();
 	};

@@ -1,25 +1,28 @@
 #include "Remote.hpp"
 
 #include <stdio.h>
+#include "Helpers/Macros.hpp"
 
 namespace PicoPilot {
-	Remote Remote::create(long&& freq, uint&& ss, uint&& reset, uint&& dio0) {
+	Remote Remote::create(long&& freq, uint&& ss, uint&& reset, uint&& dio0) noexcept {
 		Remote temp;
 		temp.setPins(ss, reset, dio0);
 		if (!temp.begin(freq)) {
-			printf("Failed\n");
-			sleep_ms(500);
-			abort();
+			DEBUG_RUN({
+				printf("Failed\n");
+				sleep_ms(500);
+				abort();
+			})
 		}
 
 		return temp;
 	}
 
-	Remote::Packet Remote::getPacketData() {
+	Remote::Packet Remote::getPacketData() noexcept {
 		int packetSize = LoRaClass::parsePacket();
 
 		if (packetSize) {
-			std::string dataStr = "";
+			std::string dataStr;
 
 			while (LoRaClass::available()) {
 				dataStr.push_back((char)LoRaClass::read());
@@ -35,10 +38,17 @@ namespace PicoPilot {
 		return m_packetData;
 	}
 
-	void Remote::waitForSignal() {
+	void Remote::waitForSignal() noexcept {
 		while (getPacketData().rssi == 0) {
-			printf("waiting for signal...\n");
+			DEBUG_RUN(printf("waiting for signal...\n");)
 			sleep_ms(1000);
 		}
+	}
+
+	void Remote::debugPrint() noexcept {
+		DEBUG_RUN({
+			auto data = getPacketData();
+			printf("thrust: %d\nyaw   : %d\npitch : %d\nroll  : %d\n", data.thrust, data.yaw, data.pitch, data.roll);
+		})
 	}
 } // namespace PicoPilot

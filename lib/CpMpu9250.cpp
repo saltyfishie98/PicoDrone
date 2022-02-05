@@ -1,4 +1,5 @@
 #include "CpMpu9250.hpp"
+#include "Helpers/Macros.hpp"
 extern "C" {
 #include "CpMpu9250.h"
 }
@@ -27,10 +28,12 @@ void mpu9250::updateAngles() // Calculates the angles based on the sensor readin
 
 void mpu9250::printData() // Prints out the sensor readings and calculated values
 {
-	// printf("Acc. X = %d, Y = %d, Z = %d\n", acceleration[0], acceleration[1], acceleration[2]);
-	printf("Gyro. X = %d, Y = %d, Z = %d\n", gyro[0] - gyroCal[0], gyro[1] - gyroCal[1], gyro[2] - gyroCal[2]);
-	printf("Euler. Roll = %d, Pitch = %d\n", eulerAngles[0], eulerAngles[1]);
-	printf("Full. Roll = %d, Pitch = %d\n", fullAngles[0], fullAngles[1]);
-	sleep_ms(100);
-	printf("\033[2J");
+	DEBUG_RUN({
+		printf("Acc. X = %d, Y = %d, Z = %d\n", acceleration[0], acceleration[1], acceleration[2]);
+		printf("Gyro. X = %d, Y = %d, Z = %d\n", gyro[0] - gyroCal[0], gyro[1] - gyroCal[1], gyro[2] - gyroCal[2]);
+		printf("Euler. Roll = %d, Pitch = %d\n", eulerAngles[0], eulerAngles[1]);
+		printf("Full. Roll = %d, Pitch = %d\n", fullAngles[0], fullAngles[1]);
+		sleep_ms(100);
+		printf("\033[2J");
+	})
 }

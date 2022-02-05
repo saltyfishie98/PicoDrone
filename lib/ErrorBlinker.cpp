@@ -25,11 +25,13 @@ namespace PicoPilot::ErrorHandler {
 		}
 
 		void printErrorCode(const ErrorCode& input) {
-			printf("Error Code: ");
-			for (int i = input.size() - 1; i >= 0; i--) {
-				printf("%d", input[i]);
-			}
-			printf("\n");
+			DEBUG_RUN({
+				printf("Error Code: ");
+				for (int i = input.size() - 1; i >= 0; i--) {
+					printf("%d", input[i]);
+				}
+				printf("\n");
+			})
 		}
 
 		class BlinkerLed {
@@ -37,7 +39,6 @@ namespace PicoPilot::ErrorHandler {
 			BlinkerLed(const Pico::gpioPin_t& number = PICO_DEFAULT_LED_PIN) : m_pinNum(number) {
 				gpio_init(m_pinNum);
 				gpio_set_dir(m_pinNum, 1);
-				DEBUG_RUN(printf("\n\n================== created Blicker =================\n\n");)
 			}
 
 			void setSpeed(const float& speed) {
