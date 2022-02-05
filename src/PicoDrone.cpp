@@ -18,25 +18,67 @@
 namespace Application {
 	using namespace PicoPilot;
 
-	namespace Core0 {
-		auto defaultPins = Mpu9250::Pins();
-		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
+	const float centerOffset = 511.f;
+	bool started = false;
+	auto remoteData = Remote::Packet();
 
-		void setup() {}
+	auto quadControls = Quad::Controls::create({6, 7, 8, 9});
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	namespace Core0 {
+		auto remote = Remote::create();
+
+		void setup() {
+			remote.waitForSignal();
+			auto tempRemoteData = remote.getPacketData();
+			quadControls.input(tempRemoteData.thrust, tempRemoteData.yaw, tempRemoteData.pitch, tempRemoteData.roll);
+			started = true;
+		}
 		void loop() {
-			mpu9250.debugPrint();
-			sleep_ms(50);
-			Misc::clearConsole();
+			remoteData = remote.getPacketData();
 		}
 	} // namespace Core0
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	namespace Core1 {
+		DEBUG_RUN(auto last = get_absolute_time();)
+		int16_t setpoint = 0;
+
+		auto defaultPins = Pico::SPI::Pins();
+		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
+
+		FastPID pitchPid(2.3f, 0.0f, 100000.0f, clock_get_hz(clk_sys) / 10, 16, true);
+		FastPID rollPid(2.3f, 0.0f, 100000.0f, clock_get_hz(clk_sys) / 10, 16, true);
 
 		void setup() {
 			Misc::Blink::setup();
 		}
 		void loop() {
-			Misc::Blink::start(250);
+			if (started) {
+				Misc::Blink::start(70);
+
+			} else {
+				Misc::Blink::start(250);
+
+				auto feedback = mpu9250.calibratedGyro();
+				int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
+				int16_t roll = rollPid.step(0, -feedback.X) + 511;
+
+				quadControls.input(remoteData.thrust, remoteData.yaw, pitch, roll);
+
+				DEBUG_RUN({
+					mpu9250.debugPrint();
+
+					printf("Controller output: Pitch = %d, Roll = %d\n\n", pitch, roll);
+					printf("Loop time = %lld microseconds\n", absolute_time_diff_us(last, get_absolute_time()));
+
+					sleep_ms(50);
+					Misc::clearConsole();
+					last = get_absolute_time();
+				})
+			}
 		}
 	} // namespace Core1
 

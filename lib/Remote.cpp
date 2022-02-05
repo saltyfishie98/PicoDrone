@@ -22,14 +22,19 @@ namespace PicoPilot {
 		int packetSize = LoRaClass::parsePacket();
 
 		if (packetSize) {
-			std::string dataStr;
+			char dataStr[6] = "";
 
+			uint8_t i = 0;
 			while (LoRaClass::available()) {
-				dataStr.push_back((char)LoRaClass::read());
+				dataStr[i] = (char)LoRaClass::read();
+				if (i > 6) {
+					return m_packetData;
+				}
+				++i;
 			}
 
-			if (dataStr.size() <= 4 && std::isdigit(dataStr.at(0))) {
-				m_packetData.thrust = stoi(dataStr);
+			if (strlen(dataStr) <= 4 && std::isdigit(dataStr[0])) {
+				m_packetData.thrust = strtol(dataStr, nullptr, 10);
 				m_packetData.rssi = LoRaClass::packetRssi();
 				m_packetData.snr = LoRaClass::packetSnr();
 			}

@@ -112,19 +112,16 @@ namespace PicoPilot {
 
 	void Mpu9250::calibrate(uint loop) {
 		Mpu9250::Vec3 tempGyro;
-		Mpu9250::Vec3 tempAccel;
 
+		sleep_ms(5000);
 		for (int i = 0; i < loop; i++) {
 			tempGyro = rawGyro();
-			tempAccel = rawAccel();
+
+			printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", tempGyro.X, tempGyro.Y, tempGyro.Z);
 
 			m_gyroCal.X += tempGyro.X;
 			m_gyroCal.Y += tempGyro.Y;
 			m_gyroCal.Z += tempGyro.Z;
-
-			m_accelCal.X += tempAccel.X;
-			m_accelCal.Y += tempAccel.Y;
-			m_accelCal.Z += tempAccel.Z;
 		}
 
 		m_gyroCal.X /= loop;
@@ -188,7 +185,7 @@ namespace PicoPilot {
 		printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n\n", calGyro.X, calGyro.Y, calGyro.Z);
 
 		printf("Angles from Accel. Pitch = %d, roll = %d\n", accelAngles.pitch, accelAngles.roll);
-		printf("filtered angles.   Pitch = %d, roll = %d\n", angleFiltered.pitch, angleFiltered.roll);
+		printf("filtered angles.   Pitch = %d, roll = %d\n\n", angleFiltered.pitch, angleFiltered.roll);
 		// })
 	}
 } // namespace PicoPilot

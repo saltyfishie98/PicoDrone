@@ -18,7 +18,7 @@ namespace Application {
 	} // namespace Core1
 } // namespace Application
 
-// clang-format off
+	// clang-format off
 #ifdef MULTICORE
 	#define LAUNCH_CORE_1 multicore_launch_core1(core1_Process)
 
