@@ -47,14 +47,8 @@ namespace PicoPilot {
 		Vec3 vec3Out;
 		Rotation rotationOut;
 
-		const std::array<float, 3> R = {7000, 7000, 7000};
-		const std::array<float, 3> H = {1, 1, 1};
-		std::array<float, 3> Q = {10, 10, 10};
-		std::array<float, 3> P = {0, 0, 0};
-		std::array<float, 3> U_hat = {0, 0, 0};
-		std::array<float, 3> K = {0, 0, 0};
-
-		std::array<Misc::Kalman::Configs, 3> kalmanConfigs;
+		std::array<Misc::Kalman::Configs, 3> accelKalmanConfigs;
+		std::array<Misc::Kalman::Configs, 3> gyroKalmanConfigs;
 
 		void m_updateGyroAngles();
 	};

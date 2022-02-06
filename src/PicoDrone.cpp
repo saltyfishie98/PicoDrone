@@ -42,7 +42,7 @@ namespace Application {
 
 		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
 
-		Pid::Configs defaultPidConf = {3.8f, 0.0f, 25.f, 0.00f, -600.f, 600.f, -200.f, 200.f};
+		Pid::Configs defaultPidConf = {2.f, 0.0f, 0.f, 0.00f, -600.f, 600.f, -200.f, 200.f};
 		auto pitchPid = Pid::create(defaultPidConf);
 		auto rollPid = Pid::create(defaultPidConf);
 
@@ -57,10 +57,10 @@ namespace Application {
 				Misc::Blink::start(250);
 
 				auto feedback = mpu9250.calibratedGyro();
-				static int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
-				static int16_t roll = rollPid.step(0, -feedback.X) + 511;
+				int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
+				int16_t roll = rollPid.step(0, -feedback.X) + 511;
 
-				quadControls.input(remoteData.thrust, remoteData.yaw, pitch, roll);
+				quadControls.input(remoteData.thrust, 511, 511, 511);
 
 				DEBUG_RUN({
 					mpu9250.debugPrint();
