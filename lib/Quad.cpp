@@ -31,45 +31,6 @@ namespace PicoPilot::Quad {
 	/**
 	 * @brief Inputs for controlling the motion of the Quad (NOTE: smaller than wrap value for 50Hz)
 	 *
-	 * @param thrust
-	 * @param yaw
-	 * @param pitch
-	 * @param roll
-	 */
-	void Controls::input(int16_t&& thrust, int16_t&& yaw, int16_t&& pitch, int16_t&& roll) {
-		// parsing the speed from input to each of the quad's motors
-		float motorSpeed[4] = {0, 0, 0, 0};
-
-		int16_t m_thrust = (thrust * spdAlloc[Z_TRANS]);
-
-		if (m_thrust > 170) {
-			int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
-			int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
-			int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];
-
-			motorSpeed[0] = m_thrust + m_yaw + m_pitch + m_roll;
-			motorSpeed[1] = m_thrust - m_yaw + m_pitch - m_roll;
-			motorSpeed[2] = m_thrust + m_yaw - m_pitch - m_roll;
-			motorSpeed[3] = m_thrust - m_yaw - m_pitch + m_roll;
-
-		} else {
-			motorSpeed[0] = m_thrust;
-			motorSpeed[1] = m_thrust;
-			motorSpeed[2] = m_thrust;
-			motorSpeed[3] = m_thrust;
-		}
-
-		for (auto i = 0; i < m_motors.size(); ++i) {
-			if (motorSpeed[i] <= 0) {
-				motorSpeed[i] = 0;
-			}
-			m_motors[i].setRangedLevel(motorSpeed[i]);
-		}
-	}
-
-	/**
-	 * @brief Inputs for controlling the motion of the Quad (NOTE: smaller than wrap value for 50Hz)
-	 *
 	 * @param thrust value to set the quad's thrust
 	 * @param yaw value to set the quad's yaw
 	 * @param pitch value to set the quad's	pitch
@@ -81,7 +42,7 @@ namespace PicoPilot::Quad {
 
 		int16_t m_thrust = (thrust * spdAlloc[Z_TRANS]);
 
-		if (m_thrust > 170) {
+		if (m_thrust > 150) {
 			int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
 			int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
 			int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];

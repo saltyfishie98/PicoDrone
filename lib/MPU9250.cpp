@@ -6,9 +6,10 @@
 #include "Helpers/Macros.hpp"
 #include "Helpers/Misc.hpp"
 
-using namespace Pico;
-
 namespace PicoPilot {
+	using namespace Misc;
+	using namespace Pico;
+
 	Mpu9250::Mpu9250(spi_inst_t* port, SPI::Pins&& gpioPins) {
 		SPI::m_port = port;
 		SPI::m_pins = std::move(gpioPins);
@@ -34,24 +35,24 @@ namespace PicoPilot {
 			while (1) {}
 		}
 
-		// Read and set DLPF_CFG
-		SPI::read_registers(0x1A, &data, 1);
-		data |= 4 << 0;
-		uint8_t dlpfCfgBuf[] = {0x1A, data};
-		SPI::write_registers(dlpfCfgBuf, 2);
+		// // Read and set DLPF_CFG
+		// SPI::read_registers(0x1A, &data, 1);
+		// data |= 4 << 0;
+		// uint8_t dlpfCfgBuf[] = {0x1A, data};
+		// SPI::write_registers(dlpfCfgBuf, 2);
 
-		// Read and set FCHOICE_B to use DLPF_CFG
-		SPI::read_registers(0x1B, &data, 1);
-		data |= 0b00 << 0;
-		uint8_t fchoicebBuf[] = {0x1B, data};
-		SPI::write_registers(fchoicebBuf, 2);
+		// // Read and set FCHOICE_B to use DLPF_CFG
+		// SPI::read_registers(0x1B, &data, 1);
+		// data |= 0b00 << 0;
+		// uint8_t fchoicebBuf[] = {0x1B, data};
+		// SPI::write_registers(fchoicebBuf, 2);
 
-		// Read and set A_DLPF_CFG and ACCEL_FCHOICE to use A_DLPF_CFG
-		SPI::read_registers(0x1C, &data, 1);
-		data |= 4 << 0;
-		data |= 0 << 3;
-		uint8_t accelDlpfCfgBuf[] = {0x1C, data};
-		SPI::write_registers(accelDlpfCfgBuf, 2);
+		// // Read and set A_DLPF_CFG and ACCEL_FCHOICE to use A_DLPF_CFG
+		// SPI::read_registers(0x1C, &data, 1);
+		// data |= 6 << 0;
+		// data |= 0 << 3;
+		// uint8_t accelDlpfCfgBuf[] = {0x1C, data};
+		// SPI::write_registers(accelDlpfCfgBuf, 2);
 
 		calibrate();
 	}
@@ -107,6 +108,17 @@ namespace PicoPilot {
 		vec3Out.Y = Misc::milli((double)vec3Out.Y / 16384.0);
 		vec3Out.Z = Misc::milli((double)vec3Out.Z / 16384.0);
 
+		return vec3Out;
+	}
+
+	Mpu9250::Vec3 Mpu9250::filteredAccels() noexcept {
+		auto rawAccels = rawAccel();
+
+		auto accelX = Kalman::filter<int16_t>(kalmanConfigs[0], rawAccels.X);
+		auto accelY = Kalman::filter<int16_t>(kalmanConfigs[1], rawAccels.Y);
+		auto accelZ = Kalman::filter<int16_t>(kalmanConfigs[2], rawAccels.Z);
+
+		vec3Out = {accelX, accelY, accelZ};
 		return vec3Out;
 	}
 
@@ -168,24 +180,30 @@ namespace PicoPilot {
 		// DEBUG_RUN({
 		auto gyroRaw = rawGyro();
 		auto accelRaw = rawAccel();
+		auto accelFiltered = filteredAccels();
 
 		auto calGyro = calibratedGyro();
 		auto accelAngles = anglesFromAccel();
 		auto angleFiltered = filteredAngles(0.8, 0.8);
 
 		uint8_t data = 0;
-		SPI::read_registers(0x1A, &data, 1);
-		printf("DLPF_CFG = %d\n", data & 0b111);
+		SPI::read_registers(0x1C, &data, 1);
+		printf("ACC_DLPF_CFG = %d\n", data & 0b111);
 
 		SPI::read_registers(0x1B, &data, 1);
 		printf("FCHOICE_B = %d\n\n", data & 0b11);
 
-		printf("Raw Acc. X = %d, Y = %d, Z = %d\n", accelRaw.X, accelRaw.Y, accelRaw.Z);
+		printf("Raw Acc.      X = %d, Y = %d, Z = %d\n", accelRaw.X, accelRaw.Y, accelRaw.Z);
+		printf("Filtered Acc. X = %d, Y = %d, Z = %d\n\n", accelFiltered.X, accelFiltered.Y, accelFiltered.Z);
+
 		printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", gyroRaw.X, gyroRaw.Y, gyroRaw.Z);
 		printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n\n", calGyro.X, calGyro.Y, calGyro.Z);
 
 		printf("Angles from Accel. Pitch = %d, roll = %d\n", accelAngles.pitch, accelAngles.roll);
 		printf("filtered angles.   Pitch = %d, roll = %d\n\n", angleFiltered.pitch, angleFiltered.roll);
+
+		// printf("%d, %d\n", accelRaw.Z, accelFiltered.Z);
+
 		// })
 	}
 } // namespace PicoPilot

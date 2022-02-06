@@ -2,6 +2,7 @@
 #define C__PROJECTS_PICO_PICODRONE_INCLUDE_MPU9250_HPP_
 
 #include "Helpers/Pico.hpp"
+#include "Helpers/Misc.hpp"
 #include "pico/time.h"
 
 namespace PicoPilot {
@@ -27,6 +28,7 @@ namespace PicoPilot {
 		void calibrate(uint loop = 100) noexcept;
 		void debugPrint() noexcept;
 		Vec3 rawAccel() noexcept;
+		Vec3 filteredAccels() noexcept;
 		Vec3 rawGyro() noexcept;
 		Vec3 calibratedGyro() noexcept;
 		Rotation anglesFromAccel() noexcept;
@@ -44,6 +46,15 @@ namespace PicoPilot {
 		absolute_time_t m_compLastTime = get_absolute_time();
 		Vec3 vec3Out;
 		Rotation rotationOut;
+
+		const std::array<float, 3> R = {7000, 7000, 7000};
+		const std::array<float, 3> H = {1, 1, 1};
+		std::array<float, 3> Q = {10, 10, 10};
+		std::array<float, 3> P = {0, 0, 0};
+		std::array<float, 3> U_hat = {0, 0, 0};
+		std::array<float, 3> K = {0, 0, 0};
+
+		std::array<Misc::Kalman::Configs, 3> kalmanConfigs;
 
 		void m_updateGyroAngles();
 	};

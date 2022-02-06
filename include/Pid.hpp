@@ -9,11 +9,11 @@ namespace PicoPilot {
 	class Pid {
 	  public:
 		struct Configs {
-			float Kp = 2.f;
-			float Ki = 0.1f;
-			float Kd = 0.9f;
+			float Kp = 2.3f;
+			float Ki = 0.0f;
+			float Kd = 0.f;
 
-			float tau = 0.000f;
+			float tau = 0.02f;
 
 			float outMin = -600.f;
 			float outMax = 600.f;
@@ -26,18 +26,29 @@ namespace PicoPilot {
 
 		Pid() = default;
 
-		template <typename T_out>
-		T_out update(const float& setpoint, const float& measurement) noexcept {
+		template <typename T_out = int16_t>
+		T_out step(const float& setpoint, const float& measurement) noexcept {
+			float proportional = 0;
+			float error = 0;
+
 			float sampleTime = (float)absolute_time_diff_us(m_last, absolute_time_t()) / 1000000.f;
 			m_last = get_absolute_time();
 
-			float error = (setpoint - measurement);
-			float proportional = m_configs.Kp * error;
-			m_integrator = m_integrator + 0.5f * m_configs.Ki * sampleTime * (error + m_prevError);
-			m_differentiator = -(2.0f * m_configs.Kd * (measurement - m_prevMeasurement) +
-								 (2.0f * m_configs.tau - sampleTime) * m_differentiator) /
-							   (2.0f * m_configs.tau + sampleTime);
-			// Note: derivative on measurement, therefore minus sign in front of equation!
+			error = setpoint - measurement;
+
+			if (m_configs.Kp) {
+				proportional = m_configs.Kp * error;
+			}
+
+			if (m_configs.Ki) {
+				m_integrator = m_integrator + 0.5f * m_configs.Ki * sampleTime * (error + m_prevError);
+			}
+
+			if (m_configs.Kd) {
+				m_differentiator = -(2.f * m_configs.Kd * (measurement - m_prevMeasurement) +
+									 (2.f * m_configs.tau - sampleTime) * m_differentiator) /
+								   (2 * m_configs.tau + sampleTime);
+			}
 
 			// Anti-wind-up via integrator clamping
 			if (m_integrator > m_configs.integralMax) {
@@ -46,10 +57,10 @@ namespace PicoPilot {
 				m_integrator = m_configs.integralMin;
 			}
 
+			T_out out = proportional + m_integrator + m_differentiator;
+
 			m_prevError = error;
 			m_prevMeasurement = measurement;
-
-			T_out out = proportional + m_integrator + m_differentiator;
 
 			if (out > m_configs.outMax) {
 				out = m_configs.outMax;
@@ -63,7 +74,7 @@ namespace PicoPilot {
 			// printf("proportional: %f\n", proportional);
 			// printf("integrator: %f\n", m_integrator);
 			// printf("differentiator: %f\n", m_differentiator);
-			// printf("raw output: %d\n", out);
+			// printf("raw output: %d\n\n", out);
 
 			return out;
 		}
