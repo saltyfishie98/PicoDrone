@@ -16,12 +16,12 @@ suppress_tinyusb_warnings()
 
 add_subdirectory(vendor/pico-lora)
 add_subdirectory(vendor/FastPID)
-add_subdirectory(lib)
+add_subdirectory(src)
 
 include_directories(${PROJECT_SOURCE_DIR}/vendor/pico-lora/src)
 
 # can't link pico_sdk without doing this
-include(src/src.cmake)
+include(src/Core/src.cmake)
 
 
 
