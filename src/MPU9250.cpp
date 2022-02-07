@@ -53,24 +53,24 @@ namespace PicoPilot {
 			while (1) {}
 		}
 
-		// // set DLPF_CFG
-		// SPI::read_registers(0x1A, &data, 1);
-		// data |= 4 << 0;
-		// uint8_t dlpfCfgBuf[] = {0x1A, data};
-		// SPI::write_registers(dlpfCfgBuf, 2);
+		// set DLPF_CFG
+		SPI::read_registers(0x1A, &data, 1);
+		data |= 4 << 0;
+		uint8_t dlpfCfgBuf[] = {0x1A, data};
+		SPI::write_registers(dlpfCfgBuf, 2);
 
-		// set gyro range and set FCHOICE_B to use DLPF_CFG
-		// SPI::read_registers(0x1B, &data, 1);
-		// // data |= 0b00 << 0;
-		// data |= 0b11 << 3;
-		// uint8_t gyroSen[] = {0x1B, data};
-		// SPI::write_registers(gyroSen, 2);
+		// // set gyro range and set FCHOICE_B to use DLPF_CFG
+		SPI::read_registers(0x1B, &data, 1);
+		data |= 0b00 << 0;
+		data |= 0b11 << 3;
+		uint8_t gyroSen[] = {0x1B, data};
+		SPI::write_registers(gyroSen, 2);
 
-		// // set accel range
-		// SPI::read_registers(0x1C, &data, 1);
-		// data |= 0b11 << 3;
-		// uint8_t accelSen[] = {0x1C, data};
-		// SPI::write_registers(accelSen, 2);
+		// set accel range
+		SPI::read_registers(0x1C, &data, 1);
+		data |= 0b11 << 3;
+		uint8_t accelSen[] = {0x1C, data};
+		SPI::write_registers(accelSen, 2);
 
 		// // Read and set A_DLPF_CFG and ACCEL_FCHOICE to use A_DLPF_CFG
 		// SPI::read_registers(0x1D, &data, 1);

@@ -13,8 +13,6 @@ namespace PicoPilot {
 			float Ki = 0.0f;
 			float Kd = 0.f;
 
-			float tau = 0.02f;
-
 			float outMin = -600.f;
 			float outMax = 600.f;
 
@@ -41,11 +39,11 @@ namespace PicoPilot {
 			}
 
 			if (m_configs.Ki) {
-				m_integrator = m_integrator +  m_configs.Ki * sampleTime * error;
+				m_integrator = m_integrator + m_configs.Ki * sampleTime * error;
 			}
 
 			if (m_configs.Kd) {
-				m_differentiator = m_configs.Kd * -(measurement - m_prevMeasurement) / sampleTime
+				m_differentiator = m_configs.Kd * -(measurement - m_prevMeasurement) / sampleTime;
 			}
 
 			// Anti-wind-up via integrator clamping

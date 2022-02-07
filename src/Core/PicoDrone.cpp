@@ -42,7 +42,7 @@ namespace Application {
 
 		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
 
-		Pid::Configs defaultPidConf = {2.f, 0.0f, 0.f, 0.00f, -600.f, 600.f, -200.f, 200.f};
+		Pid::Configs defaultPidConf = {0.f, 0.0f, 10.f, -600.f, 600.f, -200.f, 200.f};
 		auto pitchPid = Pid::create(defaultPidConf);
 		auto rollPid = Pid::create(defaultPidConf);
 
@@ -60,7 +60,7 @@ namespace Application {
 				int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
 				int16_t roll = rollPid.step(0, -feedback.X) + 511;
 
-				quadControls.input(remoteData.thrust, 511, 511, 511);
+				quadControls.input(remoteData.thrust, remoteData.yaw, pitch, roll);
 
 				DEBUG_RUN({
 					mpu9250.debugPrint();

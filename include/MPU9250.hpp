@@ -32,7 +32,7 @@ namespace PicoPilot {
 		Vec3 rawGyro() noexcept;
 		Vec3 calibratedGyro() noexcept;
 		Rotation anglesFromAccel() noexcept;
-		Rotation filteredAngles(double&& pitchTau = 0.75, double&& rollTau = 0.75) noexcept;
+		Rotation filteredAngles(double&& pitchTau = 0.996, double&& rollTau = 0.996) noexcept;
 
 	  protected:
 		Mpu9250(spi_inst_t* port, SPI::Pins&& gpioPins);
