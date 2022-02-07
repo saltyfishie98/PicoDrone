@@ -41,13 +41,11 @@ namespace PicoPilot {
 			}
 
 			if (m_configs.Ki) {
-				m_integrator = m_integrator + 0.5f * m_configs.Ki * sampleTime * (error + m_prevError);
+				m_integrator = m_integrator +  m_configs.Ki * sampleTime * error;
 			}
 
 			if (m_configs.Kd) {
-				m_differentiator = -(2.f * m_configs.Kd * (measurement - m_prevMeasurement) +
-									 (2.f * m_configs.tau - sampleTime) * m_differentiator) /
-								   (2 * m_configs.tau + sampleTime);
+				m_differentiator = m_configs.Kd * -(measurement - m_prevMeasurement) / sampleTime
 			}
 
 			// Anti-wind-up via integrator clamping
