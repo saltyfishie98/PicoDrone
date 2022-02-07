@@ -85,7 +85,7 @@ namespace Pico {
 
 	void SPI::write_registers(const uint8_t* buf, size_t len) {
 		cs_select();
-		spi_write_blocking(m_port, buf, 2);
+		spi_write_blocking(m_port, buf, len);
 		cs_deselect();
 	}
 } // namespace Pico
