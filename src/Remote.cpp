@@ -15,6 +15,10 @@ namespace PicoPilot {
 			})
 		}
 
+		temp.setSpreadingFactor(7);
+		temp.setCodingRate4(5);
+		temp.setSignalBandwidth(250E3);
+
 		return temp;
 	}
 
@@ -22,22 +26,27 @@ namespace PicoPilot {
 		int packetSize = LoRaClass::parsePacket();
 
 		if (packetSize) {
-			char dataStr[6] = "";
+			uint8_t msgBuff[8];
+			static uint64_t dataBuffer = 0;
 
-			uint8_t i = 0;
-			while (LoRaClass::available()) {
-				dataStr[i] = (char)LoRaClass::read();
-				if (i > 6) {
-					return m_packetData;
-				}
-				++i;
+			memset(msgBuff, 0, sizeof(msgBuff));
+			uint8_t cntr = 0;
+			while (LoRaClass::available() > 0) {
+				if (cntr < (sizeof(msgBuff) / sizeof(msgBuff[0]))) {
+					msgBuff[cntr] = LoRaClass::read();
+					cntr++;
+				} else // discard any extra data
+					LoRa.read();
 			}
 
-			if (strlen(dataStr) <= 4 && std::isdigit(dataStr[0])) {
-				m_packetData.thrust = strtol(dataStr, nullptr, 10);
-				m_packetData.rssi = LoRaClass::packetRssi();
-				m_packetData.snr = LoRaClass::packetSnr();
-			}
+			memmove(&dataBuffer, msgBuff, sizeof(msgBuff));
+
+			m_packetData.thrust = (dataBuffer >> 0) & 0b1111111111111111;
+			m_packetData.yaw = (dataBuffer >> 16) & 0b1111111111111111;
+			m_packetData.pitch = (dataBuffer >> 32) & 0b1111111111111111;
+			m_packetData.roll = (dataBuffer >> 48) & 0b1111111111111111;
+			m_packetData.rssi = LoRaClass::packetRssi();
+			m_packetData.snr = LoRaClass::packetSnr();
 		}
 
 		return m_packetData;
@@ -53,7 +62,7 @@ namespace PicoPilot {
 	void Remote::debugPrint() noexcept {
 		DEBUG_RUN({
 			auto data = getPacketData();
-			printf("thrust: %d\nyaw   : %d\npitch : %d\nroll  : %d\n", data.thrust, data.yaw, data.pitch, data.roll);
+			printf("thrust: %d\nyaw   : %d\npitch : %d\nroll  : %d\n\n", data.thrust, data.yaw, data.pitch, data.roll);
 		})
 	}
 } // namespace PicoPilot

@@ -150,7 +150,7 @@ namespace PicoPilot {
 	void Mpu9250::calibrate(uint loop) {
 		Mpu9250::Vec3 tempGyro;
 
-		sleep_ms(5000);
+		sleep_ms(1000);
 		for (int i = 0; i < loop; i++) {
 			tempGyro = rawGyro();
 

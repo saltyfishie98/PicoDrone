@@ -18,7 +18,9 @@ namespace PicoPilot::Misc {
 	}
 
 	namespace Blink {
-		bool toggle = 0;
+		namespace {
+			bool toggle = 0;
+		}
 
 		/**
 		 * @brief Setup blink using the built-in LED(just place in setup)
