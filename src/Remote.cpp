@@ -35,8 +35,10 @@ namespace PicoPilot {
 				if (cntr < (sizeof(msgBuff) / sizeof(msgBuff[0]))) {
 					msgBuff[cntr] = LoRaClass::read();
 					cntr++;
-				} else // discard any extra data
+				} else { // discard any extra data
 					LoRa.read();
+					printf("discard\n");
+				}
 			}
 
 			memmove(&dataBuffer, msgBuff, sizeof(msgBuff));
@@ -57,12 +59,5 @@ namespace PicoPilot {
 			DEBUG_RUN(printf("waiting for signal...\n");)
 			sleep_ms(1000);
 		}
-	}
-
-	void Remote::debugPrint() noexcept {
-		DEBUG_RUN({
-			auto data = getPacketData();
-			printf("thrust: %d\nyaw   : %d\npitch : %d\nroll  : %d\n\n", data.thrust, data.yaw, data.pitch, data.roll);
-		})
 	}
 } // namespace PicoPilot

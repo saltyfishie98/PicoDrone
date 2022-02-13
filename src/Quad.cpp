@@ -42,7 +42,7 @@ namespace PicoPilot::Quad {
 
 		int16_t m_thrust = (thrust * spdAlloc[Z_TRANS]);
 
-		if (m_thrust > 150) {
+		if (m_thrust > 50) {
 			int16_t m_yaw = (yaw - m_offset) * spdAlloc[Z_ROT];
 			int16_t m_pitch = (pitch - m_offset) * spdAlloc[XY_ROT];
 			int16_t m_roll = (roll - m_offset) * spdAlloc[XY_ROT];

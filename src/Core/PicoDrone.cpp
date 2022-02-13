@@ -29,6 +29,7 @@ namespace Application {
 		}
 		void loop() {
 			remoteData = remote.getPacketData();
+			sleep_ms(10);
 		}
 	} // namespace Core0
 
@@ -42,9 +43,12 @@ namespace Application {
 
 		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
 
-		Pid::Configs defaultPidConf = {0.f, 0.0f, 10.f, -600.f, 600.f, -200.f, 200.f};
-		auto pitchPid = Pid::create(defaultPidConf);
-		auto rollPid = Pid::create(defaultPidConf);
+		Pid::Configs pitchPidConfig = {0.f, 0.0f, 0.f, -600.f, 600.f, -200.f, 200.f};
+		Pid::Configs rollPidConfig = {0.f, 0.0f, 0.f, -600.f, 600.f, -200.f, 200.f};
+		Pid::Configs yawPidConfig = {3.f, 0.15f, 0.f, -600.f, 600.f, -200.f, 200.f};
+		auto pitchPid = Pid::create(pitchPidConfig);
+		auto rollPid = Pid::create(rollPidConfig);
+		auto yawPid = Pid::create(yawPidConfig);
 
 		void setup() {
 			Misc::Blink::setup();
@@ -59,12 +63,14 @@ namespace Application {
 				auto feedback = mpu9250.calibratedGyro();
 				int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
 				int16_t roll = rollPid.step(0, -feedback.X) + 511;
+				int16_t yaw = yawPid.step(0, -feedback.Z) + 511;
 
-				quadControls.input(remoteData.thrust, remoteData.yaw, pitch, roll);
+				quadControls.input(remoteData.thrust, yaw, pitch, roll);
 
 				DEBUG_RUN({
-					mpu9250.debugPrint();
-					// quadControls.debugPrint();
+					// remoteData.debugPrint();
+					// mpu9250.debugPrint();
+					quadControls.debugPrint();
 
 					printf("Controller output: Pitch = %d, Roll = %d\n\n", pitch, roll);
 					printf("Loop time = %lld microseconds\n", absolute_time_diff_us(last, get_absolute_time()));
