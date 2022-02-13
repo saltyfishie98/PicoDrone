@@ -9,7 +9,7 @@
 namespace PicoPilot::Misc {
 
 	namespace Blink {
-		void start(uint interval) noexcept;
+		void run(uint interval) noexcept;
 		void setup() noexcept;
 	} // namespace Blink
 
@@ -23,15 +23,20 @@ namespace PicoPilot::Misc {
 			float K = 0.f;
 		};
 
-		template <typename T>
-		inline T filter(Configs& configs, const float& U) noexcept {
+		inline float filter(Configs& configs, const float& U) noexcept {
 			configs.K = configs.P * configs.H / (configs.H * configs.P * configs.H + configs.R);
 			configs.UHat = configs.UHat + configs.K * (U - configs.H * configs.UHat);
 			configs.P = (1.f - configs.K * configs.H) * configs.P + configs.Q;
 
-			return (T)configs.UHat;
+			return configs.UHat;
 		}
 	} // namespace Kalman
+
+	namespace Complementary {
+		inline float filter(float fraction, float part0, float part1) noexcept {
+			return (fraction * (part0)) + ((1 - fraction) * part1);
+		}
+	} // namespace Complementary
 
 	template <typename T>
 	bool arrayFind(T thisElement, T inThisArray) noexcept {
@@ -50,8 +55,6 @@ namespace PicoPilot::Misc {
 	inline void clearConsole() {
 		DEBUG_RUN(printf("\033[2J");)
 	}
-
-	bool interval(const Pico::millis_t& setMillis) noexcept;
 
 } // namespace PicoPilot::Misc
 

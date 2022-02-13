@@ -155,9 +155,9 @@ namespace PicoPilot {
 	Mpu9250::Vec3 Mpu9250::gyroVals() noexcept {
 		auto raw = rawGyro();
 
-		vec3Out.X = Kalman::filter<int16_t>(gyroKalmanConfigs[0], raw.X - m_gyroCal.X);
-		vec3Out.Y = Kalman::filter<int16_t>(gyroKalmanConfigs[1], raw.Y - m_gyroCal.Y);
-		vec3Out.Z = Kalman::filter<int16_t>(gyroKalmanConfigs[2], raw.Z - m_gyroCal.Z);
+		vec3Out.X = static_cast<int16_t>(Kalman::filter(gyroKalmanConfigs[0], raw.X - m_gyroCal.X));
+		vec3Out.Y = static_cast<int16_t>(Kalman::filter(gyroKalmanConfigs[1], raw.Y - m_gyroCal.Y));
+		vec3Out.Z = static_cast<int16_t>(Kalman::filter(gyroKalmanConfigs[2], raw.Z - m_gyroCal.Z));
 
 		return vec3Out;
 	}
@@ -165,79 +165,28 @@ namespace PicoPilot {
 	Mpu9250::Vec3 Mpu9250::filteredAccels() noexcept {
 		auto rawAccels = rawAccel();
 
-		auto accelX = Kalman::filter<int16_t>(accelKalmanConfigs[0], rawAccels.X);
-		auto accelY = Kalman::filter<int16_t>(accelKalmanConfigs[1], rawAccels.Y);
-		auto accelZ = Kalman::filter<int16_t>(accelKalmanConfigs[2], rawAccels.Z);
+		auto accelX = static_cast<int16_t>(Kalman::filter(accelKalmanConfigs[0], rawAccels.X));
+		auto accelY = static_cast<int16_t>(Kalman::filter(accelKalmanConfigs[1], rawAccels.Y));
+		auto accelZ = static_cast<int16_t>(Kalman::filter(accelKalmanConfigs[2], rawAccels.Z));
 
 		vec3Out = {accelX, accelY, accelZ};
 		return vec3Out;
 	}
 
-	Mpu9250::Rotation Mpu9250::anglesFromAccel() noexcept {
-		Vec3 accel = filteredAccels();
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Static methods
 
-		float roll = std::atan2((float)accel.Y, (float)accel.Z) * (630.f / 11.f);
-		float pitch = -(std::atan2((float)accel.X, (float)accel.Z) * (630.f / 11.f));
+	Mpu9250::Rotation Mpu9250::toAngles(const Vec3& acceleration) noexcept {
+		Rotation out;
 
-		rotationOut.roll = roll;
-		rotationOut.pitch = pitch;
+		float roll = std::atan2((float)acceleration.Y, (float)acceleration.Z) * (630.f / 11.f);
+		float pitch = -(std::atan2((float)acceleration.X, (float)acceleration.Z) * (630.f / 11.f));
 
-		return rotationOut;
+		out.roll = roll;
+		out.pitch = pitch;
+
+		return out;
 	}
 
-	Mpu9250::Rotation Mpu9250::filteredAngles(double&& pitchTau, double&& rollTau) noexcept {
-		auto gyroRate = gyroVals();
-		auto accelAngles = anglesFromAccel();
-
-		double deltaT = (double)absolute_time_diff_us(m_compLastTime, get_absolute_time()) / 1000000.0;
-		m_compLastTime = get_absolute_time();
-
-		double rollRate = gyroRate.X;
-		double pitchRate = gyroRate.Y;
-
-		double accelRoll = accelAngles.roll;
-		double accelPitch = accelAngles.pitch;
-
-		m_filteredAngles.roll = rollTau * (m_filteredAngles.roll + rollRate * deltaT) + (1 - rollTau) * accelRoll;
-		m_filteredAngles.pitch = pitchTau * (m_filteredAngles.pitch + pitchRate * deltaT) + (1 - pitchTau) * accelPitch;
-
-		return m_filteredAngles;
-	}
-
-	void Mpu9250::debugPrint() noexcept {
-		// DEBUG_RUN({
-		auto gyroRaw = rawGyro();
-		auto accelRaw = rawAccel();
-		auto accelFiltered = filteredAccels();
-
-		auto calGyro = gyroVals();
-		auto accelAngles = anglesFromAccel();
-		auto angleFiltered = filteredAngles(0.8, 0.8);
-
-		uint8_t data = 0;
-		SPI::readRegs(0x1A, &data, 1);
-		printf("DLPF_CFG = %d\n", data & 0b111);
-
-		SPI::readRegs(0x1B, &data, 1);
-		printf("FCHOICE_B = %d\n\n", data & 0b11);
-
-		SPI::readRegs(0x1C, &data, 1);
-		printf("ACCEL_DLPF_CFG = %d\n", data & 0b111);
-
-		SPI::readRegs(0x1D, &data, 1);
-		printf("ACCEL_FCHOICE_B = %d\n\n", data & 0b11);
-
-		printf("Raw Acc.      X = %d, Y = %d, Z = %d\n", accelRaw.X, accelRaw.Y, accelRaw.Z);
-		printf("Filtered Acc. X = %d, Y = %d, Z = %d\n\n", accelFiltered.X, accelFiltered.Y, accelFiltered.Z);
-
-		printf("Raw Gyro. X = %d, Y = %d, Z = %d\n", gyroRaw.X, gyroRaw.Y, gyroRaw.Z);
-		printf("calibrated Gyro. X = %d, Y = %d, Z = %d\n\n", calGyro.X, calGyro.Y, calGyro.Z);
-
-		printf("Angles from Accel. Pitch = %d, roll = %d\n", accelAngles.pitch, accelAngles.roll);
-		printf("filtered angles.   Pitch = %d, roll = %d\n\n", angleFiltered.pitch, angleFiltered.roll);
-
-		// printf("%d, %d\n", accelRaw.Z, accelFiltered.Z);
-
-		// })
-	}
+	void Mpu9250::debugPrint() noexcept {}
 } // namespace PicoPilot

@@ -1,26 +1,16 @@
 #include "Helpers/Misc.hpp"
 
-#include "Helpers/Arduino.hpp"
+#include "hardware/timer.h"
 
 namespace PicoPilot::Misc {
 	using namespace PicoPilot;
 
 	namespace {
-		auto lastTime = Arduino::millis();
-	}
-
-	bool interval(const Pico::millis_t& setMillis) {
-		if ((Arduino::millis() - lastTime) >= setMillis) {
-			lastTime = Arduino::millis();
-			return true;
-		}
-		return false;
-	}
+		bool toggle = 0;
+		auto last = get_absolute_time();
+	} // namespace
 
 	namespace Blink {
-		namespace {
-			bool toggle = 0;
-		}
 
 		/**
 		 * @brief Setup blink using the built-in LED(just place in setup)
@@ -35,10 +25,12 @@ namespace PicoPilot::Misc {
 		 * @brief start the blinking of the built-in LED
 		 *
 		 */
-		void start(uint interval) {
-			if (Misc::interval(interval)) {
+		void run(uint interval) {
+			static auto now = get_absolute_time();
+			if (absolute_time_diff_us(last, now) / 1000 > interval) {
 				toggle ^= 1UL << 0;
 				gpio_put(PICO_DEFAULT_LED_PIN, toggle);
+				last = now;
 			}
 		}
 

@@ -8,10 +8,6 @@
 namespace PicoPilot {
 	class Mpu9250 : public Pico::SPI {
 	  public:
-		static Mpu9250 create(spi_inst_t* port, SPI::Pins&& gpioPins, uint CalibrationLoop) noexcept;
-
-		Mpu9250() = default;
-
 		struct Vec3 {
 			int16_t X = 0;
 			int16_t Y = 0;
@@ -24,15 +20,18 @@ namespace PicoPilot {
 			int16_t yaw = 0;
 		};
 
+		static Mpu9250 create(spi_inst_t* port, SPI::Pins&& gpioPins, uint CalibrationLoop) noexcept;
+		Mpu9250() = default;
+
 		void reset() noexcept;
 		void getMpuOffsets(uint loop = 100) noexcept;
-		void debugPrint() noexcept;
 		Vec3 rawAccel() noexcept;
 		Vec3 filteredAccels() noexcept;
 		Vec3 rawGyro() noexcept;
 		Vec3 gyroVals() noexcept;
-		Rotation anglesFromAccel() noexcept;
-		Rotation filteredAngles(double&& pitchTau = 0.996, double&& rollTau = 0.996) noexcept;
+		void debugPrint() noexcept;
+
+		static Rotation toAngles(const Vec3& acceleration) noexcept;
 
 	  protected:
 		Mpu9250(spi_inst_t* port, SPI::Pins&& gpioPins);

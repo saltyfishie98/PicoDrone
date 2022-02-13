@@ -9,13 +9,9 @@ namespace PicoPilot::Arduino {
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
 
-	inline uint32_t millis() {
-		// TODO: refactor this to use method forced by pico sdk
-#ifndef NDEBUG
-		return static_cast<uint32_t>(get_absolute_time()._private_us_since_boot / 1000ull);
-#else
-		return static_cast<uint32_t>(get_absolute_time() / 1000ull);
-#endif
+	template <typename T>
+	constexpr T constrain(T value, T low, T high) {
+		return (value) < (low) ? (low) : ((value) > (high) ? (high) : (value));
 	}
 } // namespace PicoPilot::Arduino
 
