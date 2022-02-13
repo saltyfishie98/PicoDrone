@@ -37,10 +37,8 @@ namespace Application {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	namespace Core1 {
 		DEBUG_RUN(auto last = get_absolute_time();)
-		int16_t setpoint = 0;
 
 		auto defaultPins = Pico::SPI::Pins();
-
 		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 100);
 
 		Pid::Configs pitchPidConfig = {0.f, 0.0f, 0.f, -600.f, 600.f, -200.f, 200.f};
@@ -60,7 +58,7 @@ namespace Application {
 			} else {
 				Misc::Blink::start(250);
 
-				auto feedback = mpu9250.calibratedGyro();
+				auto feedback = mpu9250.gyroVals();
 				int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
 				int16_t roll = rollPid.step(0, -feedback.X) + 511;
 				int16_t yaw = yawPid.step(0, -feedback.Z) + 511;

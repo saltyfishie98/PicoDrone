@@ -43,10 +43,10 @@ namespace Pico {
 
 		SPI() = default;
 
-		void cs_select();
-		void cs_deselect();
-		void read_registers(uint8_t reg, uint8_t* buf, uint16_t len);
-		void write_registers(const uint8_t* buf, size_t len);
+		void chipSelect();
+		void chipDeselect();
+		void readRegs(uint8_t reg, uint8_t* buf, uint16_t len);
+		void writeRegs(const uint8_t* buf, size_t len);
 
 	  protected:
 		SPI(spi_inst_t* port, Pins&& pins) noexcept;

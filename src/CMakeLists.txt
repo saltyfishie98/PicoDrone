@@ -47,9 +47,7 @@ target_include_directories(Quad PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 
 add_library(MPU9250 STATIC
-	CpMpu9250.cpp 
-	CpMpu9250.c
-	MPU9250.cpp
+	Mpu9250.cpp
 )
 target_link_libraries(MPU9250
 	pico_stdlib 

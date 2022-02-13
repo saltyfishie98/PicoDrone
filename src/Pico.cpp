@@ -59,34 +59,34 @@ namespace Pico {
 		gpio_put(m_pins.cs, 1);
 	}
 
-	void SPI::cs_select() {
+	void SPI::chipSelect() {
 		asm volatile("nop \n nop \n nop");
 		gpio_put(m_pins.cs, 0); // Active low
 		asm volatile("nop \n nop \n nop");
 	}
 
-	void SPI::cs_deselect() {
+	void SPI::chipDeselect() {
 		asm volatile("nop \n nop \n nop");
 		gpio_put(m_pins.cs, 1);
 		asm volatile("nop \n nop \n nop");
 	}
 
-	void SPI::read_registers(uint8_t reg, uint8_t* buf, uint16_t len) {
+	void SPI::readRegs(uint8_t reg, uint8_t* buf, uint16_t len) {
 		// For this particular device, we send the device the register we want to read
 		// first, then subsequently read from the device. The register is auto incrementing
 		// so we don't need to keep sending the register we want, just the first.
 
 		reg |= READ_BIT;
-		cs_select();
+		chipSelect();
 		spi_write_blocking(m_port, &reg, 1);
 		spi_read_blocking(m_port, 0, buf, len);
-		cs_deselect();
+		chipDeselect();
 	}
 
-	void SPI::write_registers(const uint8_t* buf, size_t len) {
-		cs_select();
+	void SPI::writeRegs(const uint8_t* buf, size_t len) {
+		chipSelect();
 		spi_write_blocking(m_port, buf, len);
-		cs_deselect();
+		chipDeselect();
 	}
 } // namespace Pico
 

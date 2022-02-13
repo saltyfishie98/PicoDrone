@@ -25,12 +25,12 @@ namespace PicoPilot {
 		};
 
 		void reset() noexcept;
-		void calibrate(uint loop = 100) noexcept;
+		void getMpuOffsets(uint loop = 100) noexcept;
 		void debugPrint() noexcept;
 		Vec3 rawAccel() noexcept;
 		Vec3 filteredAccels() noexcept;
 		Vec3 rawGyro() noexcept;
-		Vec3 calibratedGyro() noexcept;
+		Vec3 gyroVals() noexcept;
 		Rotation anglesFromAccel() noexcept;
 		Rotation filteredAngles(double&& pitchTau = 0.996, double&& rollTau = 0.996) noexcept;
 
