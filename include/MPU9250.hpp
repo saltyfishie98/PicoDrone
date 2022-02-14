@@ -8,48 +8,46 @@
 namespace PicoPilot {
 	class Mpu9250 : public Pico::SPI {
 	  public:
+		template <typename T>
 		struct Vec3 {
-			int16_t X = 0;
-			int16_t Y = 0;
-			int16_t Z = 0;
+			T X = 0;
+			T Y = 0;
+			T Z = 0;
 		};
 
+		template <typename T>
 		struct Rotation {
-			int16_t pitch = 0;
-			int16_t roll = 0;
-			int16_t yaw = 0;
+			T pitch = 0;
+			T roll = 0;
+			T yaw = 0;
 		};
 
-		static Mpu9250 create(spi_inst_t* port, SPI::Pins&& gpioPins, uint CalibrationLoop) noexcept;
-		Mpu9250() = default;
+		using QuadVec3 = Vec3<int16_t>;
+		using QuadRotation = Vec3<int16_t>;
 
-		void reset() noexcept;
-		void getMpuOffsets(uint loop = 100) noexcept;
-		Vec3 rawAccel() noexcept;
-		Vec3 filteredAccels() noexcept;
-		Vec3 rawGyro() noexcept;
-		Vec3 gyroVals() noexcept;
-		void debugPrint() noexcept;
-
-		static Rotation toAngles(const Vec3& acceleration) noexcept;
+		static Mpu9250 create(spi_inst_t* port, SPI::Pins&& gpioPins) noexcept;
+		QuadVec3 gyroVals();
+		QuadVec3 accelMilliVals();
+		void checkSettings();
+		void checkMpuVals();
 
 	  protected:
 		Mpu9250(spi_inst_t* port, SPI::Pins&& gpioPins);
 		void begin() noexcept;
+		void reset() noexcept;
 
 	  private:
-		Vec3 m_gyroCal;
-		Vec3 m_accelCal;
-		Vec3 m_accel;
-		Rotation m_filteredAngles;
-		absolute_time_t m_compLastTime = get_absolute_time();
-		Vec3 vec3Out;
-		Rotation rotationOut;
+		Vec3<float> m_accelOffset;
+		Vec3<float> m_gyroOffset;
+		QuadVec3 m_prevGyro;
+		QuadVec3 m_prevAccel;
+		uint8_t data = 0;
 
-		std::array<Misc::Kalman::Configs, 3> accelKalmanConfigs;
-		std::array<Misc::Kalman::Configs, 3> gyroKalmanConfigs;
-
-		void m_updateGyroAngles();
+		void getMpuOffsets();
+		QuadVec3 getRawMilliAccel();
+		QuadVec3 getRawGyro();
+		void setGyroSens();
+		void setAccelSens();
 	};
 } // namespace PicoPilot
 

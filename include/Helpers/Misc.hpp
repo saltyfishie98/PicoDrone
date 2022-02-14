@@ -15,7 +15,7 @@ namespace PicoPilot::Misc {
 
 	namespace Kalman {
 		struct Configs {
-			float R = 7000.f;
+			float R = 100.f;
 			float H = 1.f;
 			float Q = 10.f;
 			float P = 0.f;

@@ -13,30 +13,12 @@ namespace PicoPilot {
 	Mpu9250::Mpu9250(spi_inst_t* port, SPI::Pins&& gpioPins) {
 		SPI::m_port = port;
 		SPI::m_pins = std::move(gpioPins);
-
-		for (auto& config : gyroKalmanConfigs) {
-			config.R = 100.f;
-			config.H = 1.f;
-			config.Q = 10.f;
-			config.P = 0.f;
-			config.UHat = 0.f;
-			config.K = 0.f;
-		}
-
-		for (auto& config : accelKalmanConfigs) {
-			config.R = 8000.f;
-			config.H = 1.f;
-			config.Q = 10.f;
-			config.P = 0.f;
-			config.UHat = 0.f;
-			config.K = 0.f;
-		}
 	}
 
-	Mpu9250 Mpu9250::create(spi_inst_t* port, SPI::Pins&& gpioPins, uint calibrationLoop) {
+	Mpu9250 Mpu9250::create(spi_inst_t* port, SPI::Pins&& gpioPins) {
 		Mpu9250 temp(port, std::move(gpioPins));
 		temp.begin();
-		temp.getMpuOffsets(calibrationLoop);
+		temp.getMpuOffsets();
 		return temp;
 	}
 
@@ -44,7 +26,6 @@ namespace PicoPilot {
 		SPI::begin();
 		reset();
 
-		uint8_t data = 0;
 		SPI::readRegs(0x75, &data, 1);
 		sleep_ms(10);
 
@@ -53,24 +34,14 @@ namespace PicoPilot {
 			while (1) {}
 		}
 
-		// set DLPF_CFG
-		SPI::readRegs(0x1A, &data, 1);
-		data |= 4 << 0;
-		uint8_t dlpfCfgBuf[] = {0x1A, data};
-		SPI::writeRegs(dlpfCfgBuf, 2);
+		setGyroSens();
+		setAccelSens();
 
-		// // set gyro range and set FCHOICE_B to use DLPF_CFG
-		SPI::readRegs(0x1B, &data, 1);
-		data |= 0b00 << 0;
-		data |= 0b11 << 3;
-		uint8_t gyroSen[] = {0x1B, data};
-		SPI::writeRegs(gyroSen, 2);
-
-		// set accel range
-		SPI::readRegs(0x1C, &data, 1);
-		data |= 0b11 << 3;
-		uint8_t accelSen[] = {0x1C, data};
-		SPI::writeRegs(accelSen, 2);
+		// // set DLPF_CFG
+		// SPI::readRegs(0x1A, &data, 1);
+		// data |= 4 << 0;
+		// uint8_t dlpfCfgBuf[] = {0x1A, data};
+		// SPI::writeRegs(dlpfCfgBuf, 2);
 
 		// // Read and set A_DLPF_CFG and ACCEL_FCHOICE to use A_DLPF_CFG
 		// SPI::readRegs(0x1D, &data, 1);
@@ -78,8 +49,6 @@ namespace PicoPilot {
 		// data |= 0 << 3;
 		// uint8_t accelDlpfCfgBuf[] = {0x1C, data};
 		// SPI::writeRegs(accelDlpfCfgBuf, 2);
-
-		getMpuOffsets();
 	}
 
 	void Mpu9250::reset() noexcept {
@@ -88,105 +57,165 @@ namespace PicoPilot {
 		// data |= 1 << 7;
 		// uint8_t hResetBuf[] = {0x6B, data};
 		// SPI::writeRegs(hResetBuf, 2);
+		// sleep_ms(5000);
+		// abort();
 
 		uint8_t buf[] = {0x6B, 0x00};
 		SPI::writeRegs(buf, 2);
 	}
 
-	void Mpu9250::getMpuOffsets(uint loop) {
-		Mpu9250::Vec3 tempGyro;
-		Mpu9250::Vec3 tempAccel;
-
-		sleep_ms(1000);
-		for (int i = 0; i < loop; i++) {
-			tempGyro = rawGyro();
-
-			m_gyroCal.X += tempGyro.X;
-			m_gyroCal.Y += tempGyro.Y;
-			m_gyroCal.Z += tempGyro.Z;
-
-			m_accelCal.X += tempAccel.X;
-			m_accelCal.Y += tempAccel.Y;
-			m_accelCal.Z += tempAccel.Z;
-		}
-
-		m_gyroCal.X /= loop;
-		m_gyroCal.Y /= loop;
-		m_gyroCal.Z /= loop;
-
-		m_accelCal.X /= loop;
-		m_accelCal.Y /= loop;
-		m_accelCal.Z /= loop;
-	}
-
-	Mpu9250::Vec3 Mpu9250::rawGyro() noexcept {
+	Mpu9250::QuadVec3 Mpu9250::getRawMilliAccel() {
 		uint8_t buffer[6] = {0, 0, 0, 0, 0, 0};
-
-		SPI::readRegs(0x43, buffer, 6);
-
-		vec3Out.X = (buffer[0] << 8 | buffer[1]);
-		vec3Out.Y = (buffer[2] << 8 | buffer[3]);
-		vec3Out.Z = (buffer[4] << 8 | buffer[5]);
-
-		// https://github.com/MarkSherstan/MPU-6050-9250-I2C-CompFilter/blob/master/Arduino/main/main.ino
-		vec3Out.X = (double)vec3Out.X / 16.4;
-		vec3Out.Y = (double)vec3Out.Y / 16.4;
-		vec3Out.Z = (double)vec3Out.Z / 16.4;
-
-		return vec3Out;
-	}
-
-	Mpu9250::Vec3 Mpu9250::rawAccel() noexcept {
-		uint8_t buffer[6] = {0, 0, 0, 0, 0, 0};
+		static QuadVec3 rawAccel;
 
 		SPI::readRegs(0x3B, buffer, 6);
 
-		vec3Out.X = (buffer[0] << 8 | buffer[1]);
-		vec3Out.Y = (buffer[2] << 8 | buffer[3]);
-		vec3Out.Z = (buffer[4] << 8 | buffer[5]);
+		rawAccel.X = (buffer[0] << 8 | buffer[1]);
+		rawAccel.Y = (buffer[2] << 8 | buffer[3]);
+		rawAccel.Z = (buffer[4] << 8 | buffer[5]);
 
-		vec3Out.X = Misc::milli((double)vec3Out.X / 2048.0);
-		vec3Out.Y = Misc::milli((double)vec3Out.Y / 2048.0);
-		vec3Out.Z = Misc::milli((double)vec3Out.Z / 2048.0);
+		rawAccel.X = ((double)rawAccel.X / 2048.0) * 1000;
+		rawAccel.Y = ((double)rawAccel.Y / 2048.0) * 1000;
+		rawAccel.Z = ((double)rawAccel.Z / 2048.0) * 1000;
 
-		return vec3Out;
+		return rawAccel;
 	}
 
-	Mpu9250::Vec3 Mpu9250::gyroVals() noexcept {
-		auto raw = rawGyro();
+	Mpu9250::QuadVec3 Mpu9250::getRawGyro() {
+		uint8_t buffer[6] = {0, 0, 0, 0, 0, 0};
+		static QuadVec3 rawGyro;
 
-		vec3Out.X = static_cast<int16_t>(Kalman::filter(gyroKalmanConfigs[0], raw.X - m_gyroCal.X));
-		vec3Out.Y = static_cast<int16_t>(Kalman::filter(gyroKalmanConfigs[1], raw.Y - m_gyroCal.Y));
-		vec3Out.Z = static_cast<int16_t>(Kalman::filter(gyroKalmanConfigs[2], raw.Z - m_gyroCal.Z));
+		SPI::readRegs(0x43, buffer, 6);
 
-		return vec3Out;
+		rawGyro.X = (buffer[0] << 8 | buffer[1]);
+		rawGyro.Y = (buffer[2] << 8 | buffer[3]);
+		rawGyro.Z = (buffer[4] << 8 | buffer[5]);
+
+		// https://github.com/MarkSherstan/MPU-6050-9250-I2C-CompFilter/blob/master/Arduino/main/main.ino
+		rawGyro.X = (double)rawGyro.X / 16.4;
+		rawGyro.Y = (double)rawGyro.Y / 16.4;
+		rawGyro.Z = (double)rawGyro.Z / 16.4;
+
+		return rawGyro;
 	}
 
-	Mpu9250::Vec3 Mpu9250::filteredAccels() noexcept {
-		auto rawAccels = rawAccel();
+	void Mpu9250::getMpuOffsets() {
+		uint32_t count = 0;
 
-		auto accelX = static_cast<int16_t>(Kalman::filter(accelKalmanConfigs[0], rawAccels.X));
-		auto accelY = static_cast<int16_t>(Kalman::filter(accelKalmanConfigs[1], rawAccels.Y));
-		auto accelZ = static_cast<int16_t>(Kalman::filter(accelKalmanConfigs[2], rawAccels.Z));
+		while (count < 12000) {
+			auto gyro = getRawGyro();
+			auto milliAccel = getRawMilliAccel();
 
-		vec3Out = {accelX, accelY, accelZ};
-		return vec3Out;
+			m_gyroOffset.X += gyro.X;
+			m_gyroOffset.Y += gyro.Y;
+			m_gyroOffset.Z += gyro.Z;
+
+			m_accelOffset.X += milliAccel.X;
+			m_accelOffset.Y += milliAccel.Y;
+			m_accelOffset.Z += milliAccel.Z;
+
+			++count;
+		}
+
+		m_gyroOffset.X /= 12000.f;
+		m_gyroOffset.Y /= 12000.f;
+		m_gyroOffset.Z /= 12000.f;
+
+		m_accelOffset.X /= 12000.f;
+		m_accelOffset.Y /= 12000.f;
+		m_accelOffset.Z /= 12000.f;
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Static methods
+	Mpu9250::QuadVec3 Mpu9250::gyroVals() {
+		static QuadVec3 out;
+		out = getRawGyro();
 
-	Mpu9250::Rotation Mpu9250::toAngles(const Vec3& acceleration) noexcept {
-		Rotation out;
+		// Correct the outputs with the calculated error values
+		out.X = out.X - m_gyroOffset.X;
+		out.Y = out.Y - m_gyroOffset.Y;
+		out.Z = out.Z - m_gyroOffset.Z;
 
-		float roll = std::atan2((float)acceleration.Y, (float)acceleration.Z) * (630.f / 11.f);
-		float pitch = -(std::atan2((float)acceleration.X, (float)acceleration.Z) * (630.f / 11.f));
+		// LP filter gyro data
+		float B_gyro = 0.1f; // 0.13 sets cutoff just past 80Hz for about 3000Hz loop rate
+		out.X = (1.0f - B_gyro) * m_prevGyro.X + B_gyro * out.X;
+		out.Y = (1.0f - B_gyro) * m_prevGyro.Y + B_gyro * out.Y;
+		out.Z = (1.0f - B_gyro) * m_prevGyro.Z + B_gyro * out.Z;
 
-		out.roll = roll;
-		out.pitch = pitch;
+		m_prevGyro.X = out.X;
+		m_prevGyro.Y = out.Y;
+		m_prevGyro.Z = out.Z;
 
 		return out;
 	}
 
-	void Mpu9250::debugPrint() noexcept {}
+	Mpu9250::QuadVec3 Mpu9250::accelMilliVals() {
+		using namespace Misc;
+
+		static QuadVec3 out;
+
+		out = getRawMilliAccel();
+
+		// Correct the outputs with the calculated error values
+		out.X = out.X - m_accelOffset.X;
+		out.Y = out.Y - m_accelOffset.Y;
+		out.Z = out.Z - m_accelOffset.Z;
+
+		// LP filter gyro data
+		float B_gyro = 0.14f; // 0.13 sets cutoff just past 80Hz for about 3000Hz loop rate
+		out.X = (1.0f - B_gyro) * m_prevAccel.X + B_gyro * out.X;
+		out.Y = (1.0f - B_gyro) * m_prevAccel.Y + B_gyro * out.Y;
+		out.Z = (1.0f - B_gyro) * m_prevAccel.Z + B_gyro * out.Z;
+
+		m_prevAccel.X = out.X;
+		m_prevAccel.Y = out.Y;
+		m_prevAccel.Z = out.Z;
+
+		out.Z += 1000;
+
+		return out;
+	}
+
+	void Mpu9250::setGyroSens() {
+		SPI::readRegs(0x1B, &data, 1);
+		data |= 0b11 << 3;
+		uint8_t gyroSen[] = {0x1B, data};
+		SPI::writeRegs(gyroSen, 2);
+	}
+
+	void Mpu9250::setAccelSens() {
+		SPI::readRegs(0x1C, &data, 1);
+		data |= 0b11 << 3;
+		uint8_t accelSen[] = {0x1C, data};
+		SPI::writeRegs(accelSen, 2);
+	}
+
+	void Mpu9250::checkSettings() {
+		uint8_t data = 0;
+		SPI::readRegs(0x1A, &data, 1);
+		printf("DLPF_CFG = %d\n", data & 0b111);
+
+		SPI::readRegs(0x1B, &data, 1);
+		printf("FCHOICE_B = %d\n\n", data & 0b11);
+
+		SPI::readRegs(0x1C, &data, 1);
+		printf("ACCEL_DLPF_CFG = %d\n", data & 0b111);
+
+		SPI::readRegs(0x1D, &data, 1);
+		printf("ACCEL_FCHOICE_B = %d\n\n", data & 0b11);
+
+		SPI::readRegs(0x1B, &data, 1);
+		printf("GYRO_SEN = %d\n", (data >> 3) & 0b11);
+
+		SPI::readRegs(0x1C, &data, 1);
+		printf("ACCEL_SEN = %d\n\n", (data >> 3) & 0b111);
+	}
+
+	void Mpu9250::checkMpuVals() {
+		QuadVec3 temp = gyroVals();
+		printf("gyro values: X: %d, Y: %d, Z: %d\n", temp.X, temp.Y, temp.Z);
+
+		temp = accelMilliVals();
+		printf("accel values: X: %f, Y: %f, Z: %f\n\n", temp.X / 1000.f, temp.Y / 1000.f, temp.Z / 1000.f);
+	}
+
 } // namespace PicoPilot

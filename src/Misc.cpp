@@ -1,6 +1,7 @@
 #include "Helpers/Misc.hpp"
 
 #include "hardware/timer.h"
+#include <math.h>
 
 namespace PicoPilot::Misc {
 	using namespace PicoPilot;
@@ -11,7 +12,6 @@ namespace PicoPilot::Misc {
 	} // namespace
 
 	namespace Blink {
-
 		/**
 		 * @brief Setup blink using the built-in LED(just place in setup)
 		 *
@@ -26,13 +26,12 @@ namespace PicoPilot::Misc {
 		 *
 		 */
 		void run(uint interval) {
-			static auto now = get_absolute_time();
+			auto now = get_absolute_time();
 			if (absolute_time_diff_us(last, now) / 1000 > interval) {
 				toggle ^= 1UL << 0;
 				gpio_put(PICO_DEFAULT_LED_PIN, toggle);
 				last = now;
 			}
 		}
-
 	} // namespace Blink
 } // namespace PicoPilot::Misc

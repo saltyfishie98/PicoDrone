@@ -22,14 +22,14 @@ namespace Application {
 		auto remote = Remote::create();
 
 		void setup() {
-			remote.waitForSignal();
-			auto tempRemoteData = remote.getPacketData();
-			quadControls.input(tempRemoteData.thrust, tempRemoteData.yaw, tempRemoteData.pitch, tempRemoteData.roll);
+			// remote.waitForSignal();
+			// auto tempRemoteData = remote.getPacketData();
+			// quadControls.input(tempRemoteData.thrust, tempRemoteData.yaw, tempRemoteData.pitch, tempRemoteData.roll);
 			started = true;
 		}
 		void loop() {
-			remoteData = remote.getPacketData();
-			sleep_ms(10);
+			// remoteData = remote.getPacketData();
+			// sleep_ms(10);
 		}
 	} // namespace Core0
 
@@ -39,10 +39,10 @@ namespace Application {
 		DEBUG_RUN(auto last = get_absolute_time();)
 
 		void rateControl();
-		void angleControl(const double& deltaT);
+		void angleControl();
 
 		auto defaultPins = Pico::SPI::Pins();
-		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins), 12000);
+		auto mpu9250 = Mpu9250::create(spi1, std::move(defaultPins));
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		void setup() {
@@ -55,55 +55,16 @@ namespace Application {
 
 			} else {
 				Misc::Blink::run(250);
-				rateControl();
+				mpu9250.checkSettings();
+				mpu9250.checkMpuVals();
+				sleep_ms(50);
+				Misc::clearConsole();
 			}
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		void rateControl() {
-			Pid::Configs pitchPidConfig = {0.f, 0.0f, 0.f, -600.f, 600.f, -200.f, 200.f};
-			auto pitchPid = Pid::create(pitchPidConfig);
+		void rateControl() {}
 
-			Pid::Configs rollPidConfig = {0.f, 0.0f, 0.f, -600.f, 600.f, -200.f, 200.f};
-			auto rollPid = Pid::create(rollPidConfig);
-
-			Pid::Configs yawPidConfig = {3.f, 0.15f, 0.f, -600.f, 600.f, -200.f, 200.f};
-			auto yawPid = Pid::create(yawPidConfig);
-
-			auto feedback = mpu9250.gyroVals();
-			int16_t pitch = pitchPid.step(0, -feedback.Y) + 511;
-			int16_t roll = rollPid.step(0, -feedback.X) + 511;
-			int16_t yaw = yawPid.step(0, -feedback.Z) + 511;
-
-			quadControls.input(remoteData.thrust, yaw, pitch, roll);
-
-			DEBUG_RUN({
-				// remoteData.debugPrint();
-				// mpu9250.debugPrint();
-				quadControls.debugPrint();
-
-				printf("Controller output: Pitch = %d, Roll = %d\n\n", pitch, roll);
-				printf("Loop time = %lld microseconds\n", absolute_time_diff_us(last, get_absolute_time()));
-
-				sleep_ms(70);
-				Misc::clearConsole();
-				last = get_absolute_time();
-			})
-		}
-
-		void angleControl(const double& deltaT) {
-			using namespace Misc;
-			static Mpu9250::Rotation filteredAngles;
-
-			auto accel = mpu9250.filteredAccels();
-			auto accelAngles = Mpu9250::toAngles(accel);
-
-			auto gyroRate = mpu9250.gyroVals();
-			double rollRate = gyroRate.X;
-			double pitchRate = gyroRate.Y;
-
-			filteredAngles.roll = Complementary::filter(0.996f, (filteredAngles.roll + rollRate * deltaT), accelAngles.roll);
-			filteredAngles.pitch = Complementary::filter(0.996f, (filteredAngles.pitch + pitchRate * deltaT), accelAngles.pitch);
-		}
+		void angleControl() {}
 	} // namespace Core1
 } // namespace Application
